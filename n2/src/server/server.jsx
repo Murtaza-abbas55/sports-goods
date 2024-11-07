@@ -4,6 +4,7 @@ import ReactDOMServer from 'react-dom/server';
 import App from '../client/components/App';
 import fs from 'fs';
 import cors from 'cors';
+import path from 'path';
 //import pool from './db.js'; // Import the PostgreSQL pool
 import productRoutes from './routes/productRoutes.js'; // Import product routes
 
@@ -14,8 +15,8 @@ app.use(cors());
 app.use(express.json()); // Parse JSON bodies
 
 // Serve static files
-app.use('/static', express.static('dist'));
-
+//app.use('/static', express.static('dist'));
+app.use('/static', express.static(path.join(__dirname, '../dist')));
 // Use the product routes
 app.use('/api/products', productRoutes);
 
