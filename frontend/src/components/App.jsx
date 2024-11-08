@@ -1,7 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
-import ProductList from './ProductList';
-import AddProduct from './AddProduct';
-import Navbar from './Navbar';
+import { Routes, Route } from "react-router-dom";
+import ProductList from "./ProductList";
+import AddProduct from "./AddProduct";
+import Navbar from "./Navbar";
 
 const App = () => {
     return (
