@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import ProductList from "./ProductList";
 import AddProduct from "./AddProduct";
-import Navbar from "./Navbar";
+import Header from "../pages/Homepage";
 
 const App = () => {
     return (
         <main>
-            <Navbar />
+            <Header />
             <Routes>
                 {/* Set distinct paths for each route */}
                 <Route path="/" element={<ProductList />} />
