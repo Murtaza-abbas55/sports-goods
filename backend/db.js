@@ -1,12 +1,13 @@
+import 'dotenv/config';
 import pkg from 'pg';
 const { Pool } = pkg;
 
 const pool = new Pool({
-    user: 'postgres', // Replace with your PostgreSQL username
-    host: 'junction.proxy.rlwy.net', // Change if your DB is hosted elsewhere
-    database: 'ecommerce-db', // Replace with your database name
-    password: 'wUXWGsocIKPnoupiutZHWtgDmtneISWY', // Replace with your PostgreSQL password
-    port: 32128, // Default PostgreSQL port
-  });
-  
-  export default pool;
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    database: process.env.PG_DATABASE,
+    password: process.env.PG_PASSWORD,
+    port: process.env.PG_PORT,
+});
+
+export default pool;

@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import productRoutes from './routes/productRoutes.js'; // Import product routes
+import productRoutes from './routes/productRoutes.js';
+import userauthRoutes from './routes/userAuthRoutes.js' // Import product routes
 const app = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
@@ -10,7 +11,7 @@ app.use(express.json()); // Parse JSON bodies
 
 // Use the product routes
 app.use('/api/products', productRoutes);
-
+app.use('/api/auth', userauthRoutes);
 // Serve the index.html file for all other routes (CSR)
 app.get('*', (req, res) => {
     res.send('Welcome to the Products API');
