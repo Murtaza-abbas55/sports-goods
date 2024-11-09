@@ -1,13 +1,10 @@
-import { Link } from "react-router-dom";
-import AppBar from "@mui/material/AppBar";
+import DrawerAppBar from "../components/Navbar";
+
 function Header() {
     return (
-        <header>
-            <AppBar>
-                <div>E-commerce</div>
-                <Link href="#">Tennis</Link>
-            </AppBar>
-        </header>
+        <>
+            <DrawerAppBar />
+        </>
     );
 }
 export default Header;
