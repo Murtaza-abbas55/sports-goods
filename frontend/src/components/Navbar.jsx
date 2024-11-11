@@ -16,7 +16,7 @@ import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
 
 const drawerWidth = 240;
-const navItems = ["Cricket", "Football", "Tennis", "Badminton"];
+const navItems = ["Cricket", "Football", "Tennis", "Badminton", "Login"];
 
 function DrawerAppBar(props) {
     const { window } = props;
@@ -65,7 +65,11 @@ function DrawerAppBar(props) {
                     >
                         <Box sx={{ display: { xs: "none", sm: "block" } }}>
                             {navItems.map((item) => (
-                                <Button key={item} sx={{ color: "#fff" }}>
+                                <Button
+                                    href={"/" + item}
+                                    key={item}
+                                    sx={{ color: "#fff" }}
+                                >
                                     {item}
                                 </Button>
                             ))}

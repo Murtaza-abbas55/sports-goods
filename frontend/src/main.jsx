@@ -1,13 +1,23 @@
+import * as React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
-import App from "./components/App"; // Your App component
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Header from "./pages/Homepage";
+import Login from "./pages/Login";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Header />,
+    },
+    {
+        path: "/login",
+        element: <Login />,
+    },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
 root.render(
-    <BrowserRouter>
-        {" "}
-        {/* Wrap your App with BrowserRouter */}
-        <App />
-    </BrowserRouter>
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>
 );
