@@ -1,5 +1,5 @@
 // server/controllers/productController.js
-import { getAllProducts, createProduct } from '../models/Product.js';
+import { getAllProducts, createProduct,DeleteProduct,UpdateProduct } from '../models/Product.js';
 
 export const getProducts = async (req, res) => {
     try {
@@ -12,8 +12,32 @@ export const getProducts = async (req, res) => {
 
 export const addProduct = async (req, res) => {
     try {
-        const newProduct = await createProduct(req.body);
-        res.status(201).json(newProduct);
+        const productData = { ...req.body, admin_username: req.adminUsername }; 
+        const newProduct = await createProduct(productData);
+        res.status(200).json({ message: 'Product added successfully',product:newProduct});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const  deleteProduct = async (req, res) => {
+    try{
+         const {product_id} = req.body;
+         if (!product_id) {
+            return res.status(400).json({ error: 'Product ID is required' });
+        }
+         const deletedProduct = await DeleteProduct(product_id);
+         res.status(200).json({ message: 'Product deleted successfully', product: deletedProduct });
+    }
+    catch(error){
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const updateProduct = async (req, res) => {
+    try {
+        const productData = { ...req.body, admin_username: req.adminUsername }; 
+        const UpdatedProduct = await UpdateProduct(productData);
+        res.status(200).json({message:'Product updated succesfully',product:UpdatedProduct});
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
