@@ -1,28 +1,36 @@
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
+// import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
+import { CardActionArea, Divider } from "@mui/material";
 
-function ImgMediaCard() {
+function ImgMediaCard({ name, price }) {
     return (
-        <Card sx={{ maxWidth: 345 }}>
-            <CardActionArea href="/products">
+        <Card sx={{ display: "flex", width: 250 }}>
+            <CardActionArea href="/">
                 <CardMedia
                     component="img"
                     alt="green iguana"
                     image="./public/images/basketball.jpg"
+                    width={"150px"}
                 />
-                <CardContent>
+                <Divider />
+                <CardContent
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                    }}
+                >
                     <Typography gutterBottom variant="h5" component="div">
-                        Product Name Check Length of Product Name
+                        {name}
                     </Typography>
                     <Typography
                         variant="body2"
                         sx={{ color: "text.secondary" }}
                     >
-                        RS.2000
+                        {"RS. " + price}
                     </Typography>
                 </CardContent>
             </CardActionArea>
