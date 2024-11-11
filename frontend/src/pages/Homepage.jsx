@@ -1,8 +1,7 @@
-import { Box, Stack, Typography } from "@mui/material";
 import ImageCarousel from "../components/ImageCarousel";
 import DrawerAppBar from "../components/Navbar";
-import ImgMediaCard from "../components/Card";
 import Section from "../components/Section";
+import CategoryList from "../components/CategoryLists";
 
 function Header() {
     return (
@@ -11,6 +10,7 @@ function Header() {
             <ImageCarousel />
             <Section sectionHeading={"New Arrival"} />
             <Section sectionHeading={"Trending"} />
+            <CategoryList />
         </>
     );
 }
