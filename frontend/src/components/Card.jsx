@@ -7,7 +7,7 @@ import { CardActionArea, Divider } from "@mui/material";
 
 function ImgMediaCard({ name, price }) {
     return (
-        <Card sx={{ display: "flex", width: 250 }}>
+        <Card sx={{ display: "flex", width: 350 }}>
             <CardActionArea href="/">
                 <CardMedia
                     component="img"

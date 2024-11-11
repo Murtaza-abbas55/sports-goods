@@ -7,7 +7,7 @@ import { CardActionArea } from "@mui/material";
 
 function CategoryCard({ name }) {
     return (
-        <Card sx={{ display: "flex", width: 300 }}>
+        <Card sx={{ display: "flex", width: 400 }}>
             <CardActionArea href="/">
                 <CardMedia
                     component="img"
