@@ -14,6 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 const drawerWidth = 240;
 const navItems = ["Cricket", "Football", "Tennis", "Badminton", "Login"];
@@ -36,7 +37,8 @@ function DrawerAppBar(props) {
                 {navItems.map((item) => (
                     <ListItem key={item} disablePadding>
                         <ListItemButton
-                            href={"/" + item}
+                            component={RouterLink}
+                            to={"/" + item}
                             sx={{ textAlign: "center" }}
                         >
                             <ListItemText primary={item} />
@@ -69,7 +71,8 @@ function DrawerAppBar(props) {
                         <Box sx={{ display: { xs: "none", sm: "block" } }}>
                             {navItems.map((item) => (
                                 <Button
-                                    href={"/" + item}
+                                    component={RouterLink}
+                                    to={"/" + item}
                                     key={item}
                                     sx={{ color: "#fff" }}
                                 >
