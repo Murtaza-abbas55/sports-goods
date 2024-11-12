@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import CreateAccount from "./pages/CreateAccount";
 import AddProductForm from "./components/AddProduct";
+import Product from "./pages/Product";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     {
         path: "/create_account",
         element: <CreateAccount />,
+    },
+    {
+        path: "/product",
+        element: <Product />,
     },
     {
         path: "/form",
