@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url'; 
-import { getProducts, addProduct, deleteProduct, updateProduct } from '../controllers/productController.js';
+import { getProducts, addProduct, deleteProduct, updateProduct,getProductById } from '../controllers/productController.js';
 import { verifyAdmin } from '../middlewares/adminauth.js';
 
 const router = express.Router();
@@ -25,6 +25,9 @@ const upload = multer({ storage });
 
 
 router.get('/', getProducts);
+router.get('/:id',getProductById);
+
+
 router.post('/',verifyAdmin, upload.single('image'), addProduct); 
 router.delete('/delete', verifyAdmin, deleteProduct);
 router.put('/update', verifyAdmin, updateProduct);

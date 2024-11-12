@@ -1,5 +1,5 @@
 // backend/controllers/productController.js
-import { getAllProducts, createProduct,DeleteProduct,UpdateProduct } from '../models/Product.js';
+import { getAllProducts, createProduct,DeleteProduct,UpdateProduct,GetProductById } from '../models/Product.js';
 
 export const getProducts = async (req, res) => {
     try {
@@ -9,7 +9,16 @@ export const getProducts = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
+export const getProductById = async (req, res) => {
+    const id = req.params.id; 
+    try {
+       const product = await GetProductById(id);
+       res.json(product);
+    }
+    catch(error){
+        res.status(500).json({ error: error.message });
+    }
+    };
 export const addProduct = async (req, res) => {
     try {
         const { body } = req;

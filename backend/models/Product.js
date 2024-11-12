@@ -1,6 +1,14 @@
 // server/models/Product.js
 import pool from '../db.js';
-
+export const GetProductById = async(id) =>{
+ try{
+    const result = await pool.query(`SELECT * FROM Products where product_id = $1`,[id]);
+    return result.rows;
+ }
+ catch (error) {
+    throw new Error(`Error retrieving product with {id}: ` + error.message);
+}
+};
 export const getAllProducts = async () => {
     try {
         const result = await pool.query('SELECT * FROM Products');
