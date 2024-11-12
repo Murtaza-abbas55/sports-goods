@@ -5,6 +5,7 @@ import Header from "./pages/Homepage";
 import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
         path: "/login",
         element: <Login />,
     },
+  
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

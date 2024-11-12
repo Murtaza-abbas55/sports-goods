@@ -37,15 +37,15 @@ export const adminLogin = async (req, res) => {
             return res.status(400).json({ error: 'Incorrect password' });
         }
 
-        const token = jwt.sign({ adminUsername: admin.admin_username }, JWT_SECRET, { expiresIn: '1h' });
-     
-         res.cookie('token', token, {
-            httpOnly: true, 
-            secure: process.env.NODE_ENV === 'production',  
+        const token = jwt.sign({ adminUsername: admin.admin_username}, JWT_SECRET, { expiresIn: '1h' });
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 3600000 
+            maxAge: 3600000
         });
-        res.status(200).json({ message: 'Login successful'});
+        res.status(200).json({ isAdmin: true, isUser: false });
     } catch (error) {
         res.status(500).json({ error: 'Error logging in admin' });
     }

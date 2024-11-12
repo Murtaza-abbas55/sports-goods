@@ -11,7 +11,7 @@ export const getAllProducts = async () => {
 };
 
 export const createProduct = async (productData) => {
-    const { product_id, name, image_url, description, price, stock, category_id, admin_username } = productData;
+    const { product_id, name, description, price, stock, category_id,image_url, admin_username } = productData;
 
     try {
         const result = await pool.query(
