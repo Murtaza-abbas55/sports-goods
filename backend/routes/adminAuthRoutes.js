@@ -1,4 +1,4 @@
-// routes/adminRoutes.js
+
 import express from 'express';
 import { adminSignup, adminLogin } from '../controllers/adminAuthController.js';
 import { validateAdminSignup, validateAdminLogin } from '../middlewares/adminvalidation.js';
