@@ -1,4 +1,4 @@
-// server/controllers/productController.js
+// backend/controllers/productController.js
 import { getAllProducts, createProduct,DeleteProduct,UpdateProduct } from '../models/Product.js';
 
 export const getProducts = async (req, res) => {
@@ -12,13 +12,23 @@ export const getProducts = async (req, res) => {
 
 export const addProduct = async (req, res) => {
     try {
-        const productData = { ...req.body, admin_username: req.adminUsername }; 
+        const { body } = req;
+     
+        const sanitizedImageUrl = req.file ? req.file.filename : null;
+
+        const productData = { 
+            ...body, 
+            image_url: sanitizedImageUrl,
+            admin_username: req.adminUsername 
+        };
+
         const newProduct = await createProduct(productData);
-        res.status(200).json({ message: 'Product added successfully',product:newProduct});
+        res.status(200).json({ message: 'Product added successfully', product: newProduct });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 export const  deleteProduct = async (req, res) => {
     try{
          const {product_id} = req.body;
