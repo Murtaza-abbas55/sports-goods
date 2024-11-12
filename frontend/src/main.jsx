@@ -5,7 +5,7 @@ import Header from "./pages/Homepage";
 import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import CreateAccount from "./pages/CreateAccount";
-
+import AddProductForm from "./components/AddProduct";
 
 const router = createBrowserRouter([
     {
@@ -20,6 +20,10 @@ const router = createBrowserRouter([
     {
         path: "/create_account",
         element: <CreateAccount />,
+    },
+    {
+        path: "/form",
+        element: <AddProductForm />,
     },
 ]);
 

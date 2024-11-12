@@ -1,17 +1,17 @@
-import React from "react";  // Import React
+import React from "react"; // Import React
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Button, TextField, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import { Link as RouterLink } from "react-router-dom";
+import { Navigate, Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AddProductForm from "../components/AddProduct"; // Importing AddProductForm
 
 function Login() {
     const navigate = useNavigate();
-    const [isAdmin, setIsAdmin] = React.useState(false);  // State to track admin login
+    const [isAdmin, setIsAdmin] = React.useState(false); // State to track admin login
 
     const {
         register,
@@ -30,7 +30,7 @@ function Login() {
 
             if (response.data.isAdmin) {
                 console.log("Admin login successful:", response.data);
-                setIsAdmin(true);  // Set admin state to true
+                setIsAdmin(true); // Set admin state to true
                 navigate("/add-product"); // Redirect to AddProductForm route
             } else if (response.data.isUser) {
                 console.log("User login successful:", response.data);
@@ -49,8 +49,7 @@ function Login() {
 
                 if (response.data.isAdmin) {
                     console.log("Admin login successful:", response.data);
-                    setIsAdmin(true);  // Set admin state to true
-                
+                    setIsAdmin(true); // Set admin state to true
                 }
             } catch (adminError) {
                 console.error(
@@ -131,8 +130,8 @@ function Login() {
                         </Button>
                     </Stack>
                 </form>
-{/* Conditionally render AddProductForm if admin is logged in */}
-            {isAdmin && <AddProductForm />}
+                {/* Conditionally render AddProductForm if admin is logged in */}
+                {isAdmin && <Navigate to={"/form"} />}
             </Paper>
         </Box>
     );
