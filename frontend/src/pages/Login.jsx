@@ -4,6 +4,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import { Link as RouterLink } from "react-router-dom";
 
 function Login() {
     const {
@@ -101,7 +102,12 @@ function Login() {
                         <Button variant="contained" type="submit">
                             Log In
                         </Button>
-                        <Button variant="contained" type="submit">
+                        <Button
+                            component={RouterLink}
+                            to="/create_account"
+                            variant="contained"
+                            type="submit"
+                        >
                             Create Account
                         </Button>
                     </Stack>
