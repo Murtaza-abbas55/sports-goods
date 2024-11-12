@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import ErrorPage from "./pages/ErrorPage";
 import CreateAccount from "./pages/CreateAccount";
 
+
 const router = createBrowserRouter([
     {
         path: "/",
