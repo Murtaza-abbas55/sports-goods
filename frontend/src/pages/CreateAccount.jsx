@@ -49,7 +49,6 @@ function CreateAccount() {
                 display: "flex",
                 justifyContent: "center",
                 border: "solid 5px green",
-                height: "100vh",
             }}
         >
             <Paper
