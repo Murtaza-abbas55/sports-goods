@@ -14,32 +14,15 @@ function CreateAccount() {
 
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post("/api/auth/login", data, {
+            const response = await axios.post("/api/auth/signup", data, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-            console.log("User login successful:", response.data);
+            console.log(response.data);
             // Handle user login success
         } catch (userError) {
-            console.warn("User login failed, trying admin login...");
-
-            try {
-                const response = await axios.post("/api/admin/login", data, {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-                console.log("Admin login successful:", response.data);
-                // Handle admin login success
-            } catch (adminError) {
-                console.error(
-                    "Login failed:",
-                    adminError.response
-                        ? adminError.response.data
-                        : adminError.message
-                );
-            }
+            console.warn(userError);
         }
     };
 
@@ -73,12 +56,41 @@ function CreateAccount() {
                 <form style={{}} onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         margin="dense"
-                        label="Full Name"
+                        label="User ID"
+                        variant="filled"
+                        placeholder="integer"
+                        {...register("user_id", { required: true })}
+                        error={!!errors.user_id}
+                        helperText={
+                            errors.phone ? "This field is required" : ""
+                        }
+                        size="large"
+                        fullWidth
+                    />
+
+                    <TextField
+                        margin="dense"
+                        label="First Name"
+                        variant="filled"
+                        placeholder="John"
+                        {...register("first_name", { required: true })}
+                        error={!!errors.first_name}
+                        helperText={
+                            errors.first_name ? "This field is required" : ""
+                        }
+                        size="large"
+                        fullWidth
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Last Name"
                         variant="filled"
                         placeholder="John Doe"
-                        {...register("name", { required: true })}
-                        error={!!errors.name}
-                        helperText={errors.name ? "This field is required" : ""}
+                        {...register("last_name", { required: true })}
+                        error={!!errors.last_name}
+                        helperText={
+                            errors.last_name ? "This field is required" : ""
+                        }
                         size="large"
                         fullWidth
                     />
@@ -88,23 +100,10 @@ function CreateAccount() {
                         label="Phone Number"
                         variant="filled"
                         placeholder="03000000000"
-                        {...register("phone", { required: true })}
-                        error={!!errors.phone}
+                        {...register("phone_number", { required: true })}
+                        error={!!errors.phone_number}
                         helperText={
-                            errors.phone ? "This field is required" : ""
-                        }
-                        size="large"
-                        fullWidth
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Alternate Phone Number"
-                        variant="filled"
-                        defaultValue={register.phone}
-                        {...register("phone", { required: true })}
-                        error={!!errors.phone}
-                        helperText={
-                            errors.phone ? "This field is required" : ""
+                            errors.phone_number ? "This field is required" : ""
                         }
                         size="large"
                         fullWidth
@@ -126,18 +125,6 @@ function CreateAccount() {
 
                     <TextField
                         margin="dense"
-                        label="City"
-                        variant="filled"
-                        placeholder="Karachi"
-                        {...register("city", { required: true })}
-                        error={!!errors.city}
-                        helperText={errors.city ? "This field is required" : ""}
-                        size="large"
-                        fullWidth
-                    />
-
-                    <TextField
-                        margin="dense"
                         label="Address"
                         variant="filled"
                         placeholder="House A10"
@@ -149,19 +136,7 @@ function CreateAccount() {
                         size="large"
                         fullWidth
                     />
-                    <TextField
-                        margin="dense"
-                        label="Email"
-                        variant="filled"
-                        defaultValue="4344@example.com"
-                        {...register("email", { required: true })}
-                        error={!!errors.email}
-                        helperText={
-                            errors.email ? "This field is required" : ""
-                        }
-                        size="large"
-                        fullWidth
-                    />
+
                     <TextField
                         margin="dense"
                         label="Create Password"
