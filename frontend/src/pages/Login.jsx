@@ -7,11 +7,11 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { Navigate, Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import AddProductForm from "../components/AddProduct"; // Importing AddProductForm
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
     const navigate = useNavigate();
-    const [isAdmin, setIsAdmin] = React.useState(false); // State to track admin login
+    const { login } = useAuth(); // Access the login function from context
 
     const {
         register,
@@ -21,6 +21,7 @@ function Login() {
 
     const onSubmit = async (data) => {
         try {
+            // Attempt to log in the user first
             const response = await axios.post("/api/auth/login", data, {
                 headers: {
                     "Content-Type": "application/json",
@@ -28,17 +29,19 @@ function Login() {
                 withCredentials: true, // Include cookies
             });
 
-            if (response.data.isAdmin) {
-                console.log("Admin login successful:", response.data);
-                setIsAdmin(true); // Set admin state to true
-                navigate("/add-product"); // Redirect to AddProductForm route
-            } else if (response.data.isUser) {
+            if (response.data.isUser) {
                 console.log("User login successful:", response.data);
-                // Handle user-specific navigation, if any
+                login(response.data); // Save user data to context
+                navigate("/list"); // Redirect to the product list for regular users
+            } else if (response.data.isAdmin) {
+                console.log("Admin login successful:", response.data);
+                login(response.data); // Save admin data to context
+                navigate("/form"); // Redirect to the AddProductForm route for admins
             }
         } catch (userError) {
             console.warn("User login failed, trying admin login...");
 
+            // Attempt to log in as an admin if the user login fails
             try {
                 const response = await axios.post("/api/admin/login", data, {
                     headers: {
@@ -49,15 +52,15 @@ function Login() {
 
                 if (response.data.isAdmin) {
                     console.log("Admin login successful:", response.data);
-                    setIsAdmin(true); // Set admin state to true
+                    login(response.data); // Save admin data to context
+                    navigate("/form"); // Redirect to the AddProductForm route for admins
                 }
             } catch (adminError) {
                 console.error(
                     "Login failed:",
-                    adminError.response
-                        ? adminError.response.data
-                        : adminError.message
+                    adminError.response ? adminError.response.data : adminError.message
                 );
+                // Optionally show an error message to the user if both logins fail
             }
         }
     };
@@ -93,9 +96,7 @@ function Login() {
                         defaultValue="4344@example.com"
                         {...register("email", { required: true })}
                         error={!!errors.email}
-                        helperText={
-                            errors.email ? "This field is required" : ""
-                        }
+                        helperText={errors.email ? "This field is required" : ""}
                         size="large"
                         fullWidth
                     />
@@ -106,9 +107,7 @@ function Login() {
                         defaultValue="fast1"
                         {...register("password", { required: true })}
                         error={!!errors.password}
-                        helperText={
-                            errors.password ? "This field is required" : ""
-                        }
+                        helperText={errors.password ? "This field is required" : ""}
                         size="large"
                         fullWidth
                     />
@@ -124,14 +123,11 @@ function Login() {
                             component={RouterLink}
                             to="/create_account"
                             variant="contained"
-                            type="submit"
                         >
                             Create Account
                         </Button>
                     </Stack>
                 </form>
-                {/* Conditionally render AddProductForm if admin is logged in */}
-                {isAdmin && <Navigate to={"/form"} />}
             </Paper>
         </Box>
     );

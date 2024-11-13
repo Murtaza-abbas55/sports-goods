@@ -18,7 +18,7 @@ export const createAdmin = async (admin_username, email, password) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10); 
         const result = await pool.query(
-            'INSERT INTO Admin (admin_username, email, password) VALUES ($1, $2, $3) RETURNING admin_username',
+            'INSERT INTO Admin (admin_username, email, password) VALUES ($1, $2, $3) RETURNING admin_username,email',
             [admin_username, email, hashedPassword]
         );
         return result.rows[0];

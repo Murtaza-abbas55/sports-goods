@@ -1,4 +1,19 @@
+import { useAuth } from "../context/AuthContext";
 function AdminHome() {
-    return <h1>Admin Homepage</h1>;
+    const { Data } = useAuth();
+    return (
+       < div>
+            {Data ? (
+                <div>
+                    <p>Welcome, {Data.admin_username}!</p>
+                    <p>Email: {Data.email}</p>
+                    <p>Role: {Data.isAdmin ? "Admin" : "User"}</p>
+                </div>
+            ) : (
+                <p>Not logged in.</p>
+            )}
+    <h1>Admin Homepage</h1>;
+    </div>
+    )
 }
 export default AdminHome;

@@ -43,7 +43,14 @@ export const login = async (req, res) => {
             sameSite: 'Strict',
             maxAge: 3600000
         });
-        res.status(200).json({ isAdmin: false, isUser: true });
+        res.status(200).json({ 
+            isAdmin: false, 
+            isUser: true,
+            user_id:user.user_id,
+            firstname:user.first_name,
+            lastname:user.last_name,
+            email:user.email
+         });
     } catch (error) {
         res.status(500).json({ error: 'Error logging in user' });
     }
