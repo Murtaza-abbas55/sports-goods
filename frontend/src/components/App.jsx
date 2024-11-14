@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Login from "../pages/Login";
 import CreateAccount from "../pages/CreateAccount";
@@ -20,7 +20,9 @@ function App() {
             />
             <Route
                 path="/list"
-                element={!Data?.isAdmin ? <ProductList /> : <Login />}
+                element={
+                    Data?.isUser ? <ProductList /> : <Navigate to={"/login"} />
+                }
             />
         </Routes>
     );
