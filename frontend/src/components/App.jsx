@@ -7,6 +7,7 @@ import ProductList from "./ProductList";
 import Header from "../pages/Homepage";
 import ErrorPage from "../pages/ErrorPage";
 import AdminLayout from "../pages/AdminLayout";
+import DeleteProduct from "../pages/DeleteProduct";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
@@ -25,6 +26,7 @@ function App() {
             >
                 <Route index element={<AdminHome />} />
                 <Route path="view-products" element={<ProductList />} />
+                <Route path="delete-product" element={<DeleteProduct />} />
             </Route>
 
             <Route

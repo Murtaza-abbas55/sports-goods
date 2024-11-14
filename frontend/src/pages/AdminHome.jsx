@@ -39,6 +39,8 @@ function AdminHome() {
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw" }}
                 size="large"
+                component={RouterLink}
+                to={"delete-product"}
             >
                 Delete Product
             </Button>
