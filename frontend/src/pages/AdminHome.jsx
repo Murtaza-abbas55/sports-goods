@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 function AdminHome() {
     const { Data } = useAuth();
     return (
-       < div>
+        <div>
             {Data ? (
                 <div>
                     <p>Welcome, {Data.admin_username}!</p>
@@ -12,8 +13,9 @@ function AdminHome() {
             ) : (
                 <p>Not logged in.</p>
             )}
-    <h1>Admin Homepage</h1>;
-    </div>
-    )
+            <h1>Admin Homepage</h1>
+            <Link to={"/"}>Home</Link>
+        </div>
+    );
 }
 export default AdminHome;
