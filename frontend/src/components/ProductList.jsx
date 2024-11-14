@@ -82,6 +82,7 @@ const ProductList = () => {
             try {
                 const response = await axios.get("/api/products");
                 setProducts(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setError("Failed to load products.");
@@ -112,7 +113,7 @@ const ProductList = () => {
                         <li key={product.product_id}>
                             <img
                                 src={`/images/${product.image_url}`}
-                                alt={product.name}
+                                alt={"not avail "}
                                 style={{
                                     width: "100px",
                                     height: "100px",
@@ -128,7 +129,7 @@ const ProductList = () => {
             ) : (
                 <p>No products available.</p>
             )}
-            <Link to={"/"}>Home</Link>
+            <Link to={"/admin"}>Home</Link>
         </div>
     );
 };
