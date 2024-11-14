@@ -5,6 +5,9 @@ import CreateAccount from "../pages/CreateAccount";
 import AdminHome from "../pages/AdminHome";
 import ProductList from "./ProductList";
 import Header from "../pages/Homepage";
+import ErrorPage from "../pages/ErrorPage";
+import AdminLayout from "../pages/AdminLayout";
+import DeleteProduct from "../pages/DeleteProduct";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
@@ -14,16 +17,23 @@ function App() {
             <Route path="/" element={<Header />} />
             <Route path="/login" element={<Login />} />
             <Route path="/create_account" element={<CreateAccount />} />
+
             <Route
-                path="/form"
-                element={Data?.isAdmin ? <AdminHome /> : <Login />}
-            />
+                path="/admin"
+                element={
+                    Data?.isAdmin ? <AdminLayout /> : <Navigate to="/login" />
+                }
+            >
+                <Route index element={<AdminHome />} />
+                <Route path="view-products" element={<ProductList />} />
+                <Route path="delete-product" element={<DeleteProduct />} />
+            </Route>
+
             <Route
                 path="/list"
-                element={
-                    Data?.isUser ? <ProductList /> : <Navigate to={"/login"} />
-                }
+                element={Data ? <ProductList /> : <Navigate to={"/login"} />}
             />
+            <Route path="*" element={<ErrorPage />} />
         </Routes>
     );
 }

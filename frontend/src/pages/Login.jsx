@@ -33,10 +33,6 @@ function Login() {
                 console.log("User login successful:", response.data);
                 login(response.data); // Save user data to context
                 navigate("/list"); // Redirect to the product list for regular users
-            } else if (response.data.isAdmin) {
-                console.log("Admin login successful:", response.data);
-                login(response.data); // Save admin data to context
-                navigate("/form"); // Redirect to the AddProductForm route for admins
             }
         } catch (userError) {
             console.warn("User login failed, trying admin login...");
@@ -53,12 +49,14 @@ function Login() {
                 if (response.data.isAdmin) {
                     console.log("Admin login successful:", response.data);
                     login(response.data); // Save admin data to context
-                    navigate("/form"); // Redirect to the AddProductForm route for admins
+                    navigate("/admin"); // Redirect to the AddProductForm route for admins
                 }
             } catch (adminError) {
                 console.error(
                     "Login failed:",
-                    adminError.response ? adminError.response.data : adminError.message
+                    adminError.response
+                        ? adminError.response.data
+                        : adminError.message
                 );
                 // Optionally show an error message to the user if both logins fail
             }
@@ -96,7 +94,9 @@ function Login() {
                         defaultValue="4344@example.com"
                         {...register("email", { required: true })}
                         error={!!errors.email}
-                        helperText={errors.email ? "This field is required" : ""}
+                        helperText={
+                            errors.email ? "This field is required" : ""
+                        }
                         size="large"
                         fullWidth
                     />
@@ -107,7 +107,9 @@ function Login() {
                         defaultValue="fast1"
                         {...register("password", { required: true })}
                         error={!!errors.password}
-                        helperText={errors.password ? "This field is required" : ""}
+                        helperText={
+                            errors.password ? "This field is required" : ""
+                        }
                         size="large"
                         fullWidth
                     />
