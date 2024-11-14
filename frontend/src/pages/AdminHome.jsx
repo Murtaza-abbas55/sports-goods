@@ -23,6 +23,8 @@ function AdminHome() {
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw" }}
                 size="large"
+                component={RouterLink}
+                to={"add-product"}
             >
                 Add Product
             </Button>
