@@ -68,7 +68,7 @@ function DeleteProduct() {
                         <p>{product.product_id}</p>
                         <p>{product.name}</p>
                         <img
-                            src={`${product.image_url}`}
+                            src={`/images/${product.image_url}`}
                             alt="no logo"
                             height={50}
                         />
