@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import productRoutes from './routes/productRoutes.js';
 import userauthRoutes from './routes/userAuthRoutes.js';
 import adminauthRoutes from './routes/adminAuthRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
 import cors from 'cors';
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/images', express.static(path.join(__dirname, '../../frontend/public/im
 app.use('/api/products', productRoutes);
 app.use('/api/auth', userauthRoutes);
 app.use('/api', adminauthRoutes);
+app.use('/api',cartRoutes);
 
 app.get('*', (req, res) => {
     res.send('Welcome to the Products API');
