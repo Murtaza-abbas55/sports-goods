@@ -67,6 +67,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -98,16 +99,13 @@ const ProductList = () => {
     return (
         <div>
             <h2>Product Items</h2>
-            {Data ? (
-                <div>
-                    <p>Welcome, {Data.firstname} {Data.lastname}!</p>
-                    <p>Email: {Data.email}</p>
-                    <p>Role: {Data.isAdmin ? "Admin" : "User"}</p>
-                </div>
-            ) : (
-                <p>Not logged in.</p>
-            )}
-
+            <div>
+                <p>
+                    Welcome, {Data.firstname} {Data.lastname}!
+                </p>
+                <p>Email: {Data.email}</p>
+                <p>Role: {Data.isAdmin ? "Admin" : "User"}</p>
+            </div>
             {products.length > 0 ? (
                 <ul>
                     {products.map((product) => (
@@ -130,6 +128,7 @@ const ProductList = () => {
             ) : (
                 <p>No products available.</p>
             )}
+            <Link to={"/"}>Home</Link>
         </div>
     );
 };
