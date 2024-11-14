@@ -1,0 +1,101 @@
+import {
+    getOrCreateAnonymousCart,
+    getUserCart,
+    addProductToCart,
+    removeProductFromCart,
+    clearCartProducts,
+    mergeAnonymousCartWithUserCart
+} from '../models/Cart.js';
+
+export const addToCart = async (req, res) => {
+    const { product_id, quantity, cartId } = req.body; // Destructure cartId from the request body
+    console.log('Received Cart ID:', cartId);
+    try {
+        console.log('Request Body:', req.body);  // Log the request body to ensure correct data
+
+        // If no cartId is passed in the body, create or use anonymous cart
+        if (!cartId) {
+            const anonymousCartResult = await getOrCreateAnonymousCart();
+            console.log('Anonymous Cart Result:', anonymousCartResult);  // Log the result
+            cartId = anonymousCartResult.cart.cart_id;  // Access the cart_id from the returned object
+        }
+
+        console.log('Using Cart ID:', cartId);
+
+        // Add the product to the cart
+        await addProductToCart(cartId, product_id, quantity);
+        console.log(`Product ${product_id} added to cart with ID:`, cartId);  // Log the result
+        res.status(200).json({ message: 'Product added to cart', cartId: cartId });
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        res.status(500).json({ error: 'Failed to add product to cart' });
+    }
+};
+
+
+export const removeFromCart = async (req, res) => {
+    const { product_id, cart_id } = req.body;
+    console.log('Attempting to remove product from cart:', cart_id, product_id);
+
+    try {
+        await removeProductFromCart(cart_id, product_id);
+        console.log(`Product ${product_id} removed from cart with ID:`, cart_id);  // Log the result
+        res.status(200).json({ message: 'Product removed from cart' });
+    } catch (error) {
+        console.error('Error removing product from cart:', error);
+        res.status(500).json({ error: 'Failed to remove product from cart' });
+    }
+};
+
+export const clearCart = async (req, res) => {
+    const { cart_id } = req.body;
+
+    try {
+        console.log('Cart ID to clear:', cart_id);
+        await clearCartProducts(cart_id);
+        console.log(`Cart with ID ${cart_id} cleared successfully`);  // Log the result
+        res.status(200).json({ message: 'Cart cleared' });
+    } catch (error) {
+        console.error('Error clearing cart:', error);
+        res.status(500).json({ error: 'Failed to clear cart' });
+    }
+};
+
+export const mergeAnonymousCart = async (req, res) => {
+    const { user_id } = req.body;
+    console.log('User ID:', user_id);
+
+    try {
+        // Check if the user has an existing cart
+        let userCartResult = await getUserCart(user_id);
+        console.log('User Cart Result:', userCartResult);  // Log the result
+
+        if (!userCartResult.cart) {
+            console.log('No existing user cart found, creating a new one.');
+        }
+
+        const userCart = userCartResult.cart;  // Correctly access the cart object
+        console.log('User Cart:', userCart);
+
+        // Find the anonymous cart
+        const anonymousCartResult = await getOrCreateAnonymousCart();
+        console.log('Anonymous Cart Result:', anonymousCartResult);  // Log the result
+
+        const anonymousCart = anonymousCartResult.cart;  // Correctly access the cart object
+        console.log('Anonymous Cart:', anonymousCart);
+
+        // Ensure both carts exist before attempting to merge
+        if (!userCart || !anonymousCart) {
+            throw new Error('User cart or anonymous cart does not exist');
+        }
+
+        // Merge the anonymous cart with the user's cart
+        await mergeAnonymousCartWithUserCart(userCart.cart_id, anonymousCart.cart_id);
+        console.log(`Anonymous cart ${anonymousCart.cart_id} merged with user cart ${userCart.cart_id}`);  // Log the result
+
+        res.status(200).json({ message: 'Anonymous cart merged with user cart' });
+    } catch (error) {
+        console.error('Failed to merge anonymous cart with user cart:', error);
+        res.status(500).json({ error: 'Failed to merge anonymous cart with user cart' });
+    }
+};
