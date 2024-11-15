@@ -32,6 +32,6 @@ router.get("/:id", getProductById);
 
 router.post("/", verifyAdmin, upload.single("image"), addProduct);
 router.post("/delete", deleteProduct); // Use POST for deletion
-router.put("/update", verifyAdmin, updateProduct);
+router.post("/update", verifyAdmin,upload.single("image"), updateProduct);
 
 export default router;
