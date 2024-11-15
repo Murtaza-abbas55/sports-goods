@@ -55,16 +55,63 @@ function UpdateProduct() {
         console.log(product.image);
     };
 
+    // const onSubmit = async (data) => {
+    //     console.log("data in onSubmit param");
+    //     console.log(data);
+    //     console.log("image");
+    //     console.log(data.image[0].name);
+    //     try {
+    //         const response = await axios.post("/api/products/update", data, {
+    //             headers: { "Content-Type": "application/json" },
+    //             withCredentials: true,
+    //         });
+    //         console.log("backend response.data.message");
+    //         console.log(response.data.message);
+    //         console.log("backend response.data");
+    //         console.log(response.data);
+    //         setEditing(false);
+    //         setEditingProduct(null);
+    //         setProducts((prevProducts) =>
+    //             prevProducts.map((product) =>
+    //                 product.product_id === data.product_id
+    //                     ? { ...product, ...data }
+    //                     : product
+    //             )
+    //         );
+    //     } catch (error) {
+    //         console.error("Error updating product:", error);
+    //         if (error.response) {
+    //             console.error("Response error:", error.response.data);
+    //         }
+    //     }
+    // };
+
     const onSubmit = async (data) => {
-        console.log("data in onSubmit param");
-        console.log(data);
-        console.log("image");
-        console.log(data.image[0].name);
+        // Create FormData object for file upload
+        const formData = new FormData();
+
+        // Append each form field to FormData
+        formData.append("product_id", data.product_id);
+        formData.append("name", data.name);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("stock", data.stock);
+        formData.append("category_id", data.category_id);
+
+        // Append file - data.image[0] is the actual file
+        if (data.image[0]) {
+            formData.append("image", data.image[0]);
+        }
+
         try {
-            const response = await axios.post("/api/products/update", data, {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-            });
+            const response = await axios.post(
+                "/api/products/update",
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    withCredentials: true,
+                }
+            );
             console.log("backend response.data.message");
             console.log(response.data.message);
             console.log("backend response.data");
@@ -79,9 +126,13 @@ function UpdateProduct() {
                 )
             );
         } catch (error) {
-            console.error("Error updating product:", error);
+            console.error("Error adding product:", error);
             if (error.response) {
-                console.error("Response error:", error.response.data);
+                console.error("Response error:", error.response);
+            } else if (error.request) {
+                console.error("Request error:", error.request);
+            } else {
+                console.error("Axios error:", error.message);
             }
         }
     };
