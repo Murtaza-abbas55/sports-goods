@@ -49,15 +49,12 @@ function UpdateProduct() {
         setValue("price", product.price);
         setValue("stock", product.stock);
         setValue("category_id", product.category_id);
+        setValue("image", product.image);
     };
 
-    // const onSubmit = (data) => {
-    //     console.log("Updated Product Data:", data);
-    //     setEditing(null);
-    //     setEditingProduct(null);
-    // };
-
     const onSubmit = async (data) => {
+        console.log("new");
+        console.log(data);
         try {
             const response = await axios.post("/api/products/update", data, {
                 headers: { "Content-Type": "application/json" },
@@ -214,6 +211,14 @@ function UpdateProduct() {
                                         : ""
                                 }
                                 fullWidth
+                            />
+
+                            <TextField
+                                type="file"
+                                accept="image/*"
+                                {...register("image", { required: true })}
+                                style={{ marginTop: "16px" }}
+                                error={!!errors.image}
                             />
 
                             <Stack
