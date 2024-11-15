@@ -55,36 +55,10 @@ function UpdateProduct() {
         console.log(product.image);
     };
 
-    // const onSubmit = async (data) => {
-    //     console.log("data in onSubmit param");
-    //     console.log(data);
-    //     console.log("image");
-    //     console.log(data.image[0].name);
-    //     try {
-    //         const response = await axios.post("/api/products/update", data, {
-    //             headers: { "Content-Type": "application/json" },
-    //             withCredentials: true,
-    //         });
-    //         console.log("backend response.data.message");
-    //         console.log(response.data.message);
-    //         console.log("backend response.data");
-    //         console.log(response.data);
-    //         setEditing(false);
-    //         setEditingProduct(null);
-    //         setProducts((prevProducts) =>
-    //             prevProducts.map((product) =>
-    //                 product.product_id === data.product_id
-    //                     ? { ...product, ...data }
-    //                     : product
-    //             )
-    //         );
-    //     } catch (error) {
-    //         console.error("Error updating product:", error);
-    //         if (error.response) {
-    //             console.error("Response error:", error.response.data);
-    //         }
-    //     }
-    // };
+    const handleCancel = () => {
+        setEditing(false);
+        setEditingProduct(null);
+    };
 
     const onSubmit = async (data) => {
         // Create FormData object for file upload
@@ -288,6 +262,13 @@ function UpdateProduct() {
                             >
                                 <Button variant="contained" type="submit">
                                     Update Product
+                                </Button>
+                                <Button
+                                    onClick={handleCancel}
+                                    variant="contained"
+                                    type="submit"
+                                >
+                                    Cancel Update
                                 </Button>
                             </Stack>
                         </form>
