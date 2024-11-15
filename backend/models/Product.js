@@ -73,9 +73,10 @@ export const UpdateProduct = async (productData) => {
                 price = $3,
                 stock = $4,
                 category_id = $5,
-                image_url = $6
+                image_url = $6,
+                admin_username = $7 
             WHERE
-                admin_username = $7 AND product_id = $8
+            product_id = $8
             RETURNING *;
         `;
 
