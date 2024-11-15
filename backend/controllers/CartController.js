@@ -8,7 +8,7 @@ import {
 } from '../models/Cart.js';
 
 export const addToCart = async (req, res) => {
-    const { product_id, quantity, cartId } = req.body; // Destructure cartId from the request body
+    let { product_id, quantity, cartId } = req.body; // Change const to let for cartId
     console.log('Received Cart ID:', cartId);
     try {
         console.log('Request Body:', req.body);  // Log the request body to ensure correct data
@@ -17,7 +17,7 @@ export const addToCart = async (req, res) => {
         if (!cartId) {
             const anonymousCartResult = await getOrCreateAnonymousCart();
             console.log('Anonymous Cart Result:', anonymousCartResult);  // Log the result
-            cartId = anonymousCartResult.cart.cart_id;  // Access the cart_id from the returned object
+            cartId = anonymousCartResult.cart.cart_id;  // Reassign cartId
         }
 
         console.log('Using Cart ID:', cartId);
@@ -31,7 +31,6 @@ export const addToCart = async (req, res) => {
         res.status(500).json({ error: 'Failed to add product to cart' });
     }
 };
-
 
 export const removeFromCart = async (req, res) => {
     const { product_id, cart_id } = req.body;
