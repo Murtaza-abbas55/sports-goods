@@ -52,8 +52,9 @@ export const DeleteProduct = async (product_id) => {
 };
 
 export const UpdateProduct = async (productData) => {
-    const { product_id, name, image_url, description, price, stock, category_id, admin_username } = productData;
+    const { product_id, name, description, price, stock, category_id, image_url, admin_username } = productData;
 
+    // Ensure required fields are provided
     if (!product_id) {
         throw new Error('Product ID is required');
     }
@@ -61,56 +62,49 @@ export const UpdateProduct = async (productData) => {
         throw new Error('Admin username is required');
     }
 
-    const fields = [];
-    const values = [];
-    let index = 1;
-
-    if (name) {
-        fields.push(`name = $${index++}`);
-        values.push(name);
-    }
-    if (image_url) {
-        fields.push(`image_url = $${index++}`);
-        values.push(image_url);
-    }
-    if (description) {
-        fields.push(`description = $${index++}`);
-        values.push(description);
-    }
-    if (price !== undefined) {
-        fields.push(`price = $${index++}`);
-        values.push(price);
-    }
-    if (stock !== undefined) {
-        fields.push(`stock = $${index++}`);
-        values.push(stock);
-    }
-    if (category_id) {
-        fields.push(`category_id = $${index++}`);
-        values.push(category_id);
-    }
-    
- 
-    fields.push(`admin_username = $${index++}`);
-    values.push(admin_username);
-
-   
-    values.push(product_id);
-
-    if (fields.length === 0) {
-        throw new Error('No fields to update');
-    }
-
     try {
- 
-        const query = `UPDATE Products
-                       SET ${fields.join(', ')}
-                       WHERE product_id = $${index}
-                       RETURNING *`;
+        console.log('Starting UpdateProduct function for product_id:', product_id);
 
+        const query = `
+            UPDATE Products
+            SET
+                name = $1,
+                description = $2,
+                price = $3,
+                stock = $4,
+                category_id = $5,
+                image_url = $6,
+                admin_username = $7 
+            WHERE
+            product_id = $8
+            RETURNING *;
+        `;
+
+        const values = [
+            name,
+            description,
+            price,
+            stock,
+            category_id,
+            image_url,
+            admin_username,
+            product_id
+        ];
+
+        console.log('Executing query:', query);
+        console.log('Query values:', values);
+
+        // Execute the query
         const result = await pool.query(query, values);
-        return result.rows[0]; 
+
+        if (result.rows.length === 0) {
+            throw new Error('No product found with the specified product_id and admin_username');
+        }
+
+        console.log('Product updated successfully:', result.rows[0]);
+        return result.rows[0];
     } catch (error) {
+        console.error('Error in UpdateProduct:', error);
         throw new Error('Error updating product: ' + error.message);
     }
 };

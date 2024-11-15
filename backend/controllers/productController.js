@@ -54,7 +54,14 @@ export const  deleteProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const productData = { ...req.body, admin_username: req.adminUsername }; 
+
+      const { body } = req;
+        const sanitizedImageUrl = req.file ? req.file.filename : null;
+        const productData = { 
+            ...body, 
+            image_url: sanitizedImageUrl,
+            admin_username: req.adminUsername 
+        };
         const UpdatedProduct = await UpdateProduct(productData);
         res.status(200).json({message:'Product updated succesfully',product:UpdatedProduct});
     } catch (error) {
