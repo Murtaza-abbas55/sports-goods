@@ -20,6 +20,7 @@ function AdminHome() {
             <Typography variant="h3">
                 Welcome Admin {Data.admin_username}
             </Typography>
+
             <Button
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
@@ -29,6 +30,7 @@ function AdminHome() {
             >
                 Add Product
             </Button>
+
             <Button
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
@@ -38,6 +40,7 @@ function AdminHome() {
             >
                 View Products
             </Button>
+
             <Button
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
@@ -47,6 +50,7 @@ function AdminHome() {
             >
                 Delete Product
             </Button>
+
             <Button
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
@@ -56,6 +60,17 @@ function AdminHome() {
             >
                 Update Product
             </Button>
+
+            <Button
+                variant="contained"
+                sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
+                size="large"
+                component={RouterLink}
+                to={"new-admin"}
+            >
+                Add New Admin
+            </Button>
+
             <Button
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
