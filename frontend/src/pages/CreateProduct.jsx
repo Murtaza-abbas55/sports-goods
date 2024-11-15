@@ -12,7 +12,23 @@ function CreateProduct() {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = async (formData) => {
+    const onSubmit = async (data) => {
+        // Create FormData object for file upload
+        const formData = new FormData();
+
+        // Append each form field to FormData
+        formData.append("product_id", data.product_id);
+        formData.append("name", data.name);
+        formData.append("description", data.description);
+        formData.append("price", data.price);
+        formData.append("stock", data.stock);
+        formData.append("category_id", data.category_id);
+
+        // Append file - data.image[0] is the actual file
+        if (data.image[0]) {
+            formData.append("image", data.image[0]);
+        }
+
         try {
             const response = await axios.post("/api/products", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -58,7 +74,7 @@ function CreateProduct() {
                 >
                     Add Product
                 </Typography>
-                <form style={{}} onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <TextField
                         margin="dense"
                         label="Product ID"
@@ -69,7 +85,6 @@ function CreateProduct() {
                         helperText={
                             errors.product_id ? "This field is required" : ""
                         }
-                        size="large"
                         fullWidth
                     />
 
@@ -81,7 +96,6 @@ function CreateProduct() {
                         {...register("name", { required: true })}
                         error={!!errors.name}
                         helperText={errors.name ? "This field is required" : ""}
-                        size="large"
                         fullWidth
                     />
 
@@ -95,7 +109,6 @@ function CreateProduct() {
                         helperText={
                             errors.description ? "This field is required" : ""
                         }
-                        size="large"
                         fullWidth
                     />
 
@@ -109,7 +122,6 @@ function CreateProduct() {
                         helperText={
                             errors.price ? "This field is required" : ""
                         }
-                        size="large"
                         fullWidth
                     />
 
@@ -123,7 +135,6 @@ function CreateProduct() {
                         helperText={
                             errors.stock ? "This field is required" : ""
                         }
-                        size="large"
                         fullWidth
                     />
 
@@ -137,9 +148,21 @@ function CreateProduct() {
                         helperText={
                             errors.category_id ? "This field is required" : ""
                         }
-                        size="large"
                         fullWidth
                     />
+
+                    <TextField
+                        type="file"
+                        accept="image/*"
+                        {...register("image", { required: true })}
+                        style={{ marginTop: "16px" }}
+                        error={!!errors.image}
+                    />
+                    {/* {errors.image && (
+                        <Typography color="error">
+                            This field is required
+                        </Typography>
+                    )} */}
 
                     <Stack
                         margin="dense"
@@ -156,4 +179,5 @@ function CreateProduct() {
         </Box>
     );
 }
+
 export default CreateProduct;
