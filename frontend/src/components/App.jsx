@@ -12,6 +12,7 @@ import AddProductForm from "./AddProduct";
 import CreateProduct from "../pages/CreateProduct";
 import UpdateProduct from "../pages/UpdateProduct";
 import CreateAdminAccount from "../pages/CreateAdminAccount";
+import Product from "../pages/Product";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
@@ -20,6 +21,7 @@ function App() {
         <Routes>
             <Route path="/" element={<Header />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/product" element={<Product />} />
             <Route path="/create_account" element={<CreateAccount />} />
 
             <Route

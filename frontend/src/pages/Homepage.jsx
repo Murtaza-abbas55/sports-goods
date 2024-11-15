@@ -14,7 +14,7 @@ function Header() {
             <Section sectionHeading={"Trending"} />
             <CategoryList />
             <Footer />
-            <Link to={"/form"}>Admin Only</Link>
+            <Link to={"/admin"}>Admin Only</Link>
             <Link to={"/list"}>User Only</Link>
         </>
     );
