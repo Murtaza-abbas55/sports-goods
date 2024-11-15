@@ -19,6 +19,7 @@ function UpdateProduct() {
             try {
                 const response = await axios.get("/api/products");
                 setProducts(response.data);
+                console.log("Fetching products response.data");
                 console.log(response.data);
             } catch (error) {
                 console.error("Error fetching products:", error);
@@ -50,17 +51,24 @@ function UpdateProduct() {
         setValue("stock", product.stock);
         setValue("category_id", product.category_id);
         setValue("image", product.image);
+        console.log("product.image");
+        console.log(product.image);
     };
 
     const onSubmit = async (data) => {
-        console.log("new");
+        console.log("data in onSubmit param");
         console.log(data);
+        console.log("image");
+        console.log(data.image[0].name);
         try {
             const response = await axios.post("/api/products/update", data, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true,
             });
+            console.log("backend response.data.message");
             console.log(response.data.message);
+            console.log("backend response.data");
+            console.log(response.data);
             setEditing(false);
             setEditingProduct(null);
             setProducts((prevProducts) =>
