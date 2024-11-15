@@ -30,7 +30,7 @@ function UpdateProduct() {
         };
 
         fetchProducts();
-    }, []);
+    }, [products]);
 
     const {
         register,
