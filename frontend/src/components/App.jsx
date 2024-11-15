@@ -10,6 +10,7 @@ import AdminLayout from "../pages/AdminLayout";
 import DeleteProduct from "../pages/DeleteProduct";
 import AddProductForm from "./AddProduct";
 import CreateProduct from "../pages/CreateProduct";
+import UpdateProduct from "../pages/UpdateProduct";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
@@ -29,6 +30,7 @@ function App() {
                 <Route index element={<AdminHome />} />
                 <Route path="add-product" element={<CreateProduct />} />
                 <Route path="delete-product" element={<DeleteProduct />} />
+                <Route path="update-product" element={<UpdateProduct />} />
                 <Route path="view-products" element={<ProductList />} />
             </Route>
 

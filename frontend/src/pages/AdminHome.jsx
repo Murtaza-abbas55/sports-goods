@@ -11,7 +11,8 @@ function AdminHome() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100vh",
+                height: "100%",
+                // overflow: "scroll",
                 border: "solid 3px red",
             }}
             component={"section"}
@@ -21,7 +22,7 @@ function AdminHome() {
             </Typography>
             <Button
                 variant="contained"
-                sx={{ fontSize: "24px", width: "60vw" }}
+                sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
                 size="large"
                 component={RouterLink}
                 to={"add-product"}
@@ -39,12 +40,21 @@ function AdminHome() {
             </Button>
             <Button
                 variant="contained"
-                sx={{ fontSize: "24px", width: "60vw" }}
+                sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
                 size="large"
                 component={RouterLink}
                 to={"delete-product"}
             >
                 Delete Product
+            </Button>
+            <Button
+                variant="contained"
+                sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
+                size="large"
+                component={RouterLink}
+                to={"update-product"}
+            >
+                Update Product
             </Button>
             <Button
                 variant="contained"
