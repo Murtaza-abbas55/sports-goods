@@ -1,4 +1,6 @@
+import ListingCard from "../components/ListingCard";
 import useFetch from "../hooks/useFetch";
+import { Stack } from "@mui/material";
 
 function ProductListing() {
     const { products, loading, error } = useFetch("/api/products");
@@ -10,9 +12,22 @@ function ProductListing() {
         <>
             <h1>Product Lisitng</h1>
             <p>These are my products</p>
-            {products.map((product) => (
-                <div key={product.product_id}>{product.name}</div>
-            ))}
+            <Stack
+                direction={"row"}
+                gap={2}
+                flexWrap={"wrap"}
+                justifyContent={"center"}
+            >
+                {products.map((product) => (
+                    <div style={{ display: "flex" }} key={product.product_id}>
+                        <ListingCard
+                            name={product.name}
+                            price={product.price}
+                            stock={product.stock}
+                        />
+                    </div>
+                ))}
+            </Stack>
         </>
     );
 }
