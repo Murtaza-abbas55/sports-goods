@@ -10,6 +10,8 @@ import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import saleRoutes from './routes/saleRoutes.js';
+import newArrivalRoutes from './routes/newArrivalRoutes.js'
 import cors from 'cors';
 dotenv.config();
 
@@ -36,12 +38,12 @@ app.use('/api',cartRoutes);
 app.use('/api/order',orderRoutes);
 app.use('/api',wishlistRoutes);
 app.use('/api',reviewRoutes);
+app.use('/api',saleRoutes);
+app.use('/api',newArrivalRoutes);
 app.get('*', (req, res) => {
-
     res.send('Welcome to the Products API');
 });
 
-// Start the server
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });

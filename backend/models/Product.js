@@ -19,19 +19,43 @@ export const getAllProducts = async () => {
 };
 
 export const createProduct = async (productData) => {
-    const { product_id, name, description, price, stock, category_id,image_url, admin_username } = productData;
+    const { product_id, name, description, price, stock, category_id, image_url, admin_username } = productData;
 
     try {
+        // Insert product into Products table
         const result = await pool.query(
             `INSERT INTO Products (product_id, name, image_url, description, price, stock, category_id, created_at, admin_username)
              VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), $8) RETURNING *`,
             [product_id, name, image_url, description, price, stock, category_id, admin_username]
         );
+        console.log("Product Insert Result:", result.rows);
+
+        // Insert product_id into New_Arrival table
+        const newArrivalResult = await pool.query(
+            `INSERT INTO New_Arrival (product_id) VALUES ($1) RETURNING *`,
+            [product_id]
+        );
+        console.log("New Arrival Insert Result:", newArrivalResult.rows);
+
+        // Delete old entries in New_Arrival to keep only the last 5 products
+        const deleteOldEntriesResult = await pool.query(
+            `DELETE FROM New_Arrival
+             WHERE product_id NOT IN (
+                 SELECT product_id
+                 FROM Products
+                 ORDER BY created_at DESC
+                 LIMIT 5
+             ) RETURNING *`
+        );
+        console.log("Deleted Old New_Arrival Entries:", deleteOldEntriesResult.rowCount);
+
         return result.rows[0];
     } catch (error) {
+        console.error('Error in createProduct:', error.message);
         throw new Error('Error creating product: ' + error.message);
     }
 };
+
 
 
 export const DeleteProduct = async (product_id) => {
