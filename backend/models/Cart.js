@@ -151,7 +151,7 @@ export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId
         // Commit the transaction
         await pool.query('COMMIT');
 
-        return { success: true, message: "Merged anonymous cart with user cart and deleted it." };
+        return { success: true, message: "Merged anonymous cart with user cart and deleted it."};
 
     } catch (error) {
         console.error('Error merging anonymous cart with user cart:', error);

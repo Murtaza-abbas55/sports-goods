@@ -92,7 +92,7 @@ export const mergeAnonymousCart = async (req, res) => {
         await mergeAnonymousCartWithUserCart(userCart.cart_id, anonymousCart.cart_id);
         console.log(`Anonymous cart ${anonymousCart.cart_id} merged with user cart ${userCart.cart_id}`);  // Log the result
 
-        res.status(200).json({ message: 'Anonymous cart merged with user cart' });
+        res.status(200).json({ message: 'Anonymous cart merged with user cart',cartId:userCart.cart_id });
     } catch (error) {
         console.error('Failed to merge anonymous cart with user cart:', error);
         res.status(500).json({ error: 'Failed to merge anonymous cart with user cart' });
