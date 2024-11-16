@@ -24,12 +24,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/product" element={<Product />} />
             <Route path="/create_account" element={<CreateAccount />} />
-            <Route
-                path="/product-listing"
-                element={
-                    Data?.isUser ? <ProductListing /> : <Navigate to="/login" />
-                }
-            ></Route>
+            <Route path="/product-listing" element={<ProductListing />}></Route>
             <Route
                 path="/admin"
                 element={

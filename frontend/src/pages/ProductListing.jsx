@@ -13,23 +13,6 @@ function ProductListing() {
 
     const { Data } = useAuth();
 
-    useEffect(() => {
-        const mergeAnonymousCart = async (user_id) => {
-            try {
-                const response = await axios.post("/api/merge", {
-                    user_id: user_id,
-                });
-                console.log("Cart merge response:", response.data.cartId);
-                setCartID(response.data.cartId);
-                console.log("Data");
-                console.log(Data.user_id);
-            } catch (error) {
-                console.error("Error merging anonymous cart:", error);
-            }
-        };
-        mergeAnonymousCart(Data.user_id);
-    }, [Data.user_id]);
-
     if (loading) return <p>loading</p>;
     if (error) return <p>error</p>;
     console.log(products);
