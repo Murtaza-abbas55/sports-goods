@@ -13,6 +13,7 @@ import CreateProduct from "../pages/CreateProduct";
 import UpdateProduct from "../pages/UpdateProduct";
 import CreateAdminAccount from "../pages/CreateAdminAccount";
 import Product from "../pages/Product";
+import ProductListing from "../pages/ProductListing";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
@@ -23,7 +24,12 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/product" element={<Product />} />
             <Route path="/create_account" element={<CreateAccount />} />
-
+            <Route
+                path="/product-listing"
+                element={
+                    Data?.isUser ? <ProductListing /> : <Navigate to="/login" />
+                }
+            ></Route>
             <Route
                 path="/admin"
                 element={

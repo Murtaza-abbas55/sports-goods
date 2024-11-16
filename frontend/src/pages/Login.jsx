@@ -32,7 +32,7 @@ function Login() {
             if (response.data.isUser) {
                 console.log("User login successful:", response.data);
                 login(response.data); // Save user data to context
-                navigate("/list"); // Redirect to the product list for regular users
+                navigate("/product-listing"); // Redirect to the product list for regular users
             }
         } catch (userError) {
             console.warn("User login failed, trying admin login...");
