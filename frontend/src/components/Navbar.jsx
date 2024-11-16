@@ -15,13 +15,22 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const drawerWidth = 240;
-const navItems = ["Cricket", "Football", "Tennis", "Badminton", "Login"];
 
 function DrawerAppBar(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
+
+    const { Data } = useAuth();
+    const navItems = [
+        "Cricket",
+        "Football",
+        "Tennis",
+        "Badminton",
+        Data?.isUser ? Data?.user_id : "Login",
+    ];
 
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
