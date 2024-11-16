@@ -8,11 +8,10 @@ function AdminHome() {
         <Box
             sx={{
                 display: "flex",
+                textAlign: "center",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100%",
-                // overflow: "scroll",
                 border: "solid 3px red",
             }}
             component={"section"}
