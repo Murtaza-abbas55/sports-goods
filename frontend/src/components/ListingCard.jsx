@@ -9,15 +9,29 @@ import IconButton from "@mui/material/IconButton";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useState } from "react";
+import axios from "axios";
 
-function ListingCard({ product_id, name, price, stock, image_url }) {
+function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
     const [quantity, setQuantity] = useState(1);
 
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
 
-    function handleAddToCart() {
-        console.log(product_id);
+    async function handleAddToCart() {
+        try {
+            const response = await axios.post("/api/add", {
+                product_id,
+                cartId: cartID,
+                quantity,
+            });
+
+            console.log(response.data);
+        } catch (error) {
+            console.error(
+                "Error while adding product to cart:",
+                error.response?.data || error.message
+            );
+        }
     }
 
     return (
