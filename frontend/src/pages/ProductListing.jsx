@@ -21,9 +21,11 @@ function ProductListing() {
                 {products.map((product) => (
                     <div style={{ display: "flex" }} key={product.product_id}>
                         <ListingCard
+                            product_id={product.product_id}
                             name={product.name}
                             price={product.price}
                             stock={product.stock}
+                            image_url={"./images/" + product.image_url}
                         />
                     </div>
                 ))}

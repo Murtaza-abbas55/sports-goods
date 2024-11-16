@@ -10,14 +10,14 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useState } from "react";
 
-function ListingCard({ name, price, stock }) {
+function ListingCard({ product_id, name, price, stock, image_url }) {
     const [quantity, setQuantity] = useState(1);
 
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
 
     function handleAddToCart() {
-        console.log(name);
+        console.log(product_id);
     }
 
     return (
@@ -33,8 +33,8 @@ function ListingCard({ name, price, stock }) {
                 <CardMedia
                     component="img"
                     alt="green iguana"
-                    image="./public/images/basketball.jpg"
-                    width={"150px"}
+                    image={image_url}
+                    height={"250px"}
                 />
                 <Divider />
                 <CardContent
