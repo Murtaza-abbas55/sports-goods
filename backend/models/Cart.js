@@ -97,8 +97,6 @@ export const clearCartProducts = async (cartId) => {
 export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId) => {
     try {
         console.log(`Starting merge from anonymous cart ${anonymousCartId} to user cart ${userCartId}`);
-
-        // Fetch items in the anonymous cart
         const { rows: anonymousCartItems } = await pool.query(
             `SELECT product_id, quantity FROM CartProducts WHERE cart_id = $1`,
             [anonymousCartId]
@@ -111,20 +109,17 @@ export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId
 
         console.log('Anonymous cart items:', anonymousCartItems);
 
-        // Start a transaction
         await pool.query('BEGIN');
 
         for (const item of anonymousCartItems) {
             const { product_id, quantity } = item;
 
-            // Check if the product already exists in the user cart
             const { rows: existingItems } = await pool.query(
                 `SELECT quantity FROM CartProducts WHERE cart_id = $1 AND product_id = $2`,
                 [userCartId, product_id]
             );
 
             if (existingItems.length > 0) {
-                // Update quantity if product exists
                 const newQuantity = existingItems[0].quantity + quantity;
                 await pool.query(
                     `UPDATE CartProducts SET quantity = $1 WHERE cart_id = $2 AND product_id = $3`,
@@ -132,7 +127,6 @@ export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId
                 );
                 console.log(`Updated product ${product_id} quantity to ${newQuantity} in user cart ${userCartId}`);
             } else {
-                // Insert new product if it doesn't exist
                 await pool.query(
                     `INSERT INTO CartProducts (cart_id, product_id, quantity) VALUES ($1, $2, $3)`,
                     [userCartId, product_id, quantity]
@@ -140,22 +134,18 @@ export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId
                 console.log(`Inserted product ${product_id} with quantity ${quantity} into user cart ${userCartId}`);
             }
         }
-
-        // Clear the anonymous cart items and delete the cart itself
         await pool.query(`DELETE FROM CartProducts WHERE cart_id = $1`, [anonymousCartId]);
         console.log('Cleared all items from anonymous cart.');
 
         await pool.query(`DELETE FROM Cart WHERE cart_id = $1`, [anonymousCartId]);
         console.log('Deleted anonymous cart after merging.');
-
-        // Commit the transaction
         await pool.query('COMMIT');
 
         return { success: true, message: "Merged anonymous cart with user cart and deleted it."};
 
     } catch (error) {
         console.error('Error merging anonymous cart with user cart:', error);
-        await pool.query('ROLLBACK');  // Rollback the transaction in case of error
+        await pool.query('ROLLBACK'); 
         return { success: false, message: "Failed to merge anonymous cart with user cart.", error };
     }
 };
