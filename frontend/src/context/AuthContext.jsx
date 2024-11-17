@@ -12,6 +12,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [Data, setData] = useState(null);
+    const [cartID, setCartID] = useState(null);
 
     useEffect(() => {
         const mergeAnonymousCart = async (user_id) => {
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }) => {
                     user_id: user_id,
                 });
                 console.log("Cart merge response:", response.data.cartId);
-                // setCartID(response.data.cartId);
+                setCartID(response.data.cartId);
                 console.log("Data");
                 console.log(Data.user_id);
             } catch (error) {
@@ -41,7 +42,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, Data, login, logout }}>
+        <AuthContext.Provider
+            value={{ isAuthenticated, Data, login, logout, cartID }}
+        >
             {children}
         </AuthContext.Provider>
     );

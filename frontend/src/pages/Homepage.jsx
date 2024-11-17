@@ -4,6 +4,8 @@ import Section from "../components/Section";
 import CategoryList from "../components/CategoryLists";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect } from "react";
 
 function Header() {
     return (
@@ -16,6 +18,7 @@ function Header() {
             <Footer />
             <Link to={"/admin"}>Admin Only</Link>
             <Link to={"/list"}>User Only</Link>
+            <Link to={"/product-listing"}>ListProducts</Link>
         </>
     );
 }

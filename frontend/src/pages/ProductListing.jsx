@@ -7,15 +7,18 @@ import { useAuth } from "../context/AuthContext";
 import DrawerAppBar from "../components/Navbar";
 
 function ProductListing() {
-    const [cartID, setCartID] = useState(null);
+    // const [cartID, setCartID] = useState(null);
 
     const { products, loading, error } = useFetch("/api/products");
 
     const { Data } = useAuth();
+    const { cartID } = useAuth();
 
     if (loading) return <p>loading</p>;
     if (error) return <p>error</p>;
     console.log(products);
+    console.log("the cart now");
+    console.log(cartID);
 
     return (
         <>

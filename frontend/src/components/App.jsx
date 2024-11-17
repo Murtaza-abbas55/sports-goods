@@ -14,6 +14,8 @@ import UpdateProduct from "../pages/UpdateProduct";
 import CreateAdminAccount from "../pages/CreateAdminAccount";
 import Product from "../pages/Product";
 import ProductListing from "../pages/ProductListing";
+import axios from "axios";
+import { useEffect } from "react";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
