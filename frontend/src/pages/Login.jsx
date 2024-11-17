@@ -108,11 +108,15 @@ function Login() {
                         label="Email"
                         variant="filled"
                         defaultValue="4344@example.com"
-                        {...register("email", { required: true })}
+                        {...register("email", {
+                            required: "This field is required",
+                            pattern: {
+                                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                message: "Invalid email format",
+                            },
+                        })}
                         error={!!errors.email}
-                        helperText={
-                            errors.email ? "This field is required" : ""
-                        }
+                        helperText={errors.email ? errors.email.message : ""}
                         size="large"
                         fullWidth
                     />
