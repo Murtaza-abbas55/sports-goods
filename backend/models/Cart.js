@@ -79,19 +79,42 @@ export const removeProductFromCart = async (cartId, productId) => {
     }
 };
 
-export const clearCartProducts = async (cartId) => {
-    const { rowCount } = await pool.query(
-        `DELETE FROM CartProducts WHERE cart_id = $1`,
-        [cartId]
+export const clearCartProducts = async () => {
+    // Step 1: Find all cart_ids where user_id is NULL
+    const { rows: cartIds } = await pool.query(
+        `SELECT cart_id FROM Cart WHERE user_id IS NULL`
     );
 
-    if (rowCount > 0) {
-        console.log(`Cleared all products from cart ${cartId}`);
-        return { success: true, message: `Cleared all products from cart.` };
-    } else {
-        console.log(`Cart ${cartId} is already empty.`);
-        return { success: false, message: `Cart is already empty.` };
+    if (cartIds.length === 0) {
+        console.log("No carts with NULL user_id found.");
+        return { success: false, message: "No carts with NULL user_id found." };
     }
+
+    for (const { cart_id } of cartIds) {
+        const { rowCount: deletedProducts } = await pool.query(
+            `DELETE FROM CartProducts WHERE cart_id = $1`,
+            [cart_id]
+        );
+
+        if (deletedProducts > 0) {
+            console.log(`Cleared all products from cart ${cart_id}`);
+        } else {
+            console.log(`Cart ${cart_id} is already empty.`);
+        }
+
+        const { rowCount: deletedCart } = await pool.query(
+            `DELETE FROM Cart WHERE cart_id = $1`,
+            [cart_id]
+        );
+
+        if (deletedCart > 0) {
+            console.log(`Deleted cart ${cart_id}`);
+        } else {
+            console.log(`Cart ${cart_id} was not found for deletion.`);
+        }
+    }
+
+    return { success: true, message: "Cleared products and deleted carts with NULL user_id." };
 };
 
 export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId) => {
