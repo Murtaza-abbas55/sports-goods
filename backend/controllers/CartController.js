@@ -47,13 +47,9 @@ export const removeFromCart = async (req, res) => {
 };
 
 export const clearCart = async (req, res) => {
-    const { cart_id } = req.body;
-
     try {
-        console.log('Cart ID to clear:', cart_id);
-        await clearCartProducts(cart_id);
-        console.log(`Cart with ID ${cart_id} cleared successfully`);  // Log the result
-        res.status(200).json({ message: 'Cart cleared' });
+        await clearCartProducts(); // Log the result
+        res.status(200).json({ message: 'Cart will null user_id  cleared' });
     } catch (error) {
         console.error('Error clearing cart:', error);
         res.status(500).json({ error: 'Failed to clear cart' });
