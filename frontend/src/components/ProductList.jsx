@@ -13,6 +13,7 @@ import {
     Typography,
     Box,
 } from "@mui/material";
+import Loading from "./Loading";
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -39,7 +40,7 @@ const ProductList = () => {
         fetchProducts();
     }, []);
 
-    if (loading) return <Typography>Loading products...</Typography>;
+    if (loading) return <Loading />;
     if (error) return <Typography color="error">{error}</Typography>;
 
     return (

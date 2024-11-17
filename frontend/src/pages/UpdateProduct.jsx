@@ -15,6 +15,7 @@ import {
     Box,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
+import Loading from "../components/Loading";
 
 function UpdateProduct() {
     const [products, setProducts] = useState([]);
@@ -103,6 +104,7 @@ function UpdateProduct() {
             console.error("Error updating product:", error);
         }
     };
+    if (loading) return <Loading />;
 
     return (
         <>

@@ -11,6 +11,7 @@ import {
     Button,
     Typography,
 } from "@mui/material";
+import Loading from "../components/Loading";
 
 function DeleteProduct() {
     const [products, setProducts] = useState([]);
@@ -35,7 +36,7 @@ function DeleteProduct() {
         fetchProducts();
     }, []);
 
-    if (loading) return <p>Loading products...</p>;
+    if (loading) return <Loading />;
     if (error) return <p>{error}</p>;
 
     const handleShowButton = async (id) => {

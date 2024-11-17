@@ -5,6 +5,7 @@ import { Stack } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import DrawerAppBar from "../components/Navbar";
+import Loading from "../components/Loading";
 
 function ProductListing() {
     // const [cartID, setCartID] = useState(null);
@@ -14,7 +15,7 @@ function ProductListing() {
     const { Data } = useAuth();
     const { cartID } = useAuth();
 
-    if (loading) return <p>loading</p>;
+    if (loading) return <Loading />;
     if (error) return <p>error</p>;
     console.log(products);
     console.log("the cart now");
