@@ -20,6 +20,19 @@ import { useEffect } from "react";
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
 
+    const clearAnonymousCart = async () => {
+        try {
+            const response = await axios.post("/api/clear");
+            console.log("API call successful!", response.status);
+        } catch (error) {
+            console.error("Error calling API:", error);
+        }
+    };
+
+    useEffect(() => {
+        clearAnonymousCart();
+    }, []);
+
     return (
         <Routes>
             <Route path="/" element={<Header />} />
