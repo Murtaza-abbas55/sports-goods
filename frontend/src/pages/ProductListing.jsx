@@ -9,11 +9,30 @@ import Loading from "../components/Loading";
 
 function ProductListing() {
     // const [cartID, setCartID] = useState(null);
-
+    const [wishlistItems, setWishlistItems] = useState([]);
     const { products, loading, error } = useFetch("/api/products");
-
     const { Data } = useAuth();
     const { cartID } = useAuth();
+
+    useEffect(() => {
+        const fetchWishlist = async () => {
+            try {
+                if (Data.isUser === null) console.error("guest no wish");
+                const response = await axios.get("/api/getallwishlist");
+                setWishlistItems(response.data.wishlistItems);
+                // console.log(response.data);
+                console.log("we wish");
+                console.log(response.data.wishlistItems);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            } finally {
+                console.log("finally");
+            }
+        };
+
+        fetchWishlist();
+    }, []);
+    console.log(wishlistItems);
 
     if (loading) return <Loading />;
     if (error) return <p>error</p>;
@@ -41,6 +60,8 @@ function ProductListing() {
                             stock={product.stock}
                             image_url={"./images/" + product.image_url}
                             cartID={cartID}
+                            wishlistItems={wishlistItems}
+                            setWishlistItems={setWishlistItems}
                         />
                     </div>
                 ))}

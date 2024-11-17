@@ -9,12 +9,46 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useState } from "react";
 import axios from "axios";
+import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
+import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
-function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
+function ListingCard({
+    product_id,
+    name,
+    price,
+    stock,
+    image_url,
+    cartID,
+    wishlistItems,
+    setWishlistItems,
+}) {
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(false);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
+    const [wishlistStatus, setWishlistStatus] = useState(false);
+
+    // function checkWishlistStatus() {
+    //     wishlistItems.forEach((item) => {
+    //         if (item.product_id === product_id) setWishlistStatus(true);
+    //     });
+    // }
+    // checkWishlistStatus();
+
+    useEffect(() => {
+        const checkWishlistStatus = () => {
+            const isInWishlist = wishlistItems.some(
+                (item) => item.product_id === product_id
+            );
+            setWishlistStatus(isInWishlist);
+        };
+
+        checkWishlistStatus();
+    }, [wishlistItems, product_id]); // Run this effect when wishlistItems or product_id changes
+
+    const { Data } = useAuth();
 
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
@@ -31,9 +65,7 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                 cartId: cartID,
                 quantity,
             });
-
             console.log(response.data);
-
             setToastMessage("Added to cart successfully!"); // Set success message
             setToastOpen(true); // Show toast
         } catch (error) {
@@ -49,6 +81,32 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
         }
     }
 
+    async function handleAddToWishlist() {
+        setLoading(true); // Show loading spinner
+        try {
+            const response = await axios.post("/api/addwishlist", {
+                product_id,
+                wishlist_name: `${Data.user_id}'s Wishlist`,
+                user_id: Data.user_id,
+            });
+
+            console.log(response.data);
+
+            setToastMessage("Added to wishlist successfully!"); // Set success message
+            setToastOpen(true); // Show toast
+        } catch (error) {
+            console.error(
+                "Error while adding product to cart:",
+                error.response?.data || error.message
+            );
+
+            setToastMessage("Failed to add to wishlist! Please try again."); // Set error message
+            setToastOpen(true); // Show toast
+        } finally {
+            setLoading(false); // Hide loading spinner
+        }
+    }
+
     return (
         <Card
             sx={{
@@ -58,6 +116,21 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                 width: 300,
             }}
         >
+            <Button
+                sx={{
+                    width: "25px",
+                    justifyContent: "start",
+                    color: "red",
+                }}
+                onClick={handleAddToWishlist}
+                // size="large"
+            >
+                {!wishlistStatus ? (
+                    <FavoriteBorderRoundedIcon />
+                ) : (
+                    <FavoriteRoundedIcon />
+                )}
+            </Button>
             <CardActionArea disabled={stock === 0} href="/">
                 <CardMedia
                     component="img"
@@ -65,6 +138,7 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                     image={image_url}
                     height={"250px"}
                 />
+
                 <Divider />
                 <CardContent
                     sx={{
