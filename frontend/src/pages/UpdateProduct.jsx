@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, TextField, Typography } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
+import {
+    Button,
+    TextField,
+    Typography,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Stack,
+    Box,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 
 function UpdateProduct() {
@@ -13,7 +23,6 @@ function UpdateProduct() {
     const [editing, setEditing] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
 
-    // Fetch the products from the backend using axios
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -43,7 +52,6 @@ function UpdateProduct() {
         setEditing(true);
         setEditingProduct(product);
 
-        // Set form fields to selected product's data
         setValue("product_id", product.product_id);
         setValue("name", product.name);
         setValue("description", product.description);
@@ -51,8 +59,6 @@ function UpdateProduct() {
         setValue("stock", product.stock);
         setValue("category_id", product.category_id);
         setValue("image", product.image);
-        console.log("product.image");
-        console.log(product.image);
     };
 
     const handleCancel = () => {
@@ -61,10 +67,8 @@ function UpdateProduct() {
     };
 
     const onSubmit = async (data) => {
-        // Create FormData object for file upload
         const formData = new FormData();
 
-        // Append each form field to FormData
         formData.append("product_id", data.product_id);
         formData.append("name", data.name);
         formData.append("description", data.description);
@@ -72,7 +76,6 @@ function UpdateProduct() {
         formData.append("stock", data.stock);
         formData.append("category_id", data.category_id);
 
-        // Append file - data.image[0] is the actual file
         if (data.image[0]) {
             formData.append("image", data.image[0]);
         }
@@ -86,10 +89,7 @@ function UpdateProduct() {
                     withCredentials: true,
                 }
             );
-            console.log("backend response.data.message");
             console.log(response.data.message);
-            console.log("backend response.data");
-            console.log(response.data);
             setEditing(false);
             setEditingProduct(null);
             setProducts((prevProducts) =>
@@ -100,45 +100,76 @@ function UpdateProduct() {
                 )
             );
         } catch (error) {
-            console.error("Error adding product:", error);
-            if (error.response) {
-                console.error("Response error:", error.response);
-            } else if (error.request) {
-                console.error("Request error:", error.request);
-            } else {
-                console.error("Axios error:", error.message);
-            }
+            console.error("Error updating product:", error);
         }
     };
 
     return (
         <>
             {!editing ? (
-                <section style={{ display: "flex" }}>
-                    <h1>Update Page</h1>
-                    {products.map((product) => (
-                        <div
-                            style={{
-                                height: "250px",
-                                width: "250px",
-                                border: "solid 3px blue",
-                                margin: "1rem",
-                            }}
-                            key={product.product_id}
-                        >
-                            <p>Product Number: {product.product_id}</p>
-                            <p>{product.name}</p>
-                            <img
-                                src={`/images/${product.image_url}`}
-                                alt="Product"
-                                height={50}
-                            />
-                            <button onClick={() => handleShowButton(product)}>
-                                Edit
-                            </button>
-                        </div>
-                    ))}
-                </section>
+                <Box sx={{ padding: "20px" }}>
+                    <Typography variant="h4" gutterBottom>
+                        Update Page
+                    </Typography>
+                    {loading && <Typography>Loading products...</Typography>}
+                    {error && <Typography color="error">{error}</Typography>}
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        <strong>Product ID</strong>
+                                    </TableCell>
+                                    <TableCell>
+                                        <strong>Name</strong>
+                                    </TableCell>
+                                    <TableCell>
+                                        <strong>Price</strong>
+                                    </TableCell>
+                                    <TableCell>
+                                        <strong>Stock</strong>
+                                    </TableCell>
+                                    <TableCell>
+                                        <strong>Image</strong>
+                                    </TableCell>
+                                    <TableCell>
+                                        <strong>Action</strong>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {products.map((product) => (
+                                    <TableRow key={product.product_id}>
+                                        <TableCell>
+                                            {product.product_id}
+                                        </TableCell>
+                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell>{product.price}</TableCell>
+                                        <TableCell>{product.stock}</TableCell>
+                                        <TableCell>
+                                            <img
+                                                src={`/images/${product.image_url}`}
+                                                alt="Product"
+                                                height={50}
+                                            />
+                                        </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() =>
+                                                    handleShowButton(product)
+                                                }
+                                            >
+                                                Edit
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
             ) : (
                 <Box
                     sx={{
