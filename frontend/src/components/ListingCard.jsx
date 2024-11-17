@@ -1,23 +1,30 @@
 import Card from "@mui/material/Card";
-// import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, Button, CardActionArea, Divider } from "@mui/material";
+import { Box, Button, CardActionArea, Divider, Snackbar } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-// import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useState } from "react";
 import axios from "axios";
 
 function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
     const [quantity, setQuantity] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [toastOpen, setToastOpen] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
 
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
 
+    const handleCloseToast = () => {
+        setToastOpen(false);
+    };
+
     async function handleAddToCart() {
+        setLoading(true); // Show loading spinner
         try {
             const response = await axios.post("/api/add", {
                 product_id,
@@ -26,11 +33,19 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
             });
 
             console.log(response.data);
+
+            setToastMessage("Added to cart successfully!"); // Set success message
+            setToastOpen(true); // Show toast
         } catch (error) {
             console.error(
                 "Error while adding product to cart:",
                 error.response?.data || error.message
             );
+
+            setToastMessage("Failed to add to cart! Please try again."); // Set error message
+            setToastOpen(true); // Show toast
+        } finally {
+            setLoading(false); // Hide loading spinner
         }
     }
 
@@ -43,7 +58,7 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                 width: 300,
             }}
         >
-            <CardActionArea disabled={stock == 0 ? true : false} href="/">
+            <CardActionArea disabled={stock === 0} href="/">
                 <CardMedia
                     component="img"
                     alt="green iguana"
@@ -77,14 +92,9 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                 }}
             >
                 <IconButton
-                    disabled={quantity == 1 ? true : false}
+                    disabled={quantity === 1}
                     onClick={handleRemove}
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        // margin: "0.5rem auto",
-                    }}
-                    aria-label="increase"
+                    aria-label="decrease quantity"
                 >
                     <RemoveCircleIcon />
                 </IconButton>
@@ -94,14 +104,9 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                 </Box>
 
                 <IconButton
-                    disabled={quantity == stock ? true : false}
+                    disabled={quantity === stock}
                     onClick={handleAdd}
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        // margin: "0.5rem auto",
-                    }}
-                    aria-label="increase"
+                    aria-label="increase quantity"
                 >
                     <AddCircleIcon />
                 </IconButton>
@@ -116,8 +121,9 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                     }}
                     variant="outlined"
                     onClick={handleAddToCart}
+                    disabled={loading} // Disable button during loading
                 >
-                    Add to Cart
+                    {loading ? <CircularProgress size={20} /> : "Add to Cart"}
                 </Button>
             ) : (
                 <Button
@@ -132,7 +138,17 @@ function ListingCard({ product_id, name, price, stock, image_url, cartID }) {
                     Out of Stock
                 </Button>
             )}
+
+            {/* Toast Notification */}
+            <Snackbar
+                open={toastOpen}
+                autoHideDuration={3000} // Auto-close after 3 seconds
+                onClose={handleCloseToast}
+                message={toastMessage}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            />
         </Card>
     );
 }
+
 export default ListingCard;
