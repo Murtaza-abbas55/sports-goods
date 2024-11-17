@@ -12,8 +12,8 @@ function Header() {
         <>
             <DrawerAppBar />
             <ImageCarousel />
-            <Section sectionHeading={"New Arrival"} />
-            <Section sectionHeading={"Trending"} />
+            <Section sectionHeading={"New Arrival"} url={"/api/new-arrivals"} />
+            {/* <Section sectionHeading={"Trending"} /> */}
             <CategoryList />
             <Footer />
             <Link to={"/admin"}>Admin Only</Link>

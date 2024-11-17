@@ -5,15 +5,15 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, Divider } from "@mui/material";
 
-function ImgMediaCard({ name, price }) {
+function ImgMediaCard({ name, price, image_url }) {
     return (
-        <Card sx={{ display: "flex", width: 350 }}>
+        <Card elevation={5} sx={{ display: "flex", width: 350 }}>
             <CardActionArea href="/">
                 <CardMedia
                     component="img"
                     alt="green iguana"
-                    image="./public/images/basketball.jpg"
-                    width={"150px"}
+                    image={image_url}
+                    height={"250px"}
                 />
                 <Divider />
                 <CardContent
