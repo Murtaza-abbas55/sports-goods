@@ -30,13 +30,6 @@ function ListingCard({
     const [toastMessage, setToastMessage] = useState("");
     const [wishlistStatus, setWishlistStatus] = useState(false);
 
-    // function checkWishlistStatus() {
-    //     wishlistItems.forEach((item) => {
-    //         if (item.product_id === product_id) setWishlistStatus(true);
-    //     });
-    // }
-    // checkWishlistStatus();
-
     useEffect(() => {
         const checkWishlistStatus = () => {
             const isInWishlist = wishlistItems.some(
@@ -48,7 +41,7 @@ function ListingCard({
         checkWishlistStatus();
     }, [wishlistItems, product_id]); // Run this effect when wishlistItems or product_id changes
 
-    const { Data } = useAuth();
+    const { Data, isAuthenticated } = useAuth();
 
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
@@ -93,6 +86,7 @@ function ListingCard({
             console.log(response.data);
 
             setToastMessage("Added to wishlist successfully!"); // Set success message
+            setWishlistStatus(true);
             setToastOpen(true); // Show toast
         } catch (error) {
             console.error(
@@ -105,6 +99,57 @@ function ListingCard({
         } finally {
             setLoading(false); // Hide loading spinner
         }
+    }
+
+    async function handleRemoveFromWishlist() {
+        setLoading(true); // Show loading spinner
+        try {
+            const response = await axios.post("/api/removewishlist", {
+                product_id,
+                wishlist_name: `${Data.user_id}'s Wishlist`,
+                user_id: Data.user_id,
+            });
+
+            console.log(response.data);
+
+            setToastMessage("Removed from wishlist!"); // Set success message
+            setWishlistStatus(false);
+            setToastOpen(true); // Show toast
+        } catch (error) {
+            console.error(
+                "Error while removing from wishlist:",
+                error.response?.data || error.message
+            );
+
+            setToastMessage(
+                "Failed to remove from wishlist! Please try again."
+            ); // Set error message
+            setToastOpen(true); // Show toast
+        } finally {
+            setLoading(false); // Hide loading spinner
+        }
+    }
+
+    function handleLogin() {
+        // <Modal
+        //     open={open}
+        //     onClose={handleClose}
+        //     aria-labelledby="modal-modal-title"
+        //     aria-describedby="modal-modal-description"
+        // >
+        //     <Box sx={style}>
+        //         <Typography id="modal-modal-title" variant="h6" component="h2">
+        //             Text in a modal
+        //         </Typography>
+        //         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+        //             Duis mollis, est non commodo luctus, nisi erat porttitor
+        //             ligula.
+        //         </Typography>
+        //     </Box>
+        // </Modal>;
+        console.log("please login");
+        console.log(Data);
+        console.log(isAuthenticated);
     }
 
     return (
@@ -122,8 +167,17 @@ function ListingCard({
                     justifyContent: "start",
                     color: "red",
                 }}
-                onClick={handleAddToWishlist}
-                // size="large"
+                onClick={() => {
+                    if (Data && isAuthenticated) {
+                        if (wishlistStatus) {
+                            handleRemoveFromWishlist();
+                        } else {
+                            handleAddToWishlist();
+                        }
+                    } else {
+                        handleLogin();
+                    }
+                }}
             >
                 {!wishlistStatus ? (
                     <FavoriteBorderRoundedIcon />

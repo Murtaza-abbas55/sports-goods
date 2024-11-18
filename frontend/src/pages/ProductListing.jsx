@@ -17,12 +17,13 @@ function ProductListing() {
     useEffect(() => {
         const fetchWishlist = async () => {
             try {
-                if (Data.isUser === null) console.error("guest no wish");
-                const response = await axios.get("/api/getallwishlist");
-                setWishlistItems(response.data.wishlistItems);
-                // console.log(response.data);
-                console.log("we wish");
-                console.log(response.data.wishlistItems);
+                if (Data !== null) {
+                    const response = await axios.get("/api/getallwishlist");
+                    setWishlistItems(response.data.wishlistItems);
+                    // console.log(response.data);
+                    console.log("we wish");
+                    console.log(response.data.wishlistItems);
+                }
             } catch (error) {
                 console.error("Error fetching products:", error);
             } finally {
