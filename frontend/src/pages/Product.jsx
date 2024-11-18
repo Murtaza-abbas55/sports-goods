@@ -14,8 +14,8 @@ function Product() {
                 <Box alignSelf={"center"}>
                     <img
                         style={{ verticalAlign: "center" }}
-                        src="./images/basketball.jpg"
-                        alt=""
+                        src="/images/basketball.jpg"
+                        alt="basket"
                         width={"100%"}
                     />
                 </Box>

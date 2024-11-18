@@ -6,6 +6,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import DrawerAppBar from "../components/Navbar";
 import Loading from "../components/Loading";
+import { Outlet } from "react-router-dom";
 
 function ProductListing() {
     // const [cartID, setCartID] = useState(null);
@@ -60,7 +61,7 @@ function ProductListing() {
                             name={product.name}
                             price={product.price}
                             stock={product.stock}
-                            image_url={"./images/" + product.image_url}
+                            image_url={"/images/" + product.image_url}
                             cartID={cartID}
                             wishlistItems={wishlistItems}
                             setWishlistItems={setWishlistItems}
@@ -68,6 +69,7 @@ function ProductListing() {
                     </div>
                 ))}
             </Stack>
+            <Outlet />
         </>
     );
 }
