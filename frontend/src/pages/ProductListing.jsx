@@ -48,9 +48,10 @@ function ProductListing() {
             <p>These are my products</p>
             <Stack
                 direction={"row"}
-                gap={2}
+                gap={4}
                 flexWrap={"wrap"}
                 justifyContent={"center"}
+                marginBottom={5}
             >
                 {products.map((product) => (
                     <div style={{ display: "flex" }} key={product.product_id}>

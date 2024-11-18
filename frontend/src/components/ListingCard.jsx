@@ -159,6 +159,9 @@ function ListingCard({
                 display: "flex",
                 flexDirection: "column",
                 width: 300,
+                "&:hover": {
+                    boxShadow: 10, // Elevation on hover
+                },
             }}
         >
             <Button
@@ -190,6 +193,7 @@ function ListingCard({
                     component="img"
                     alt="green iguana"
                     image={image_url}
+                    loading="lazy"
                     height={"250px"}
                 />
 
