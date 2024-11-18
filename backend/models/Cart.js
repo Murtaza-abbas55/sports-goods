@@ -41,6 +41,21 @@ export const getUserCart = async (userId) => {
 export const addProductToCart = async (cartId, productId, quantity) => {
     console.log('Adding product to cart:', cartId, productId, quantity);
 
+    // Check stock availability
+    const { rows: productStock } = await pool.query(
+        `SELECT stock FROM Products WHERE product_id = $1`,
+        [productId]
+    );
+
+    if (productStock.length === 0) {
+        return { success: false, message: "Product does not exist." };
+    }
+
+    if (productStock[0].stock < quantity) {
+        return { success: false, message: "Not enough stock available." };
+    }
+
+    // Check if product already exists in cart
     const { rows: existingProduct } = await pool.query(
         `SELECT * FROM CartProducts WHERE cart_id = $1 AND product_id = $2`,
         [cartId, productId]
@@ -48,23 +63,49 @@ export const addProductToCart = async (cartId, productId, quantity) => {
 
     if (existingProduct.length > 0) {
         const newQuantity = existingProduct[0].quantity + quantity;
+
+        if (productStock[0].stock < newQuantity) {
+            return { success: false, message: "Not enough stock available to update quantity." };
+        }
+
         await pool.query(
             `UPDATE CartProducts SET quantity = $1 WHERE cart_id = $2 AND product_id = $3`,
             [newQuantity, cartId, productId]
         );
         console.log(`Updated product ${productId} quantity to ${newQuantity} in cart ${cartId}`);
-        return { success: true, message: `Updated product quantity to ${newQuantity}.` };
     } else {
         await pool.query(
             `INSERT INTO CartProducts (cart_id, product_id, quantity) VALUES ($1, $2, $3)`,
             [cartId, productId, quantity]
         );
         console.log(`Added product ${productId} with quantity ${quantity} to cart ${cartId}`);
-        return { success: true, message: `Added new product to cart.` };
     }
+
+    // Reduce stock
+    await pool.query(
+        `UPDATE Products SET stock = stock - $1 WHERE product_id = $2`,
+        [quantity, productId]
+    );
+    console.log(`Reduced stock for product ${productId} by ${quantity}`);
+
+    return { success: true, message: "Product added to cart." };
 };
 
 export const removeProductFromCart = async (cartId, productId) => {
+    console.log('Removing product from cart:', cartId, productId);
+
+    const { rows: productInCart } = await pool.query(
+        `SELECT quantity FROM CartProducts WHERE cart_id = $1 AND product_id = $2`,
+        [cartId, productId]
+    );
+
+    if (productInCart.length === 0) {
+        return { success: false, message: "Product not found in cart." };
+    }
+
+    const quantity = productInCart[0].quantity;
+
+    // Remove product from cart
     const { rowCount } = await pool.query(
         `DELETE FROM CartProducts WHERE cart_id = $1 AND product_id = $2`,
         [cartId, productId]
@@ -72,15 +113,22 @@ export const removeProductFromCart = async (cartId, productId) => {
 
     if (rowCount > 0) {
         console.log(`Successfully removed product ${productId} from cart ${cartId}`);
-        return { success: true, message: `Removed product from cart.` };
+
+        // Increase stock
+        await pool.query(
+            `UPDATE Products SET stock = stock + $1 WHERE product_id = $2`,
+            [quantity, productId]
+        );
+        console.log(`Increased stock for product ${productId} by ${quantity}`);
+
+        return { success: true, message: "Removed product from cart." };
     } else {
         console.log(`Product ${productId} not found in cart ${cartId}`);
-        return { success: false, message: `Product not found in cart.` };
+        return { success: false, message: "Product not found in cart." };
     }
 };
 
 export const clearCartProducts = async () => {
-    // Step 1: Find all cart_ids where user_id is NULL
     const { rows: cartIds } = await pool.query(
         `SELECT cart_id FROM Cart WHERE user_id IS NULL`
     );
