@@ -15,6 +15,7 @@ import CreateAdminAccount from "../pages/CreateAdminAccount";
 import Product from "../pages/Product";
 import ProductListing from "../pages/ProductListing";
 import axios from "axios";
+import ProductLayout from "../pages/ProductLayout";
 import { useEffect } from "react";
 
 function App() {
@@ -39,8 +40,9 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             <Route path="/create_account" element={<CreateAccount />} />
-            <Route path="/product-listing" element={<ProductListing />}>
-                <Route path="product" element={<Product />} />
+            <Route path="/product-listing" element={<ProductLayout />}>
+                <Route index element={<ProductListing />} />
+                <Route path=":product_id" element={<Product />} />
             </Route>
             <Route
                 path="/admin"

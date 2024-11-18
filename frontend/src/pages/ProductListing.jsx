@@ -44,7 +44,6 @@ function ProductListing() {
 
     return (
         <>
-            <DrawerAppBar />
             <h1>Product Lisitng</h1>
             <p>These are my products</p>
             <Stack
@@ -69,7 +68,6 @@ function ProductListing() {
                     </div>
                 ))}
             </Stack>
-            <Outlet />
         </>
     );
 }

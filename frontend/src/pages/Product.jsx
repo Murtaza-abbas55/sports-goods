@@ -1,22 +1,56 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Loading from "../components/Loading";
 
 function Product() {
+    let { product_id } = useParams();
+    console.log("id");
+    console.log({ product_id });
+
+    const [products, setProducts] = useState();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get(`/api/products/${product_id}`);
+                setProducts(response.data[0]);
+                console.log(response.data[0]);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                setError("Failed to load products.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    console.log("products");
+    console.log(products);
+
+    if (loading) return <Loading />;
+
     return (
         <>
             <Stack
                 direction={{ sm: "row" }}
                 justifyContent={"center"}
                 alignItems={{ xs: "center", sm: "start" }}
-                border={"solid 3px blue"}
+                // border={"solid 3px blue"}
                 gap={2}
-                marginTop={{ xs: "5rem", sm: "10rem" }}
+                // marginTop={{ xs: "5rem", sm: "10rem" }}
             >
                 <Box alignSelf={"center"}>
                     <img
                         style={{ verticalAlign: "center" }}
-                        src="/images/basketball.jpg"
+                        src={`/images/${products.image_url}`}
                         alt="basket"
-                        width={"100%"}
+                        width={"700px"}
                     />
                 </Box>
                 <Divider />
@@ -28,7 +62,7 @@ function Product() {
                                 variant="h3"
                                 fontWeight={"bold"}
                             >
-                                Basketball Made By Lebron Himself
+                                {products.name}
                             </Typography>
                             <Typography
                                 gutterBottom
@@ -41,20 +75,9 @@ function Product() {
                                 textAlign={"justify"}
                                 gutterBottom
                                 component="p"
+                                marginBottom={5}
                             >
-                                This is Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Magni ex vitae consequatur n.
-                                Lorem ipsum, dolor sit amet consectetur
-                                adipisicing elit. Non, aspernatur. Beatae minus
-                                sunt quam commodi, mollitia nemo sit veritatis
-                                laborum consequatur tempore, non veniam
-                                voluptatibus ex ut dolorum similique voluptatum.
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Vel laboriosam maiores nemo
-                                quod exercitationem animi accusantium
-                                dignissimos ipsa? Fuga vitae consequuntur
-                                corrupti, sapiente ducimus quaerat odio.
-                                Molestiae a minus nihil?
+                                {products.description}
                             </Typography>
                             <Button variant="contained">Add to Cart</Button>
                         </Box>

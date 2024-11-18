@@ -188,7 +188,12 @@ function ListingCard({
                     <FavoriteRoundedIcon />
                 )}
             </Button>
-            <CardActionArea disabled={stock === 0} href="/">
+            <CardActionArea
+                disabled={stock === 0}
+                component={RouterLink}
+                to={`${product_id}`}
+                // href={product_id}
+            >
                 <CardMedia
                     component="img"
                     alt="green iguana"
