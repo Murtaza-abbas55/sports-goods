@@ -50,7 +50,8 @@ function Product() {
                         style={{ verticalAlign: "center" }}
                         src={`/images/${products.image_url}`}
                         alt="basket"
-                        width={"700px"}
+                        width={"600px"}
+                        height={"600px"}
                     />
                 </Box>
                 <Divider />
