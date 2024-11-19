@@ -1,8 +1,27 @@
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { Box, Button, colors, Divider, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
+import AddToCart from "../components/AddToCart";
+import { useAuth } from "../context/AuthContext";
+import useFetchWishlist from "../hooks/useFetchWishlist";
+import Wishlist from "../components/Wishlist";
+import IconButton from "@mui/material/IconButton";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+
+const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+};
 
 function Product() {
     let { product_id } = useParams();
@@ -12,6 +31,12 @@ function Product() {
     const [products, setProducts] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { cartID } = useAuth();
+    const [quantity, setQuantity] = useState(1);
+    const handleAdd = () => setQuantity(quantity + 1);
+    const handleRemove = () => setQuantity(quantity - 1);
+
+    const { wishlistItems, setWishlistItems } = useFetchWishlist();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -28,7 +53,13 @@ function Product() {
         };
 
         fetchProducts();
-    }, []);
+    }, [product_id]);
+
+    if (loading) return <Loading />;
+    if (error) return <p>error</p>;
+    console.log(products);
+    console.log("the cart now");
+    console.log(cartID);
 
     console.log("products");
     console.log(products);
@@ -70,7 +101,7 @@ function Product() {
                                 variant="h5"
                                 fontWeight={"bold"}
                             >
-                                RS.2000
+                                {"RS " + products.price}
                             </Typography>
                             <Typography
                                 textAlign={"justify"}
@@ -80,7 +111,51 @@ function Product() {
                             >
                                 {products.description}
                             </Typography>
-                            <Button variant="contained">Add to Cart</Button>
+                            <Box display={"flex"} flexDirection={"column"}>
+                                <Box marginLeft={6}>
+                                    <Wishlist
+                                        product_id={products.product_id}
+                                        wishlistItems={wishlistItems}
+                                        setWishlistItems={setWishlistItems}
+                                        style={modalStyle}
+                                    />
+                                </Box>
+                                <Box display={"flex"} gap={3}>
+                                    <IconButton
+                                        disabled={quantity === 1}
+                                        onClick={handleRemove}
+                                        aria-label="decrease quantity"
+                                    >
+                                        <RemoveCircleIcon />
+                                    </IconButton>
+
+                                    <Box>
+                                        <Typography marginTop={1}>
+                                            {quantity}
+                                        </Typography>
+                                    </Box>
+
+                                    <IconButton
+                                        disabled={
+                                            products.stock <= 1 ||
+                                            products.stock === quantity
+                                        }
+                                        onClick={handleAdd}
+                                        aria-label="increase quantity"
+                                    >
+                                        <AddCircleIcon />
+                                    </IconButton>
+                                </Box>
+                                <AddToCart
+                                    product_id={products.product_id}
+                                    stock={products.stock}
+                                    cartID={cartID}
+                                    quantity={quantity}
+                                    style={{
+                                        alignSelf: "start",
+                                    }}
+                                />
+                            </Box>
                         </Box>
                     </Stack>
                 </Box>
