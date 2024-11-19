@@ -12,6 +12,8 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import saleRoutes from './routes/saleRoutes.js';
 import newArrivalRoutes from './routes/newArrivalRoutes.js'
+import trendingRoutes from './routes/TrendingRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js'
 import cors from 'cors';
 dotenv.config();
 
@@ -40,6 +42,8 @@ app.use('/api',wishlistRoutes);
 app.use('/api',reviewRoutes);
 app.use('/api',saleRoutes);
 app.use('/api',newArrivalRoutes);
+app.use('/api',trendingRoutes);
+app.use('/api',categoryRoutes);
 app.get('*', (req, res) => {
     res.send('Welcome to the Products API');
 });
