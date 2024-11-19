@@ -46,6 +46,7 @@ function ListingCard({
 
     return (
         <Card
+            elevation={3}
             sx={{
                 backgroundColor: "whitesmoke",
                 display: "flex",
@@ -54,6 +55,7 @@ function ListingCard({
                 "&:hover": {
                     boxShadow: 10, // Elevation on hover
                 },
+                borderRadius: "1rem 1rem 0 0",
             }}
         >
             <Wishlist
@@ -85,7 +87,14 @@ function ListingCard({
                         justifyContent: "space-around",
                     }}
                 >
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography
+                        overflow={"clip"}
+                        height={85}
+                        fontWeight={"bold"}
+                        gutterBottom
+                        variant="body1"
+                        component="h1"
+                    >
                         {name}
                     </Typography>
                     <Typography
