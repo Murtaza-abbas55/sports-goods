@@ -9,7 +9,13 @@ import { useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import { Link as RouterLink } from "react-router-dom";
 
-function Wishlist({ product_id, wishlistItems, setWishlistItems, style }) {
+function Wishlist({
+    product_id,
+    wishlistItems,
+    setWishlistItems,
+    style,
+    modalStyle,
+}) {
     const [loading, setLoading] = useState(false);
     const { Data, isAuthenticated } = useAuth();
     const [wishlistStatus, setWishlistStatus] = useState(false);
@@ -131,6 +137,7 @@ function Wishlist({ product_id, wishlistItems, setWishlistItems, style }) {
 
             {/* Active when guest tries to use wishlist */}
             <Modal
+                modalStyle={modalStyle}
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"

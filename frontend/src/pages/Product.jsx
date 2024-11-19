@@ -8,6 +8,18 @@ import { useAuth } from "../context/AuthContext";
 import useFetchWishlist from "../hooks/useFetchWishlist";
 import Wishlist from "../components/Wishlist";
 
+const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+};
+
 function Product() {
     let { product_id } = useParams();
     console.log("id");
@@ -98,6 +110,7 @@ function Product() {
                                     product_id={products.product_id}
                                     wishlistItems={wishlistItems}
                                     setWishlistItems={setWishlistItems}
+                                    style={modalStyle}
                                 />
                                 <AddToCart
                                     product_id={products.product_id}
