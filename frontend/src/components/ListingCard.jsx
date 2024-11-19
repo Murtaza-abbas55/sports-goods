@@ -130,6 +130,11 @@ function ListingCard({
                 quantity={quantity}
                 setQuantity={setQuantity}
                 stock={stock}
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    margin: "0.5rem auto",
+                }}
             />
         </Card>
     );

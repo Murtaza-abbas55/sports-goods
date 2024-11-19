@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import { Link as RouterLink } from "react-router-dom";
 
-function AddToCart({ product_id, cartID, quantity, stock }) {
+function AddToCart({ product_id, cartID, quantity, stock, style }) {
     const [loading, setLoading] = useState(false);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -53,11 +53,8 @@ function AddToCart({ product_id, cartID, quantity, stock }) {
         <>
             {stock > 0 ? (
                 <Button
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        margin: "0.5rem auto",
-                    }}
+                    sx={style}
+                    size="large"
                     variant="outlined"
                     onClick={handleAddToCart}
                     disabled={loading} // Disable button during loading

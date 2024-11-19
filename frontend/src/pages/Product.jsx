@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import { Box, Button, colors, Divider, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -93,17 +93,20 @@ function Product() {
                             >
                                 {products.description}
                             </Typography>
-                            <Box display={"flex"} margin={"auto"}>
+                            <Box display={"flex"} flexDirection={"column"}>
+                                <Wishlist
+                                    product_id={products.product_id}
+                                    wishlistItems={wishlistItems}
+                                    setWishlistItems={setWishlistItems}
+                                />
                                 <AddToCart
                                     product_id={products.product_id}
                                     stock={products.stock}
                                     cartID={cartID}
                                     quantity={1}
-                                />
-                                <Wishlist
-                                    product_id={products.product_id}
-                                    wishlistItems={wishlistItems}
-                                    setWishlistItems={setWishlistItems}
+                                    style={{
+                                        alignSelf: "start",
+                                    }}
                                 />
                             </Box>
                         </Box>
