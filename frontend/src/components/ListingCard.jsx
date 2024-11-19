@@ -15,6 +15,7 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import { Link as RouterLink } from "react-router-dom";
+import AddToCart from "./AddToCart";
 
 const style = {
     position: "absolute",
@@ -67,30 +68,6 @@ function ListingCard({
     const handleCloseToast = () => {
         setToastOpen(false);
     };
-
-    async function handleAddToCart() {
-        setLoading(true); // Show loading spinner
-        try {
-            const response = await axios.post("/api/add", {
-                product_id,
-                cartId: cartID,
-                quantity,
-            });
-            console.log(response.data);
-            setToastMessage("Added to cart successfully!"); // Set success message
-            setToastOpen(true); // Show toast
-        } catch (error) {
-            console.error(
-                "Error while adding product to cart:",
-                error.response?.data || error.message
-            );
-
-            setToastMessage("Failed to add to cart! Please try again."); // Set error message
-            setToastOpen(true); // Show toast
-        } finally {
-            setLoading(false); // Hide loading spinner
-        }
-    }
 
     async function handleAddToWishlist() {
         setLoading(true); // Show loading spinner
@@ -249,32 +226,13 @@ function ListingCard({
                 </IconButton>
             </Box>
 
-            {stock > 0 ? (
-                <Button
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        margin: "0.5rem auto",
-                    }}
-                    variant="outlined"
-                    onClick={handleAddToCart}
-                    disabled={loading} // Disable button during loading
-                >
-                    {loading ? <CircularProgress size={20} /> : "Add to Cart"}
-                </Button>
-            ) : (
-                <Button
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        margin: "0.5rem auto",
-                    }}
-                    variant="contained"
-                    disabled
-                >
-                    Out of Stock
-                </Button>
-            )}
+            <AddToCart
+                product_id={product_id}
+                cartID={cartID}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                stock={stock}
+            />
 
             {/* Toast Notification */}
             <Snackbar
