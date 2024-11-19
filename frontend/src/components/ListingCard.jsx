@@ -68,7 +68,7 @@ function ListingCard({
             <CardActionArea
                 disabled={stock === 0}
                 component={RouterLink}
-                to={`${product_id}`}
+                to={`product/${product_id}`}
                 // href={product_id}
             >
                 <CardMedia

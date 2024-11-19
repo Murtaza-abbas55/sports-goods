@@ -42,7 +42,7 @@ function App() {
             <Route path="/create_account" element={<CreateAccount />} />
             <Route path="/product-listing" element={<ProductLayout />}>
                 <Route index element={<ProductListing />} />
-                <Route path=":product_id" element={<Product />} />
+                <Route path="product/:product_id" element={<Product />} />
             </Route>
             <Route
                 path="/admin"
