@@ -10,6 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -66,7 +67,7 @@ function DrawerAppBar(props) {
             <CssBaseline />
             <AppBar component="nav">
                 <Toolbar>
-                    <Box sx={{ display: "flex", flexGrow: 1 }}>
+                    <Box sx={{ display: "flex", flexGrow: { xs: 0, sm: 1 } }}>
                         <Typography>MyStore</Typography>
                     </Box>
                     <Typography
@@ -90,6 +91,17 @@ function DrawerAppBar(props) {
                             ))}
                         </Box>
                     </Typography>
+
+                    <IconButton
+                        sx={{
+                            color: "white",
+                            display: "flex",
+                            verticalAlign: "text-top",
+                            flexGrow: { xs: 1, sm: 0 },
+                        }}
+                    >
+                        <ShoppingCartIcon />
+                    </IconButton>
 
                     <IconButton
                         color="inherit"
