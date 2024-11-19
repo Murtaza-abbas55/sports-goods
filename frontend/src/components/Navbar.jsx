@@ -17,6 +17,7 @@ import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Badge from "@mui/material/Badge";
 
 const drawerWidth = 240;
 
@@ -93,6 +94,8 @@ function DrawerAppBar(props) {
                     </Typography>
 
                     <IconButton
+                        component={RouterLink}
+                        to="/cart"
                         sx={{
                             color: "white",
                             display: "flex",
@@ -100,7 +103,9 @@ function DrawerAppBar(props) {
                             flexGrow: { xs: 1, sm: 0 },
                         }}
                     >
-                        <ShoppingCartIcon />
+                        <Badge color="secondary" badgeContent={4}>
+                            <ShoppingCartIcon />
+                        </Badge>
                     </IconButton>
 
                     <IconButton
