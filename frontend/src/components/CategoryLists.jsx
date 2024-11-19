@@ -1,7 +1,18 @@
 import { Box, Stack, Typography } from "@mui/material";
 import CategoryCard from "./CategoryCard";
+import useFetch from "../hooks/useFetch";
+import Loading from "./Loading";
 
 function CategoryList() {
+    const {
+        products: categories,
+        loading,
+        error,
+    } = useFetch("/api/categories");
+
+    if (loading) return <Loading />;
+    if (error) return <h1>Error</h1>;
+
     return (
         <Box sx={{ margin: "2.5rem 0" }}>
             <Typography
@@ -18,10 +29,12 @@ function CategoryList() {
                 gap={2}
                 justifyContent={"center"}
             >
-                <CategoryCard name={"Cricket"} />
-                <CategoryCard name={"Tennis"} />
-                <CategoryCard name={"Board Games"} />
-                <CategoryCard name={"Hockey"} />
+                {categories.map((category) => (
+                    <CategoryCard
+                        key={category.category_id}
+                        name={category.name}
+                    />
+                ))}
             </Stack>
         </Box>
     );
