@@ -7,6 +7,9 @@ import AddToCart from "../components/AddToCart";
 import { useAuth } from "../context/AuthContext";
 import useFetchWishlist from "../hooks/useFetchWishlist";
 import Wishlist from "../components/Wishlist";
+import IconButton from "@mui/material/IconButton";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const modalStyle = {
     position: "absolute",
@@ -29,6 +32,9 @@ function Product() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { cartID } = useAuth();
+    const [quantity, setQuantity] = useState(1);
+    const handleAdd = () => setQuantity(quantity + 1);
+    const handleRemove = () => setQuantity(quantity - 1);
 
     const { wishlistItems, setWishlistItems } = useFetchWishlist();
 
@@ -106,17 +112,45 @@ function Product() {
                                 {products.description}
                             </Typography>
                             <Box display={"flex"} flexDirection={"column"}>
-                                <Wishlist
-                                    product_id={products.product_id}
-                                    wishlistItems={wishlistItems}
-                                    setWishlistItems={setWishlistItems}
-                                    style={modalStyle}
-                                />
+                                <Box marginLeft={6}>
+                                    <Wishlist
+                                        product_id={products.product_id}
+                                        wishlistItems={wishlistItems}
+                                        setWishlistItems={setWishlistItems}
+                                        style={modalStyle}
+                                    />
+                                </Box>
+                                <Box display={"flex"} gap={3}>
+                                    <IconButton
+                                        disabled={quantity === 1}
+                                        onClick={handleRemove}
+                                        aria-label="decrease quantity"
+                                    >
+                                        <RemoveCircleIcon />
+                                    </IconButton>
+
+                                    <Box>
+                                        <Typography marginTop={1}>
+                                            {quantity}
+                                        </Typography>
+                                    </Box>
+
+                                    <IconButton
+                                        disabled={
+                                            products.stock <= 1 ||
+                                            products.stock === quantity
+                                        }
+                                        onClick={handleAdd}
+                                        aria-label="increase quantity"
+                                    >
+                                        <AddCircleIcon />
+                                    </IconButton>
+                                </Box>
                                 <AddToCart
                                     product_id={products.product_id}
                                     stock={products.stock}
                                     cartID={cartID}
-                                    quantity={1}
+                                    quantity={quantity}
                                     style={{
                                         alignSelf: "start",
                                     }}

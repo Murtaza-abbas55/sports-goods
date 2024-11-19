@@ -116,7 +116,7 @@ function ListingCard({
                 </Box>
 
                 <IconButton
-                    disabled={quantity === stock}
+                    disabled={stock <= 1 || stock === quantity}
                     onClick={handleAdd}
                     aria-label="increase quantity"
                 >
