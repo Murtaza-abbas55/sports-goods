@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
+import AddToCart from "../components/AddToCart";
+import { useAuth } from "../context/AuthContext";
 
 function Product() {
     let { product_id } = useParams();
@@ -12,6 +14,7 @@ function Product() {
     const [products, setProducts] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { Data, isAuthenticated, cartID } = useAuth();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -29,6 +32,33 @@ function Product() {
 
         fetchProducts();
     }, []);
+
+    // useEffect(() => {
+    //     const fetchWishlist = async () => {
+    //         try {
+    //             if (Data !== null) {
+    //                 const response = await axios.get("/api/getallwishlist");
+    //                 setWishlistItems(response.data.wishlistItems);
+    //                 // console.log(response.data);
+    //                 console.log("we wish");
+    //                 console.log(response.data.wishlistItems);
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching products:", error);
+    //         } finally {
+    //             console.log("finally");
+    //         }
+    //     };
+
+    //     fetchWishlist();
+    // }, []);
+    // console.log(wishlistItems);
+
+    if (loading) return <Loading />;
+    if (error) return <p>error</p>;
+    console.log(products);
+    console.log("the cart now");
+    console.log(cartID);
 
     console.log("products");
     console.log(products);
@@ -70,7 +100,7 @@ function Product() {
                                 variant="h5"
                                 fontWeight={"bold"}
                             >
-                                RS.2000
+                                {"RS " + products.price}
                             </Typography>
                             <Typography
                                 textAlign={"justify"}
@@ -80,7 +110,14 @@ function Product() {
                             >
                                 {products.description}
                             </Typography>
-                            <Button variant="contained">Add to Cart</Button>
+                            <Box display={"flex"} margin={"auto"}>
+                                <AddToCart
+                                    product_id={products.product_id}
+                                    stock={products.stock}
+                                    cartID={cartID}
+                                    quantity={1}
+                                />
+                            </Box>
                         </Box>
                     </Stack>
                 </Box>
