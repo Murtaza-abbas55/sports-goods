@@ -17,6 +17,7 @@ import ProductListing from "../pages/ProductListing";
 import axios from "axios";
 import ProductLayout from "../pages/ProductLayout";
 import { useEffect } from "react";
+import Cart from "../pages/Cart";
 
 function App() {
     const { Data } = useAuth(); // Access auth state and user data
@@ -44,6 +45,7 @@ function App() {
                 <Route index element={<ProductListing />} />
                 <Route path="product/:product_id" element={<Product />} />
             </Route>
+            <Route path="cart/:cartID" element={<Cart />} />
             <Route
                 path="/admin"
                 element={

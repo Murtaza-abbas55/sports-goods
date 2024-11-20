@@ -98,7 +98,7 @@ function DrawerAppBar(props) {
 
                     <IconButton
                         component={RouterLink}
-                        to="/cart"
+                        to={`/cart/${Data?.user_id}`}
                         sx={{
                             color: "white",
                             display: "flex",
