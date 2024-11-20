@@ -10,18 +10,25 @@ function useFetchCartItems() {
 
     useEffect(() => {
         async function getCartItems(cartID) {
+            setLoading(true); // Show loading state while fetching
             try {
                 const response = await axios.get("/api/getcart", {
                     params: { cart_id: cartID },
                 });
 
-                console.log("Response data for cart:");
-                console.log(response.data.cart.quantity);
-                console.log(response.data.cart);
-                setCartProducts(response.data.cart);
-                let totalItems = cartProducts.reduce(function (prev, curr) {
-                    return prev + curr.quantity;
-                }, 0);
+                console.log("Response data for cart:", response.data.cart);
+
+                // Extract cart data directly from the API response
+                const cartData = response.data.cart;
+
+                // Calculate total items directly from the response
+                const totalItems = cartData.reduce(
+                    (prev, curr) => prev + curr.quantity,
+                    0
+                );
+
+                // Update states
+                setCartProducts(cartData);
                 setCartProductsLength(totalItems);
             } catch (error) {
                 console.error(
@@ -29,12 +36,19 @@ function useFetchCartItems() {
                     error.response?.data || error.message
                 );
             } finally {
-                setLoading(false);
+                setLoading(false); // Stop loading state
             }
         }
-        getCartItems(cartID);
-    }, [cartID, cartProducts]);
 
-    return { cartProductsLength, setCartProductsLength, loading };
+        if (cartID) getCartItems(cartID); // Only fetch if cartID exists
+    }, [cartID]); // Remove setCartProducts from dependencies
+
+    return {
+        cartProductsLength,
+        setCartProductsLength,
+        cartProducts,
+        setCartProducts,
+        loading,
+    };
 }
 export default useFetchCartItems;
