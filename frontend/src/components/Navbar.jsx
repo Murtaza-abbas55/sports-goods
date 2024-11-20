@@ -20,36 +20,15 @@ import Badge from "@mui/material/Badge";
 import axios from "axios";
 import useFetch from "../hooks/useFetch";
 import { useState } from "react";
+import useFetchCartItems from "../hooks/useFetchCartItems";
 
 const drawerWidth = 240;
 function DrawerAppBar(props) {
     const { window } = props;
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [cartProductsLength, setCartProductsLength] = useState(0);
-    const [loading, setLoading] = useState(true);
-
     const { Data, cartID } = useAuth();
+    const { cartProductsLength } = useFetchCartItems();
 
-    async function getCartItems(cartID) {
-        try {
-            const response = await axios.get("/api/getcart", {
-                params: { cart_id: cartID },
-            });
-
-            console.log("Response data for cart:");
-            console.log(response.data);
-            console.log(response.data.cart.length);
-            setCartProductsLength(response.data.cart.length);
-        } catch (error) {
-            console.error(
-                "Error while fetching cart items:",
-                error.response?.data || error.message
-            );
-        } finally {
-            setLoading(false);
-        }
-    }
-    getCartItems(cartID);
     const navItems = [
         "Cricket",
         "Football",
