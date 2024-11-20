@@ -31,13 +31,10 @@ export const RemoveSale = async (product_id) => {
 
 export const updateSaleById = async (newdiscount_percent, product_id, admin_username) => {
     try {
-        // Check if the product is in the Sale table
         const saleExistResult = await pool.query(`SELECT * FROM Sale WHERE product_id = $1`, [product_id]);
         if (saleExistResult.rows.length === 0) {
             throw new Error("Product has no sale related to it");
         }
-
-        // Get the current product price
         const productPriceResult = await pool.query(`SELECT price FROM Products WHERE product_id = $1`, [product_id]);
         if (productPriceResult.rows.length === 0) {
             throw new Error("Product not found.");
@@ -46,28 +43,54 @@ export const updateSaleById = async (newdiscount_percent, product_id, admin_user
         const productPrice = productPriceResult.rows[0].price;
         console.log(`The product price is ${productPrice}`);
 
-        // Calculate the updated price based on the discount
         const updatedPrice = productPrice - (productPrice * newdiscount_percent) / 100;
 
-        // Update the Sale table with the new discount and price
         const result = await pool.query(
             `UPDATE Sale SET discount_percentage = $1, new_price = $2, admin_username = $3 WHERE product_id = $4 RETURNING *`,
             [newdiscount_percent, updatedPrice, admin_username, product_id]
         );
 
-        // Log how many rows were updated
         console.log('Number of rows updated:', result.rowCount);
 
-        // If no rows were updated, the product might not exist in Sale, or no changes were made.
         if (result.rowCount === 0) {
             throw new Error("No sale entry was updated.");
         }
 
-        // Return the updated sale entry
         console.log('Updated sale:', result.rows[0]);
         return result.rows[0];
     } catch (error) {
         console.error('Error updating sale:', error);
         throw error;
+    }
+};
+export const getSale = async () => {
+    try {
+        const query = `
+            SELECT 
+                s.discount_percentage,
+                s.new_price,
+                p.product_id,
+                p.name,
+                p.price AS original_price,
+                p.description,
+                p.category_id
+            FROM 
+                Sale s
+            INNER JOIN 
+                Products p
+            ON 
+                s.product_id = p.product_id
+        `;
+
+        const { rows } = await pool.query(query);
+
+        if (rows.length === 0) {
+            return { success: false, message: "No sales available." };
+        }
+
+        return { success: true, message: "Sales retrieved successfully.", sales: rows };
+    } catch (error) {
+        console.error("Error fetching sales:", error.message);
+        throw new Error("An error occurred while fetching sales.");
     }
 };

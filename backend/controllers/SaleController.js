@@ -1,5 +1,5 @@
 
-import { AddSale, RemoveSale, updateSaleById } from "../models/Sale.js";
+import { AddSale, RemoveSale, updateSaleById,getSale } from "../models/Sale.js";
 export const AddSaleController = async (req, res) => {
     const { product_id, discount_percent } = req.body;
     const admin_username = req.adminUsername;
@@ -53,5 +53,25 @@ export const UpdateSaleController = async (req, res) => {
     } catch (error) {
         console.error("Error updating sale:", error);
         res.status(500).json({ error: "Failed to update sale due to server error." });
+    }
+};
+export const getSalesController = async (req, res) => {
+    try {
+        const result = await getSale();
+
+        if (result.success) {
+            res.status(200).json({
+                message: result.message,
+                sales: result.sales,
+            });
+        } else {
+            res.status(404).json({ message: result.message });
+        }
+    } catch (error) {
+        console.error("Error in getSalesController:", error.message);
+        res.status(500).json({
+            message: "An error occurred while fetching sales.",
+            error: error.message,
+        });
     }
 };

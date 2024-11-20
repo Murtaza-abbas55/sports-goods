@@ -4,7 +4,9 @@ import {
     addProductToCart,
     removeProductFromCart,
     clearCartProducts,
-    mergeAnonymousCartWithUserCart
+    mergeAnonymousCartWithUserCart,
+    clearuserCartProducts,
+    getCartProducts
 } from '../models/Cart.js';
 
 export const addToCart = async (req, res) => {
@@ -55,7 +57,6 @@ export const clearCart = async (req, res) => {
         res.status(500).json({ error: 'Failed to clear cart' });
     }
 };
-
 export const mergeAnonymousCart = async (req, res) => {
     const { user_id } = req.body;
     console.log('User ID:', user_id);
@@ -92,5 +93,39 @@ export const mergeAnonymousCart = async (req, res) => {
     } catch (error) {
         console.error('Failed to merge anonymous cart with user cart:', error);
         res.status(500).json({ error: 'Failed to merge anonymous cart with user cart' });
+    }
+};
+export const clearUserCart = async (req, res) => {
+    const { user_id } = req.body;
+
+    try {
+        const result = await clearuserCartProducts(user_id);
+        if (result.success) {
+            res.status(200).json({ message: result.message });
+        } else {
+            res.status(400).json({ message: result.message });
+        }
+    } catch (error) {
+        console.error("Error in clearUserCart:", error);
+        res.status(500).json({ message: "An error occurred while clearing the user's cart.", error });
+    }
+};
+export const getCartProductsController = async (req, res) => {
+    const { cart_id } = req.body;
+
+    try {
+        const result = await getCartProducts(cart_id);
+
+        if (result.success) {
+            res.status(200).json({message: result.message,cart: result.cart});
+        } else {
+            res.status(404).json({ message: result.message });
+        }
+    } catch (error) {
+        console.error("Error in getCartProductsController:", error.message);
+        res.status(500).json({
+            message: "An error occurred while fetching cart products.",
+            error: error.message,
+        });
     }
 };
