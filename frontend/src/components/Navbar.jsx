@@ -1,4 +1,3 @@
-import * as React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,14 +17,39 @@ import { Divider } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Badge from "@mui/material/Badge";
+import axios from "axios";
+import useFetch from "../hooks/useFetch";
+import { useState } from "react";
 
 const drawerWidth = 240;
-
 function DrawerAppBar(props) {
     const { window } = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [cartProductsLength, setCartProductsLength] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-    const { Data } = useAuth();
+    const { Data, cartID } = useAuth();
+
+    async function getCartItems(cartID) {
+        try {
+            const response = await axios.get("/api/getcart", {
+                params: { cart_id: cartID },
+            });
+
+            console.log("Response data for cart:");
+            console.log(response.data);
+            console.log(response.data.cart.length);
+            setCartProductsLength(response.data.cart.length);
+        } catch (error) {
+            console.error(
+                "Error while fetching cart items:",
+                error.response?.data || error.message
+            );
+        } finally {
+            setLoading(false);
+        }
+    }
+    getCartItems(cartID);
     const navItems = [
         "Cricket",
         "Football",
@@ -103,7 +127,10 @@ function DrawerAppBar(props) {
                             flexGrow: { xs: 1, sm: 0 },
                         }}
                     >
-                        <Badge color="secondary" badgeContent={4}>
+                        <Badge
+                            color="secondary"
+                            badgeContent={cartProductsLength}
+                        >
                             <ShoppingCartIcon />
                         </Badge>
                     </IconButton>
