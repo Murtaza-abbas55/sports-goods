@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
 function useFetchCartItems() {
+    const [cartProducts, setCartProducts] = useState([]);
     const [cartProductsLength, setCartProductsLength] = useState(0);
     const [loading, setLoading] = useState(true);
     const { cartID } = useAuth();
@@ -15,9 +16,13 @@ function useFetchCartItems() {
                 });
 
                 console.log("Response data for cart:");
-                console.log(response.data);
-                console.log(response.data.cart.length);
-                setCartProductsLength(response.data.cart.length);
+                console.log(response.data.cart.quantity);
+                console.log(response.data.cart);
+                setCartProducts(response.data.cart);
+                let totalItems = cartProducts.reduce(function (prev, curr) {
+                    return prev + curr.quantity;
+                }, 0);
+                setCartProductsLength(totalItems);
             } catch (error) {
                 console.error(
                     "Error while fetching cart items:",
@@ -28,7 +33,7 @@ function useFetchCartItems() {
             }
         }
         getCartItems(cartID);
-    }, [cartID]);
+    }, [cartID, cartProducts]);
 
     return { cartProductsLength, setCartProductsLength, loading };
 }
