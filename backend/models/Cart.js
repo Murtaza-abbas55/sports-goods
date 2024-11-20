@@ -164,6 +164,35 @@ export const clearCartProducts = async () => {
 
     return { success: true, message: "Cleared products and deleted carts with NULL user_id." };
 };
+export const clearuserCartProducts = async (user_id) => {
+    try{
+    const { rows: userCart } = await pool.query(
+        `SELECT * FROM Cart WHERE user_id = $1 LIMIT 1`,
+        [userId]
+    );
+    if (userCart.length === 0) {
+        console.log('No Cart for user_id: ' + user_id);
+        return { success: false, message: "No cart found for the user." };
+    }
+
+    const cartId = userCart[0].cart_id;
+    const { rowCount } = await pool.query(
+        `DELETE FROM CartProducts WHERE cart_id = $1`,
+        [cartId]
+    );
+
+    if (rowCount > 0) {
+        console.log(`Cleared ${rowCount} products from cart_id: ${cartId}`);
+        return { success: true, message: "Cleared all products from the user's cart." };
+    } else {
+        console.log(`No products found in cart_id: ${cartId}`);
+        return { success: false, message: "No products found in the user's cart." };
+    }
+} catch (error) {
+    console.error("Error clearing user cart products:", error);
+    return { success: false, message: "Error clearing user cart products.", error };
+}
+};
 
 export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId) => {
     try {
@@ -174,8 +203,8 @@ export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId
         );
 
         if (anonymousCartItems.length === 0) {
-            console.log("No items in anonymous cart to merge.");
-            return { success: false, message: "No items in anonymous cart to merge." };
+                console.log("No items in anonymous cart to merge.");
+                return { success: false, message: "No items in anonymous cart to merge." };
         }
 
         console.log('Anonymous cart items:', anonymousCartItems);
@@ -218,5 +247,24 @@ export const mergeAnonymousCartWithUserCart = async (userCartId, anonymousCartId
         console.error('Error merging anonymous cart with user cart:', error);
         await pool.query('ROLLBACK'); 
         return { success: false, message: "Failed to merge anonymous cart with user cart.", error };
+    }
+};
+
+export const getCartProducts= async(cart_id)=>{
+    try {
+        console.log(`Getting cart ${cart_id}`);
+        const { rows: cart } = await pool.query(
+            `SELECT * FROM CartProducts WHERE cart_id = $1`,
+            [cart_id]
+        );
+        if(cart.length == 0) {
+            console.log("No items in cart...");
+            return { success: false, message: "No items in cart." };
+        }
+        return { success: true, message:"Cart found",cart:cart};
+
+}
+    catch(error) {
+        throw new error('Error:'+error.message);
     }
 };
