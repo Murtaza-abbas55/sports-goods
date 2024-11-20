@@ -33,6 +33,7 @@ function CategoryList() {
                     <CategoryCard
                         key={category.category_id}
                         name={category.name}
+                        category_id={category.category_id}
                     />
                 ))}
             </Stack>
