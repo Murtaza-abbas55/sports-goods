@@ -3,25 +3,31 @@ import ImgMediaCard from "./Card";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import Loading from "./Loading";
 
 function Section({ sectionHeading, url }) {
     const [sectionProducts, setSectionProducts] = useState([null]);
-
-    const fetchSectionProducts = async () => {
-        try {
-            const response = await axios.get(url);
-            console.log("API call successful!", response.status);
-            console.log(response.data.products);
-            setSectionProducts(response.data.products);
-        } catch (error) {
-            console.error("Error calling API:", error);
-        }
-    };
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const fetchSectionProducts = async () => {
+            try {
+                const response = await axios.get(url);
+                console.log("Section API call successful!", response.status);
+                console.log(response.data.products);
+                if (sectionHeading === "New Arrival")
+                    setSectionProducts(response.data.products);
+                else setSectionProducts(response.data);
+            } catch (error) {
+                console.error("Error calling API:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchSectionProducts();
-    }, []);
+    }, [sectionHeading, url]);
 
+    if (loading) return <Loading />;
     return (
         <Box sx={{ margin: "2.5rem 0" }}>
             <Typography
@@ -43,6 +49,7 @@ function Section({ sectionHeading, url }) {
                         sectionProduct && (
                             <ImgMediaCard
                                 key={sectionProduct.product_id}
+                                product_id={sectionProduct.product_id}
                                 name={sectionProduct.name}
                                 price={sectionProduct.price}
                                 image_url={`/images/${sectionProduct.image_url}`}

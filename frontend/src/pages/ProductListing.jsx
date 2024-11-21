@@ -44,8 +44,6 @@ function ProductListing() {
 
     return (
         <>
-            <h1>Product Lisitng</h1>
-            <p>These are my products</p>
             <Stack
                 direction={"row"}
                 gap={4}

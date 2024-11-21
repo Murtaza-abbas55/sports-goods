@@ -4,11 +4,15 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea, Divider } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
-function ImgMediaCard({ name, price, image_url }) {
+function ImgMediaCard({ name, price, image_url, product_id }) {
     return (
         <Card elevation={5} sx={{ display: "flex", width: 350 }}>
-            <CardActionArea href="/">
+            <CardActionArea
+                component={RouterLink}
+                to={`product-listing/product/${product_id}`}
+            >
                 <CardMedia
                     component="img"
                     alt="green iguana"

@@ -1,4 +1,3 @@
-import * as React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -10,20 +9,26 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Divider } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Badge from "@mui/material/Badge";
+import axios from "axios";
+import useFetch from "../hooks/useFetch";
+import { useState } from "react";
+import useFetchCartItems from "../hooks/useFetchCartItems";
 
 const drawerWidth = 240;
-
 function DrawerAppBar(props) {
     const { window } = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const { Data, cartID } = useAuth();
+    const { cartProductsLength } = useFetchCartItems();
 
-    const { Data } = useAuth();
     const navItems = [
         "Cricket",
         "Football",
@@ -66,7 +71,7 @@ function DrawerAppBar(props) {
             <CssBaseline />
             <AppBar component="nav">
                 <Toolbar>
-                    <Box sx={{ display: "flex", flexGrow: 1 }}>
+                    <Box sx={{ display: "flex", flexGrow: { xs: 0, sm: 1 } }}>
                         <Typography>MyStore</Typography>
                     </Box>
                     <Typography
@@ -90,6 +95,24 @@ function DrawerAppBar(props) {
                             ))}
                         </Box>
                     </Typography>
+
+                    <IconButton
+                        component={RouterLink}
+                        to={`/cart/${Data?.user_id}`}
+                        sx={{
+                            color: "white",
+                            display: "flex",
+                            verticalAlign: "text-top",
+                            flexGrow: { xs: 1, sm: 0 },
+                        }}
+                    >
+                        <Badge
+                            color="secondary"
+                            badgeContent={cartProductsLength}
+                        >
+                            <ShoppingCartIcon />
+                        </Badge>
+                    </IconButton>
 
                     <IconButton
                         color="inherit"
