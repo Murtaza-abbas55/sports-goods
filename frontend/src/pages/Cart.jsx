@@ -79,84 +79,83 @@ function Cart() {
     console.log(cartProducts);
     return (
         <>
-            <DrawerAppBar />
-            <Typography textAlign={"center"} component={"h1"} variant="h5">
-                SHOPPING CART
-            </Typography>
-            <Divider sx={{ margin: "20px 0" }} />
-            <Stack direction={"row"}>
-                <Stack flex={0.5}>
-                    {cartProducts.map((cartProduct) => (
-                        <Box key={cartProduct.product_id}>
-                            <Stack gap={5} marginLeft={3} direction={"row"}>
-                                <Box flex={1}>
-                                    <Typography
-                                        fontWeight={"bold"}
-                                        variant="h5"
-                                        textTransform={"capitalize"}
-                                    >
-                                        {cartProduct.name}
-                                    </Typography>
-
-                                    <Typography
-                                        sx={{ marginTop: "10px" }}
-                                        variant="body1"
-                                    >
-                                        RS.
-                                        {cartProduct.quantity *
-                                            cartProduct.price}
-                                    </Typography>
-
-                                    <Box marginLeft={-1} marginTop={5}>
-                                        <Stack direction={"row"}>
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleRemove(
-                                                        cartProduct.product_id
-                                                    )
-                                                }
-                                                aria-label="decrease quantity"
-                                            >
-                                                <RemoveCircleIcon />
-                                            </IconButton>
-                                            <Typography marginTop={1}>
-                                                {!loading ? (
-                                                    cartProduct.quantity
-                                                ) : (
-                                                    <CircularProgress
-                                                        size={10}
-                                                    />
-                                                )}
-                                            </Typography>
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleAdd(
-                                                        cartProduct.product_id
-                                                    )
-                                                }
-                                                aria-label="increase quantity"
-                                            >
-                                                <AddCircleIcon />
-                                            </IconButton>
-                                        </Stack>
+            <div style={{ backgroundColor: "#fafafa" }}>
+                <DrawerAppBar />
+                <Typography textAlign={"center"} component={"h1"} variant="h5">
+                    SHOPPING CART
+                </Typography>
+                <Divider sx={{ margin: "20px 0" }} />
+                <Stack direction={"row"}>
+                    <Stack flex={0.5}>
+                        {cartProducts.map((cartProduct) => (
+                            <Box key={cartProduct.product_id}>
+                                <Stack gap={5} marginLeft={3} direction={"row"}>
+                                    <Box flex={1}>
+                                        <Typography
+                                            fontWeight={"bold"}
+                                            variant="h5"
+                                            textTransform={"capitalize"}
+                                        >
+                                            {cartProduct.name}
+                                        </Typography>
+                                        <Typography
+                                            sx={{ marginTop: "10px" }}
+                                            variant="body1"
+                                        >
+                                            RS.
+                                            {cartProduct.quantity *
+                                                cartProduct.price}
+                                        </Typography>
+                                        <Box marginLeft={-1} marginTop={5}>
+                                            <Stack direction={"row"}>
+                                                <IconButton
+                                                    onClick={() =>
+                                                        handleRemove(
+                                                            cartProduct.product_id
+                                                        )
+                                                    }
+                                                    aria-label="decrease quantity"
+                                                >
+                                                    <RemoveCircleIcon />
+                                                </IconButton>
+                                                <Typography marginTop={1}>
+                                                    {!loading ? (
+                                                        cartProduct.quantity
+                                                    ) : (
+                                                        <CircularProgress
+                                                            size={10}
+                                                        />
+                                                    )}
+                                                </Typography>
+                                                <IconButton
+                                                    onClick={() =>
+                                                        handleAdd(
+                                                            cartProduct.product_id
+                                                        )
+                                                    }
+                                                    aria-label="increase quantity"
+                                                >
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                            </Stack>
+                                        </Box>
                                     </Box>
-                                </Box>
-
-                                <Box>
-                                    <img
-                                        src={`/images/${cartProduct.image_url}`}
-                                        alt={`Image of ${cartProduct.name}`}
-                                        height={250}
-                                        width={200}
-                                    />
-                                </Box>
-                            </Stack>
-                            <Divider sx={{ margin: "20px 0" }} />
-                        </Box>
-                    ))}
+                                    <Box>
+                                        <img
+                                            src={`/images/${cartProduct.image_url}`}
+                                            alt={`Image of ${cartProduct.name}`}
+                                            height={250}
+                                            width={200}
+                                        />
+                                    </Box>
+                                </Stack>
+                                <Divider sx={{ margin: "20px 0" }} />
+                            </Box>
+                        ))}
+                    </Stack>
+                    <Stack></Stack>
                 </Stack>
-                <Stack></Stack>
-            </Stack>
+            </div>
         </>
     );
 }
