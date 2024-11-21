@@ -254,7 +254,7 @@ export const getCartProducts= async(cart_id)=>{
     try {
         console.log(`Getting cart ${cart_id}`);
         const { rows: cart } = await pool.query(
-            `SELECT * FROM CartProducts WHERE cart_id = $1`,
+            `SELECT c.*,p.name,p.category_id, FROM CartProducts c JOIN Products p ON c.product_id=p.product_id WHERE c.cart_id = $1`,
             [cart_id]
         );
         if(cart.length == 0) {
