@@ -91,6 +91,6 @@ export const getSale = async () => {
         return { success: true, message: "Sales retrieved successfully.", sales: rows };
     } catch (error) {
         console.error("Error fetching sales:", error.message);
-        throw new Error("An error occurred while fetching sales.");
+        throw new error("An error occurred while fetching sales.");
     }
 };
