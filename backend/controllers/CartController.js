@@ -146,7 +146,7 @@ export const getCartProductsController = async (req, res) => {
     } catch (error) {
         console.error("Error in getCartProductsController:", error.message);
         res.status(500).json({
-            message: "An error occurred while fetching cart products.",
+            message: "backAn error occurred while fetching cart products.",
             error: error.message,
         });
     }

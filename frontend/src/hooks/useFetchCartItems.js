@@ -32,7 +32,7 @@ function useFetchCartItems() {
                 setCartProductsLength(totalItems);
             } catch (error) {
                 console.error(
-                    "Error while fetching cart items:",
+                    "frontError while fetching cart items:",
                     error.response?.data || error.message
                 );
             } finally {
