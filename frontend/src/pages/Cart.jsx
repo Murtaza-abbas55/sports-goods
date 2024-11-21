@@ -98,6 +98,15 @@ function Cart() {
                                         {cartProduct.name}
                                     </Typography>
 
+                                    <Typography
+                                        sx={{ marginTop: "10px" }}
+                                        variant="body1"
+                                    >
+                                        RS.
+                                        {cartProduct.quantity *
+                                            cartProduct.price}
+                                    </Typography>
+
                                     <Box marginLeft={-1} marginTop={5}>
                                         <Stack direction={"row"}>
                                             <IconButton
@@ -133,11 +142,14 @@ function Cart() {
                                     </Box>
                                 </Box>
 
-                                <Box
-                                    height={250}
-                                    width={200}
-                                    sx={{ backgroundColor: "black" }}
-                                ></Box>
+                                <Box>
+                                    <img
+                                        src={`/images/${cartProduct.image_url}`}
+                                        alt={`Image of ${cartProduct.name}`}
+                                        height={250}
+                                        width={200}
+                                    />
+                                </Box>
                             </Stack>
                             <Divider sx={{ margin: "20px 0" }} />
                         </Box>
