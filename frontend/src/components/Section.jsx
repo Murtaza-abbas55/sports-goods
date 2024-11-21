@@ -49,6 +49,7 @@ function Section({ sectionHeading, url }) {
                         sectionProduct && (
                             <ImgMediaCard
                                 key={sectionProduct.product_id}
+                                product_id={sectionProduct.product_id}
                                 name={sectionProduct.name}
                                 price={sectionProduct.price}
                                 image_url={`/images/${sectionProduct.image_url}`}
