@@ -4,8 +4,6 @@ import Section from "../components/Section";
 import CategoryList from "../components/CategoryLists";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useEffect } from "react";
 
 function Header() {
     return (
@@ -13,7 +11,10 @@ function Header() {
             <DrawerAppBar />
             <ImageCarousel />
             <Section sectionHeading={"New Arrival"} url={"/api/new-arrivals"} />
-            {/* <Section sectionHeading={"Trending"} /> */}
+            <Section
+                sectionHeading={"Trending"}
+                url={"/api/trending-products"}
+            />
             <CategoryList />
             <Footer />
             <Link to={"/admin"}>Admin Only</Link>
