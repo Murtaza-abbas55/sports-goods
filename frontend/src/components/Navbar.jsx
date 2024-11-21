@@ -1,4 +1,3 @@
-import * as React from "react";
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,14 +17,18 @@ import { Divider } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Badge from "@mui/material/Badge";
+import axios from "axios";
+import useFetch from "../hooks/useFetch";
+import { useState } from "react";
+import useFetchCartItems from "../hooks/useFetchCartItems";
 
 const drawerWidth = 240;
-
 function DrawerAppBar(props) {
     const { window } = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const { Data, cartID } = useAuth();
+    const { cartProductsLength } = useFetchCartItems();
 
-    const { Data } = useAuth();
     const navItems = [
         "Cricket",
         "Football",
@@ -95,7 +98,7 @@ function DrawerAppBar(props) {
 
                     <IconButton
                         component={RouterLink}
-                        to="/cart"
+                        to={`/cart/${Data?.user_id}`}
                         sx={{
                             color: "white",
                             display: "flex",
@@ -103,7 +106,10 @@ function DrawerAppBar(props) {
                             flexGrow: { xs: 1, sm: 0 },
                         }}
                     >
-                        <Badge color="secondary" badgeContent={4}>
+                        <Badge
+                            color="secondary"
+                            badgeContent={cartProductsLength}
+                        >
                             <ShoppingCartIcon />
                         </Badge>
                     </IconButton>

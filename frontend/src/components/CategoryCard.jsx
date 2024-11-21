@@ -4,11 +4,15 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
-function CategoryCard({ name }) {
+function CategoryCard({ name, category_id }) {
     return (
         <Card sx={{ display: "flex", width: 400 }}>
-            <CardActionArea href="/">
+            <CardActionArea
+                component={RouterLink}
+                to={`category/${category_id}`}
+            >
                 <CardMedia
                     component="img"
                     alt="green iguana"
