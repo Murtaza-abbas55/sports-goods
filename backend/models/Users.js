@@ -17,3 +17,45 @@ export async function findUserByEmail(email) {
     const { rows } = await pool.query(query, [email]);
     return rows[0];
 }
+
+export const updateUserDetails = async ({
+    user_id,
+    phone_number,
+    first_name,
+    last_name,
+    password,
+    address,
+    email,
+}) => {
+    try {
+        if (!user_id || !phone_number || !first_name || !last_name || !password || !address || !email) {
+            return { success: false, message: 'All fields are required.' };
+        }
+        const { rowCount } = await pool.query(
+            `UPDATE Users 
+             SET phone_number = $2, 
+                 first_name = $3, 
+                 last_name = $4, 
+                 password = $5, 
+                 address = $6, 
+                 email = $7
+             WHERE user_id = $1 RETURNING *`,
+            [user_id, phone_number, first_name, last_name, password, address, email]
+        );
+        if (rowCount === 0) {
+            return { success: false, message: `No user found with user_id: ${user_id}` };
+        }
+
+        return { success: true, message: 'User details updated successfully.' };
+    } catch (error) {
+        console.error('Error updating user details:', error.message);
+        if (error.code === '23505') {
+            return {
+                success: false,
+                message: 'Duplicate value found for a unique field (e.g., email or phone number).',
+            };
+        }
+
+        throw new Error('Error updating user details: ' + error.message);
+    }
+};

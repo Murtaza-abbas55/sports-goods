@@ -128,3 +128,80 @@ export const CartToOrderProducts = async (user_id, order_id) => {
         throw new Error('Error transferring cart to order: ' + error.message);
     }
 };
+export const cancelOrder = async (order_id) => {
+    try {
+        console.log(`Attempting to cancel order with order_id: ${order_id}`);
+        const { rows: orderProducts } = await pool.query(
+            `SELECT product_id, quantity FROM OrderProducts WHERE order_id = $1`,
+            [order_id]
+        );
+
+        if (orderProducts.length === 0) {
+            return { success: false, message: 'No products found for this order.' };
+        }
+        for (const product of orderProducts) {
+            const { product_id, quantity } = product;
+
+            await pool.query(
+                `UPDATE Products SET stock = stock + $1 WHERE product_id = $2`,
+                [quantity, product_id]
+            );
+        }
+        await pool.query(`DELETE FROM OrderProducts WHERE order_id = $1`, [order_id]);
+        await pool.query(`DELETE FROM Orders WHERE order_id = $1`, [order_id]);
+
+        console.log(`Order with order_id ${order_id} canceled successfully.`);
+        return { success: true, message: `Order ${order_id} has been canceled.` };
+    } catch (error) {
+        console.error('Error canceling order:', error.message);
+        throw new Error(`Error canceling order: ${error.message}`);
+    }
+};
+export const getOrder = async (order_id) => {
+    try {
+        console.log(`Fetching order details for order_id: ${order_id}`);
+
+        const { rows: orderProducts } = await pool.query(
+            `SELECT o.product_id, p.name,p.image_url, o.quantity, o.price_at_order
+             FROM OrderProducts o
+             JOIN Products p ON o.product_id = p.product_id
+             WHERE o.order_id = $1`,
+            [order_id]
+        );
+
+        if (orderProducts.length === 0) {
+            console.log(`No products found for order_id: ${order_id}`);
+            return { success: false, message: 'No products found for this order.' };
+        }
+
+        console.log(`Order details retrieved successfully for order_id: ${order_id}`);
+        return { success: true, order_id, products: orderProducts };
+    } catch (error) {
+        console.error('Error fetching order details:', error.message);
+        throw new Error(`Error fetching order details: ${error.message}`);
+    }
+};
+
+export const getUserAllOrders = async (user_id) => {
+    try {
+        console.log(`Fetching all orders for user_id: ${user_id}`);
+
+        const { rows: orders } = await pool.query(
+            `SELECT order_id, created_at, status 
+             FROM Orders 
+             WHERE user_id = $1 
+             ORDER BY created_at DESC`,
+            [user_id]
+        );
+
+        if (orders.length === 0) {
+            return { success: false, message: 'No orders found for this user.' };
+        }
+
+        console.log(`Found ${orders.length} orders for user_id: ${user_id}`);
+        return { success: true, orders };
+    } catch (error) {
+        console.error('Error fetching user orders:', error.message);
+        throw new Error('Error fetching orders: ' + error.message);
+    }
+};

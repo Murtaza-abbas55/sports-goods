@@ -1,4 +1,4 @@
-import { createPayment } from "../models/PAyment.js";
+import { createPayment,getPaymentByOrderId } from "../models/PAyment.js";
 
 export const createPaymentController = async (req, res) => {
     const { order_id, payment_method } = req.body;
