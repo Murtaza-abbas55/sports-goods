@@ -12,11 +12,15 @@ import {
     Typography,
 } from "@mui/material";
 import Loading from "../components/Loading";
+import SaleForm from "../components/SaleForm";
 
 function Sale() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [formDialogOpen, setFormDialogOpen] = useState(false);
+    const [discount, setDiscount] = useState(0);
+    const [selectedProductID, setSelectedProductID] = useState(null);
 
     // Fetch the products from the backend using axios
     useEffect(() => {
@@ -35,6 +39,11 @@ function Sale() {
 
         fetchProducts();
     }, []);
+
+    function handleOpenFormDialog(product_id) {
+        setSelectedProductID(product_id);
+        setFormDialogOpen(true);
+    }
 
     if (error) return <p>{error}</p>;
 
@@ -81,7 +90,15 @@ function Sale() {
                                     />
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="primary">
+                                    <Button
+                                        onClick={() =>
+                                            handleOpenFormDialog(
+                                                product.product_id
+                                            )
+                                        }
+                                        variant="contained"
+                                        color="primary"
+                                    >
                                         add sale
                                     </Button>
                                 </TableCell>
@@ -90,6 +107,13 @@ function Sale() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <SaleForm
+                formDialogOpen={formDialogOpen}
+                setFormDialogOpen={setFormDialogOpen}
+                discount={discount}
+                setDiscount={setDiscount}
+                selectedProductID={selectedProductID}
+            />
         </div>
     );
 }
