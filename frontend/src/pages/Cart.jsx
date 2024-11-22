@@ -143,6 +143,8 @@ function Cart() {
                                                 >
                                                     <AddCircleIcon />
                                                 </IconButton>
+                                            </Stack>
+                                            <Box marginTop={3} display={"flex"}>
                                                 <Button
                                                     size="small"
                                                     variant="contained"
@@ -156,7 +158,7 @@ function Cart() {
                                                 >
                                                     Remove
                                                 </Button>
-                                            </Stack>
+                                            </Box>
                                         </Box>
                                     </Box>
                                     <Box>
