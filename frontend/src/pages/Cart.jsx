@@ -9,9 +9,10 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Loading from "../components/Loading";
 
 function Cart() {
-    const { cartProducts, setCartProducts } = useFetchCartItems();
+    const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
     const [loading, setLoading] = useState(false);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -83,6 +84,8 @@ function Cart() {
 
     console.log("cart page");
     console.log(cartProducts);
+
+    if (fetchLoading) return <Loading />;
     return (
         <>
             <div style={{ backgroundColor: "#fafafa" }}>

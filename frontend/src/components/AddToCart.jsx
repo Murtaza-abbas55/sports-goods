@@ -20,6 +20,7 @@ function AddToCart({ product_id, cartID, quantity, stock, style }) {
     const [loading, setLoading] = useState(false);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
+    const { setCartID } = useAuth();
 
     const handleCloseToast = () => {
         setToastOpen(false);
@@ -34,6 +35,7 @@ function AddToCart({ product_id, cartID, quantity, stock, style }) {
                 quantity,
             });
             console.log(response.data);
+            setCartID(response.data.cartId);
             setToastMessage("Added to cart successfully!"); // Set success message
             setToastOpen(true); // Show toast
         } catch (error) {

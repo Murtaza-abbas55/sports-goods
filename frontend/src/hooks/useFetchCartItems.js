@@ -5,12 +5,12 @@ import { useAuth } from "../context/AuthContext";
 function useFetchCartItems() {
     const [cartProducts, setCartProducts] = useState([]);
     const [cartProductsLength, setCartProductsLength] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [fetchLoading, setFetchLoading] = useState(false);
     const { cartID } = useAuth();
 
     useEffect(() => {
         async function getCartItems(cartID) {
-            setLoading(true); // Show loading state while fetching
+            setFetchLoading(true); // Show loading state while fetching
             try {
                 const response = await axios.get("/api/getcart", {
                     params: { cart_id: cartID },
@@ -36,7 +36,7 @@ function useFetchCartItems() {
                     error.response?.data || error.message
                 );
             } finally {
-                setLoading(false); // Stop loading state
+                setFetchLoading(false); // Stop loading state
             }
         }
 
@@ -48,7 +48,7 @@ function useFetchCartItems() {
         setCartProductsLength,
         cartProducts,
         setCartProducts,
-        loading,
+        fetchLoading,
     };
 }
 export default useFetchCartItems;
