@@ -7,6 +7,7 @@ import {
     mergeAnonymousCartWithUserCart,
     clearuserCartProducts,
     getCartProducts,
+    ChangeProductQuantity
 } from "../models/Cart.js";
 
 export const addToCart = async (req, res) => {
@@ -151,3 +152,26 @@ export const getCartProductsController = async (req, res) => {
         });
     }
 };
+export const ChangeQuantityController = async (req,res) => {
+    try {
+        const { cart_id, product_id, cflag } = req.body;
+        if (!cart_id || !product_id || !cflag) {
+            return res.status(400).json({
+                success: false,
+                message: "cart_id, product_id, and cflag are required.",
+            });
+        }
+        const result = await ChangeProductQuantity(cart_id, product_id, cflag);
+        if (result.success) {
+            return res.status(200).json(result);
+        } else {
+            return res.status(400).json(result);
+        }
+    } catch (error) {
+        console.error("Error in changeProductQuantity controller:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error.",
+        });
+    }
+}
