@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import DrawerAppBar from "../components/Navbar";
 import useFetchCartItems from "../hooks/useFetchCartItems";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function Cart() {
     const { cartProducts, setCartProducts } = useFetchCartItems();
@@ -57,11 +58,16 @@ function Cart() {
         try {
             const response = await axios.post("/api/remove", {
                 product_id,
-                cartId: cartID,
+                cart_id: cartID,
             });
             console.log(response.data);
             setToastMessage("Removed from cart!"); // Set success message
             setToastOpen(true); // Show toast
+            setCartProducts((prevProducts) =>
+                prevProducts.filter(
+                    (cartProduct) => cartProduct.product_id !== product_id
+                )
+            );
         } catch (error) {
             console.error(
                 "Error while removing product from cart:",
@@ -137,6 +143,19 @@ function Cart() {
                                                 >
                                                     <AddCircleIcon />
                                                 </IconButton>
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
+                                                    color="error"
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={() =>
+                                                        handleRemove(
+                                                            cartProduct.product_id
+                                                        )
+                                                    }
+                                                >
+                                                    Remove
+                                                </Button>
                                             </Stack>
                                         </Box>
                                     </Box>
