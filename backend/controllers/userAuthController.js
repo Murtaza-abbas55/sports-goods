@@ -55,3 +55,44 @@ export const login = async (req, res) => {
         res.status(500).json({ error: 'Error logging in user' });
     }
 };
+export const updateUserController = async (req, res) => {
+    try {
+        const {
+            user_id,
+            phone_number,
+            first_name,
+            last_name,
+            password,
+            address,
+            email,
+        } = req.body;
+        if (!user_id || !phone_number || !first_name || !last_name || !password || !address || !email) {
+            return res.status(400).json({
+                success: false,
+                message: 'All fields (user_id, phone_number, first_name, last_name, password, address, email) are required.',
+            });
+        }
+        const result = await updateUserDetails({
+            user_id,
+            phone_number,
+            first_name,
+            last_name,
+            password,
+            address,
+            email,
+        });
+
+        if (result.success) {
+            return res.status(200).json(result);
+        } else {
+            return res.status(400).json(result);
+        }
+    } catch (error) {
+        console.error('Error in updateUserController:', error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while updating user details.',
+        });
+    }
+};
