@@ -27,15 +27,25 @@ function SaleForm({
     async function addSale(event) {
         const formData = new FormData(event.currentTarget);
         const formJson = Object.fromEntries(formData.entries());
-        setDiscount(formJson.discount);
-        console.log(formJson.discount);
+        const discountValue = parseInt(formJson.discount, 10);
+
+        // Validate discount value
+        if (isNaN(discountValue) || discountValue < 1 || discountValue > 100) {
+            alert(
+                "Please enter a valid discount percentage between 1 and 100."
+            );
+            return;
+        }
+
+        setDiscount(discountValue);
+        console.log(discountValue);
         console.log(selectedProductID);
         handleClose();
 
         try {
             const response = await axios.post("/api/addsale", {
                 product_id: selectedProductID,
-                discount_percent: formJson.discount,
+                discount_percent: discountValue,
                 admin_username: Data.admin_username,
             });
             console.log(response.data);
@@ -43,7 +53,7 @@ function SaleForm({
                 ...prevSaleProducts,
                 {
                     product_id: selectedProductID,
-                    discount_percent: formJson.discount,
+                    discount_percent: discountValue,
                 },
             ]);
         } catch (error) {
@@ -53,6 +63,7 @@ function SaleForm({
             );
         }
     }
+
     return (
         <React.Fragment>
             <Dialog
@@ -75,12 +86,17 @@ function SaleForm({
                         autoFocus
                         required
                         margin="dense"
-                        id="name"
+                        id="discount"
                         name="discount"
                         label="Discount"
                         type="number"
                         fullWidth
                         variant="standard"
+                        inputProps={{
+                            min: 1,
+                            max: 100,
+                            step: 1,
+                        }}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -91,4 +107,5 @@ function SaleForm({
         </React.Fragment>
     );
 }
+
 export default SaleForm;
