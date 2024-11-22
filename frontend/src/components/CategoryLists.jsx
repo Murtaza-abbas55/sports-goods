@@ -26,7 +26,7 @@ function CategoryList() {
             <Stack
                 direction={"row"}
                 flexWrap={"wrap"}
-                gap={2}
+                gap={5}
                 justifyContent={"center"}
             >
                 {categories.map((category) => (

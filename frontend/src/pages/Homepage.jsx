@@ -4,6 +4,7 @@ import Section from "../components/Section";
 import CategoryList from "../components/CategoryLists";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import SaleSection from "../components/SaleSection";
 
 function Header() {
     return (
@@ -15,6 +16,7 @@ function Header() {
                 sectionHeading={"Trending"}
                 url={"/api/trending-products"}
             />
+            <SaleSection />
             <CategoryList />
             <Footer />
             <Link to={"/admin"}>Admin Only</Link>

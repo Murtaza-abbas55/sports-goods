@@ -40,7 +40,7 @@ function Section({ sectionHeading, url }) {
             </Typography>
             <Stack
                 direction={"row"}
-                gap={2}
+                gap={5}
                 flexWrap={"wrap"}
                 justifyContent={"center"}
             >
