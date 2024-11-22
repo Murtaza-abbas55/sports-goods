@@ -23,6 +23,37 @@ function Cart() {
         setToastOpen(false);
     };
 
+    async function handleDecrease(product_id) {
+        setLoading(true); // Show loading spinner
+        try {
+            const response = await axios.post("/api/change-quantity", {
+                product_id,
+                cart_id: cartID,
+                cflag: "decrease",
+            });
+            console.log(response.data);
+            setToastMessage("Added to cart successfully!"); // Set success message
+            setToastOpen(true); // Show toast
+            setCartProducts((prevProducts) =>
+                prevProducts.map((cartProduct) =>
+                    cartProduct.product_id === product_id
+                        ? { ...cartProduct, quantity: cartProduct.quantity - 1 }
+                        : cartProduct
+                )
+            );
+        } catch (error) {
+            console.error(
+                "Error while adding product to cart:",
+                error.response?.data || error.message
+            );
+
+            setToastMessage("Failed to add to cart! Please try again."); // Set error message
+            setToastOpen(true); // Show toast
+        } finally {
+            setLoading(false); // Hide loading spinner
+        }
+    }
+
     async function handleAdd(product_id) {
         setLoading(true); // Show loading spinner
         try {
@@ -118,8 +149,12 @@ function Cart() {
                                         <Box marginLeft={-1} marginTop={5}>
                                             <Stack direction={"row"}>
                                                 <IconButton
+                                                    disabled={
+                                                        cartProduct.quantity <=
+                                                        1
+                                                    }
                                                     onClick={() =>
-                                                        handleRemove(
+                                                        handleDecrease(
                                                             cartProduct.product_id
                                                         )
                                                     }
