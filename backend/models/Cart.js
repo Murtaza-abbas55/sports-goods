@@ -326,7 +326,80 @@ export const getCartProducts = async (cart_id) => {
 
         return { success: true, message: "Cart found", cart: cart };
     } catch (error) {
-        // Use the correct JavaScript Error constructor
         throw new Error("Error: " + error.message);
+    }
+};
+export const ChangeProductQuantity = async (cart_id, product_id, cflag) => {
+    try {
+        console.log(`${cflag === "increase" ? "Increasing" : "Decreasing"} quantity for product ${product_id} in cart ${cart_id}`  );
+        const { rows: productInCart } = await pool.query(
+            `SELECT quantity FROM CartProducts WHERE cart_id = $1 AND product_id = $2`,
+            [cart_id, product_id]
+        );
+
+        if (productInCart.length === 0) {
+            return { success: false, message: "Product not found in cart." };
+        }
+
+        const currentQuantity = productInCart[0].quantity;
+        const { rows: productStock } = await pool.query(
+            `SELECT stock FROM Products WHERE product_id = $1`,
+            [product_id]
+        );
+
+        if (productStock.length === 0) {
+            return { success: false, message: "Product does not exist." };
+        }
+
+        const stockAvailable = productStock[0].stock;
+        if (cflag === "increase") {
+            if (stockAvailable < 1) {
+                return {
+                    success: false,
+                    message: "Not enough stock available to increase quantity.",
+                };
+            }
+            await pool.query(
+                `UPDATE CartProducts SET quantity = quantity + 1 WHERE cart_id = $1 AND product_id = $2`,
+                [cart_id, product_id]
+            );
+            await pool.query(
+                `UPDATE Products SET stock = stock - 1 WHERE product_id = $1`,
+                [product_id]
+            );
+
+            console.log(`Increased quantity for product ${product_id} in cart ${cart_id}`);
+            return { success: true, message: "Increased product quantity by 1." };
+
+        } else if (cflag === "decrease") {
+            if (currentQuantity <= 1) {
+                return {
+                    success: false,
+                    message: "Cannot decrease quantity below 1. Remove the product instead.",
+                };
+            }
+            await pool.query(
+                `UPDATE CartProducts SET quantity = quantity - 1 WHERE cart_id = $1 AND product_id = $2`,
+                [cart_id, product_id]
+            );
+
+            await pool.query(
+                `UPDATE Products SET stock = stock + 1 WHERE product_id = $1`,
+                [product_id]
+            );
+
+            console.log(`Decreased quantity for product ${product_id} in cart ${cart_id}`);
+            return { success: true, message: "Decreased product quantity by 1." };
+
+        } else {
+            return { success: false, message: "Invalid flag. Use 'increase' or 'decrease'." };
+        }
+    } catch (error) {
+        console.error("Error changing product quantity:", error);
+        return {
+            success: false,
+            message: "Error changing product quantity.",
+            error,
+        };
     }
 };
