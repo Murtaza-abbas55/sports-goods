@@ -33,6 +33,8 @@ function SaleSection() {
                         name={saleProduct.name}
                         price={saleProduct.price}
                         image_url={`/images/${saleProduct.image_url}`}
+                        new_price={saleProduct.new_price}
+                        discount_percentage={saleProduct.discount_percentage}
                     />
                 ))}
             </Stack>
