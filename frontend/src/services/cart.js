@@ -16,7 +16,7 @@ async function handleDecrease(
             cflag: "decrease",
         });
         console.log(response.data);
-        setToastMessage("Added to cart successfully!"); // Set success message
+        setToastMessage("Deducted From Cart Successfully"); // Set success message
         setToastOpen(true); // Show toast
         setCartProducts((prevProducts) =>
             prevProducts.map((cartProduct) =>
@@ -31,7 +31,7 @@ async function handleDecrease(
             error.response?.data || error.message
         );
 
-        setToastMessage("Failed to add to cart! Please try again."); // Set error message
+        setToastMessage("Failed to deduct from cart! Please try again."); // Set error message
         setToastOpen(true); // Show toast
     } finally {
         setLoading(false); // Hide loading spinner

@@ -12,6 +12,8 @@ import Loading from "../components/Loading";
 import { handleRemove } from "../services/cart";
 import { handleDecrease } from "../services/cart";
 import { handleAdd } from "../services/cart";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 function Cart() {
     const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
@@ -140,6 +142,24 @@ function Cart() {
                         ))}
                     </Stack>
                     <Stack></Stack>
+                    {/* Toast Notification */}
+                    <Snackbar
+                        open={toastOpen}
+                        autoHideDuration={3000} // Auto-close after 3 seconds
+                        onClose={handleCloseToast}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "center",
+                        }}
+                    >
+                        <Alert
+                            onClose={handleCloseToast}
+                            severity={"success"}
+                            sx={{ width: "100%" }}
+                        >
+                            {toastMessage}
+                        </Alert>
+                    </Snackbar>
                 </Stack>
             </div>
         </>
