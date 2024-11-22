@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import Loading from "../components/Loading";
 import SaleForm from "../components/SaleForm";
+import useFetchSale from "../hooks/useFetchSale";
 
 function Sale() {
     const [products, setProducts] = useState([]);
@@ -21,6 +22,10 @@ function Sale() {
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [discount, setDiscount] = useState(0);
     const [selectedProductID, setSelectedProductID] = useState(null);
+
+    const { saleProducts, setSaleProducts } = useFetchSale();
+    console.log("saleProducts");
+    console.log(saleProducts);
 
     // Fetch the products from the backend using axios
     useEffect(() => {
@@ -43,6 +48,31 @@ function Sale() {
     function handleOpenFormDialog(product_id) {
         setSelectedProductID(product_id);
         setFormDialogOpen(true);
+    }
+
+    function getProductSaleStatus(product_id) {
+        return saleProducts.some(
+            (product) => product.product_id === product_id
+        );
+    }
+
+    async function handleRemoveSale(product_id) {
+        console.log(product_id);
+        try {
+            const response = await axios.post("/api/removesale", {
+                product_id,
+            });
+            setSaleProducts((prevSaleProducts) =>
+                prevSaleProducts.filter(
+                    (product) => product.product_id !== product_id
+                )
+            );
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        } finally {
+            console.log("finally");
+        }
     }
 
     if (error) return <p>{error}</p>;
@@ -71,7 +101,10 @@ function Sale() {
                                 <strong>Image</strong>
                             </TableCell>
                             <TableCell>
-                                <strong>Action</strong>
+                                <strong>Add</strong>
+                            </TableCell>
+                            <TableCell>
+                                <strong>Remove</strong>
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -102,6 +135,22 @@ function Sale() {
                                         add sale
                                     </Button>
                                 </TableCell>
+                                <TableCell>
+                                    <Button
+                                        disabled={
+                                            !getProductSaleStatus(
+                                                product.product_id
+                                            )
+                                        }
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() =>
+                                            handleRemoveSale(product.product_id)
+                                        }
+                                    >
+                                        remove sale
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -113,6 +162,8 @@ function Sale() {
                 discount={discount}
                 setDiscount={setDiscount}
                 selectedProductID={selectedProductID}
+                setSaleProducts={setSaleProducts}
+                saleProducts={saleProducts}
             />
         </div>
     );

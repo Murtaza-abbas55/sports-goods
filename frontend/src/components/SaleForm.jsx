@@ -15,6 +15,8 @@ function SaleForm({
     discount,
     setDiscount,
     selectedProductID,
+    setSaleProducts,
+    saleProducts,
 }) {
     function handleClose() {
         setFormDialogOpen(false);
@@ -37,6 +39,13 @@ function SaleForm({
                 admin_username: Data.admin_username,
             });
             console.log(response.data);
+            setSaleProducts((prevSaleProducts) => [
+                ...prevSaleProducts,
+                {
+                    product_id: selectedProductID,
+                    discount_percent: formJson.discount,
+                },
+            ]);
         } catch (error) {
             console.error(
                 "Error while adding product to cart:",
