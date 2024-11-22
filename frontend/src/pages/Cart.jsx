@@ -6,10 +6,12 @@ import IconButton from "@mui/material/IconButton";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Loading from "../components/Loading";
+import { handleRemove } from "../services/cart";
+import { handleDecrease } from "../services/cart";
+import { handleAdd } from "../services/cart";
 
 function Cart() {
     const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
@@ -22,96 +24,6 @@ function Cart() {
     const handleCloseToast = () => {
         setToastOpen(false);
     };
-
-    async function handleDecrease(product_id) {
-        setLoading(true); // Show loading spinner
-        try {
-            const response = await axios.post("/api/change-quantity", {
-                product_id,
-                cart_id: cartID,
-                cflag: "decrease",
-            });
-            console.log(response.data);
-            setToastMessage("Added to cart successfully!"); // Set success message
-            setToastOpen(true); // Show toast
-            setCartProducts((prevProducts) =>
-                prevProducts.map((cartProduct) =>
-                    cartProduct.product_id === product_id
-                        ? { ...cartProduct, quantity: cartProduct.quantity - 1 }
-                        : cartProduct
-                )
-            );
-        } catch (error) {
-            console.error(
-                "Error while adding product to cart:",
-                error.response?.data || error.message
-            );
-
-            setToastMessage("Failed to add to cart! Please try again."); // Set error message
-            setToastOpen(true); // Show toast
-        } finally {
-            setLoading(false); // Hide loading spinner
-        }
-    }
-
-    async function handleAdd(product_id) {
-        setLoading(true); // Show loading spinner
-        try {
-            const response = await axios.post("/api/add", {
-                product_id,
-                cartId: cartID,
-                quantity: 1,
-            });
-            console.log(response.data);
-            setToastMessage("Added to cart successfully!"); // Set success message
-            setToastOpen(true); // Show toast
-            setCartProducts((prevProducts) =>
-                prevProducts.map((cartProduct) =>
-                    cartProduct.product_id === product_id
-                        ? { ...cartProduct, quantity: cartProduct.quantity + 1 }
-                        : cartProduct
-                )
-            );
-        } catch (error) {
-            console.error(
-                "Error while adding product to cart:",
-                error.response?.data || error.message
-            );
-
-            setToastMessage("Failed to add to cart! Please try again."); // Set error message
-            setToastOpen(true); // Show toast
-        } finally {
-            setLoading(false); // Hide loading spinner
-        }
-    }
-
-    async function handleRemove(product_id) {
-        setLoading(true); // Show loading spinner
-        try {
-            const response = await axios.post("/api/remove", {
-                product_id,
-                cart_id: cartID,
-            });
-            console.log(response.data);
-            setToastMessage("Removed from cart!"); // Set success message
-            setToastOpen(true); // Show toast
-            setCartProducts((prevProducts) =>
-                prevProducts.filter(
-                    (cartProduct) => cartProduct.product_id !== product_id
-                )
-            );
-        } catch (error) {
-            console.error(
-                "Error while removing product from cart:",
-                error.response?.data || error.message
-            );
-
-            setToastMessage("Failed to remove from cart! Please try again."); // Set error message
-            setToastOpen(true); // Show toast
-        } finally {
-            setLoading(false); // Hide loading spinner
-        }
-    }
 
     console.log("cart page");
     console.log(cartProducts);
@@ -155,7 +67,12 @@ function Cart() {
                                                     }
                                                     onClick={() =>
                                                         handleDecrease(
-                                                            cartProduct.product_id
+                                                            cartProduct.product_id,
+                                                            setLoading,
+                                                            setToastMessage,
+                                                            setToastOpen,
+                                                            setCartProducts,
+                                                            cartID
                                                         )
                                                     }
                                                     aria-label="decrease quantity"
@@ -174,7 +91,12 @@ function Cart() {
                                                 <IconButton
                                                     onClick={() =>
                                                         handleAdd(
-                                                            cartProduct.product_id
+                                                            cartProduct.product_id,
+                                                            setLoading,
+                                                            setToastMessage,
+                                                            setToastOpen,
+                                                            setCartProducts,
+                                                            cartID
                                                         )
                                                     }
                                                     aria-label="increase quantity"
@@ -190,7 +112,12 @@ function Cart() {
                                                     startIcon={<DeleteIcon />}
                                                     onClick={() =>
                                                         handleRemove(
-                                                            cartProduct.product_id
+                                                            cartProduct.product_id,
+                                                            setLoading,
+                                                            setToastMessage,
+                                                            setToastOpen,
+                                                            setCartProducts,
+                                                            cartID
                                                         )
                                                     }
                                                 >
