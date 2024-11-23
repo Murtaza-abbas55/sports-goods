@@ -80,11 +80,17 @@ function App() {
                     )
                 }
             />
-            <Route path="/product-listing" element={<ProductLayout />}>
+            <Route
+                path="/product-listing"
+                element={Data?.isAdmin ? <ErrorPage /> : <ProductLayout />}
+            >
                 <Route index element={<ProductListing />} />
                 <Route path="product/:product_id" element={<Product />} />
             </Route>
-            <Route path="cart/:cartID" element={<Cart />} />
+            <Route
+                path="cart/:cartID"
+                element={Data?.isAdmin ? <ErrorPage /> : <Cart />}
+            />
             <Route
                 path="/admin"
                 element={Data?.isAdmin ? <AdminLayout /> : <ErrorPage />}
