@@ -29,7 +29,7 @@ function Product() {
     console.log("id");
     console.log({ product_id });
 
-    const [products, setProducts] = useState();
+    const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { cartID } = useAuth();
@@ -43,8 +43,8 @@ function Product() {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get(`/api/products/${product_id}`);
-                setProducts(response.data[0]);
-                console.log(response.data[0]);
+                setProducts(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setError("Failed to load products.");
