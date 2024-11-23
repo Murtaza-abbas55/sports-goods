@@ -1,27 +1,36 @@
-import { addReview, deleteReview,getAllGivenReviews,getAllProductReviews} from "../models/Review.js";
-
+import {
+    addReview,
+    deleteReview,
+    getAllGivenReviews,
+    getAllProductReviews,
+} from "../models/Review.js";
 
 export const AddReviewController = async (req, res) => {
     const { product_id, rating, comments } = req.body;
+    const { user_id } = req.userId;
 
     try {
-        const newReview = await addReview(user_id, product_id, rating, comments);
-        res.status(201).json({ 
-            success: true, 
-            review: newReview, 
-            message: "Review added successfully." 
+        const newReview = await addReview(
+            user_id,
+            product_id,
+            rating,
+            comments
+        );
+        res.status(201).json({
+            success: true,
+            review: newReview,
+            message: "Review added successfully.",
         });
     } catch (error) {
-        res.status(400).json({ 
-            success: false, 
-            error: error.message 
+        res.status(400).json({
+            success: false,
+            error: error.message,
         });
     }
 };
 
-
 export const DeleteReviewController = async (req, res) => {
-    const {product_id } = req.body;
+    const { product_id } = req.body;
     const user_id = req.userId;
     try {
         const result = await deleteReview(user_id, product_id);
@@ -32,10 +41,10 @@ export const DeleteReviewController = async (req, res) => {
 };
 
 export const GetReviewController = async (req, res) => {
-    const user_id = req.userId; 
+    const user_id = req.userId;
 
     try {
-        const reviews = await getAllGivenReviews(user_id); 
+        const reviews = await getAllGivenReviews(user_id);
         res.status(200).json({
             success: true,
             reviews,
@@ -48,13 +57,13 @@ export const GetReviewController = async (req, res) => {
         });
     }
 };
-export const getAllProductReviewsController = async (req, res) => { 
+export const getAllProductReviewsController = async (req, res) => {
     try {
         const { product_id } = req.params;
         if (!product_id) {
             return res.status(400).json({
                 success: false,
-                message: 'Product ID is required.',
+                message: "Product ID is required.",
             });
         }
 
@@ -71,10 +80,13 @@ export const getAllProductReviewsController = async (req, res) => {
             data: result,
         });
     } catch (error) {
-        console.error('Error in getAllProductReviewsController:', error.message);
+        console.error(
+            "Error in getAllProductReviewsController:",
+            error.message
+        );
         return res.status(500).json({
             success: false,
-            message: 'Internal server error.',
+            message: "Internal server error.",
         });
     }
 };
