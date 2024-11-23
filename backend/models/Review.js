@@ -15,8 +15,17 @@ export const addReview = async (user_id, product_id, rating, comments) => {
         [user_id, product_id, rating, comments]
     );
 
-    return newReview.rows[0];
+    const result = await pool.query(
+        `SELECT r.*, u.first_name, u.last_name
+         FROM Reviews r
+         JOIN Users u ON r.user_id = u.user_id
+         WHERE r.review_id = $1`,
+        [newReview.rows[0].review_id]
+    );
+
+    return result.rows[0];
 };
+
 
 export const deleteReview = async (user_id, product_id) => {
     const review = await pool.query(

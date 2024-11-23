@@ -3,14 +3,22 @@ import { addReview, deleteReview,getAllGivenReviews,getAllProductReviews} from "
 
 export const AddReviewController = async (req, res) => {
     const { product_id, rating, comments } = req.body;
-    const user_id = req.userId;
+
     try {
         const newReview = await addReview(user_id, product_id, rating, comments);
-        res.status(201).json({ success: true, review: newReview, message: "Review added successfully." });
+        res.status(201).json({ 
+            success: true, 
+            review: newReview, 
+            message: "Review added successfully." 
+        });
     } catch (error) {
-        res.status(400).json({ success: false, error: error.message });
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
     }
 };
+
 
 export const DeleteReviewController = async (req, res) => {
     const {product_id } = req.body;
