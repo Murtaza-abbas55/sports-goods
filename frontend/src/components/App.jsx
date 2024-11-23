@@ -43,8 +43,30 @@ function App() {
 
     return (
         <Routes>
-            <Route path="/" element={<Header />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+                path="/"
+                element={
+                    !Data ? (
+                        <Header />
+                    ) : Data.isAdmin ? (
+                        <Navigate to="/admin" />
+                    ) : (
+                        <Header />
+                    )
+                }
+            />
+            <Route
+                path="/login"
+                element={
+                    !Data ? (
+                        <Login />
+                    ) : Data.isAdmin ? (
+                        <Navigate to="/admin" />
+                    ) : (
+                        <Navigate to="/" />
+                    )
+                }
+            />
 
             <Route path="/create_account" element={<CreateAccount />} />
             <Route path="/product-listing" element={<ProductLayout />}>
