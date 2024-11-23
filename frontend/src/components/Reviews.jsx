@@ -8,10 +8,16 @@ import Rating from "@mui/material/Rating";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import ReviewForm from "./ReviewForm";
 
 function Reviews({ product_id }) {
     const { Data } = useAuth();
     const [reviews, setReviews] = useState([]);
+    const [formDialogOpen, setFormDialogOpen] = useState(false);
+
+    function openForm() {
+        setFormDialogOpen(true);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,55 +34,6 @@ function Reviews({ product_id }) {
         fetchData();
     }, [product_id]);
     console.log(reviews);
-
-    async function postReview(product_id) {
-        try {
-            const response = await axios.post("/api/addreview", {
-                product_id,
-                user_id: Data.user_id,
-                rating: 4,
-                comments: "review sent from frontend",
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error(
-                "Error while adding product to cart:",
-                error.response?.data || error.message
-            );
-        } finally {
-            setReviews((prevReviews) => [
-                ...prevReviews,
-                {
-                    user_name: Data.user_name,
-                    user_id: Data.user_id,
-                    rating: 4,
-                    comments: "review sent from frontend",
-                },
-            ]);
-        }
-    }
-
-    // async function postReview(product_id) {
-    //     const newReview = {
-    //         product_id,
-    //         user_id: Data.user_id,
-    //         rating: 4,
-    //         comments: "review sent from frontend",
-    //     };
-
-    //     try {
-    //         const response = await axios.post("/api/addreview", newReview);
-    //         console.log(response.data);
-    //     } catch (error) {
-    //         console.error(
-    //             "Error while adding product review:",
-    //             error.response?.data || error.message
-    //         );
-    //         alert("Failed to post the review. Please try again.");
-    //     } finally {
-    //         setReviews((prevReviews) => [...prevReviews, newReview]);
-    //     }
-    // }
 
     async function deleteReview(product_id, user_id) {
         try {
@@ -160,10 +117,15 @@ function Reviews({ product_id }) {
             <Button
                 variant="contained"
                 sx={{ margin: "10px 10px" }}
-                onClick={() => postReview(product_id)}
+                onClick={openForm}
             >
                 Review Product
             </Button>
+            <ReviewForm
+                formDialogOpen={formDialogOpen}
+                setFormDialogOpen={setFormDialogOpen}
+                product_id={product_id}
+            />
         </>
     );
 }
