@@ -68,7 +68,18 @@ function App() {
                 }
             />
 
-            <Route path="/create_account" element={<CreateAccount />} />
+            <Route
+                path="/create_account"
+                element={
+                    !Data ? (
+                        <CreateAccount />
+                    ) : Data.isAdmin ? (
+                        <Navigate to="/admin" />
+                    ) : (
+                        <Navigate to="/" />
+                    )
+                }
+            />
             <Route path="/product-listing" element={<ProductLayout />}>
                 <Route index element={<ProductListing />} />
                 <Route path="product/:product_id" element={<Product />} />
@@ -76,9 +87,7 @@ function App() {
             <Route path="cart/:cartID" element={<Cart />} />
             <Route
                 path="/admin"
-                element={
-                    Data?.isAdmin ? <AdminLayout /> : <Navigate to="/login" />
-                }
+                element={Data?.isAdmin ? <AdminLayout /> : <ErrorPage />}
             >
                 <Route index element={<AdminHome />} />
                 <Route path="add-product" element={<CreateProduct />} />
