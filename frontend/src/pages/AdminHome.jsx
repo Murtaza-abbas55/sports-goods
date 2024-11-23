@@ -1,9 +1,17 @@
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 function AdminHome() {
-    const { Data } = useAuth();
+    const { Data, logout } = useAuth();
+    const navigate = useNavigate();
+
+    function handleLogOut() {
+        logout();
+        navigate("/");
+        console.log(localStorage.getItem("authData"));
+    }
     return (
         <Box
             sx={{
@@ -84,8 +92,7 @@ function AdminHome() {
                 variant="contained"
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
                 size="large"
-                component={RouterLink}
-                to={"/"}
+                onClick={handleLogOut}
             >
                 Back To home
             </Button>

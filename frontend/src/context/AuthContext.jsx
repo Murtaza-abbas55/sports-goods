@@ -1,7 +1,6 @@
 // src/context/AuthContext.js
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import { useEffect } from "react";
 
 const AuthContext = createContext();
 
@@ -14,6 +13,16 @@ export const AuthProvider = ({ children }) => {
     const [Data, setData] = useState(null);
     const [cartID, setCartID] = useState(null);
 
+    // Load user data from local storage on initialization
+    useEffect(() => {
+        const savedData = JSON.parse(localStorage.getItem("authData"));
+        if (savedData) {
+            setIsAuthenticated(true);
+            setData(savedData);
+        }
+    }, []);
+
+    // Merge anonymous cart if user logs in
     useEffect(() => {
         const mergeAnonymousCart = async (user_id) => {
             try {
@@ -22,8 +31,6 @@ export const AuthProvider = ({ children }) => {
                 });
                 console.log("Cart merge response:", response.data.cartId);
                 setCartID(response.data.cartId);
-                console.log("Data");
-                console.log(Data.user_id);
             } catch (error) {
                 console.error("Error merging anonymous cart:", error);
             }
@@ -31,14 +38,19 @@ export const AuthProvider = ({ children }) => {
         if (Data) mergeAnonymousCart(Data.user_id);
     }, [Data]);
 
+    // Login and save user data to local storage
     const login = (data) => {
         setIsAuthenticated(true);
         setData(data);
+        localStorage.setItem("authData", JSON.stringify(data)); // Save user data to local storage
     };
 
+    // Logout and clear user data from local storage
     const logout = () => {
         setIsAuthenticated(false);
-        setData(null); // Clear user data on logout
+        setData(null);
+        setCartID(null); // Clear cart ID
+        localStorage.removeItem("authData"); // Remove user data from local storage
     };
 
     return (
