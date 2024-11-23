@@ -1,17 +1,67 @@
 // server/models/Product.js
 import pool from '../db.js';
-export const GetProductById = async(id) =>{
- try{
-    const result = await pool.query(`SELECT * FROM Products where product_id = $1`,[id]);
-    return result.rows;
- }
- catch (error) {
-    throw new Error(`Error retrieving product with {id}: ` + error.message);
-}
+export const GetProductById = async (id) => {
+    try {
+        const query = `
+            SELECT 
+                p.product_id, 
+                p.name, 
+                p.image_url, 
+                p.stock, 
+                p.price, 
+                p.description, 
+                p.category_id, 
+                p.created_at, 
+                p.admin_username,
+                s.discount_percentage, 
+                s.new_price
+            FROM 
+                Products p
+            LEFT JOIN 
+                Sale s
+            ON 
+                p.product_id = s.product_id
+            WHERE 
+                p.product_id = $1
+        `;
+
+        const result = await pool.query(query, [id]);
+
+        if (result.rows.length === 0) {
+            throw new Error(`No product found with id: ${id}`);
+        }
+
+        return result.rows[0]; 
+    } catch (error) {
+        throw new Error(`Error retrieving product with id ${id}: ` + error.message);
+    }
 };
+
 export const getAllProducts = async () => {
     try {
-        const result = await pool.query('SELECT * FROM Products');
+        const query = `
+            SELECT 
+                p.product_id, 
+                p.name, 
+                p.image_url, 
+                p.stock, 
+                p.price, 
+                p.description, 
+                p.category_id, 
+                p.created_at, 
+                p.admin_username,
+                s.discount_percentage, 
+                s.new_price
+            FROM 
+                Products p
+            LEFT JOIN 
+                Sale s
+            ON 
+                p.product_id = s.product_id
+        `;
+
+        const result = await pool.query(query);
+
         return result.rows;
     } catch (error) {
         throw new Error('Error retrieving products: ' + error.message);

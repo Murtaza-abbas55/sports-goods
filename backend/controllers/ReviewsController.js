@@ -1,4 +1,4 @@
-import { addReview, deleteReview,getAllGivenReviews } from "../models/Review.js";
+import { addReview, deleteReview,getAllGivenReviews,getAllProductReviews} from "../models/Review.js";
 
 
 export const AddReviewController = async (req, res) => {
@@ -40,4 +40,33 @@ export const GetReviewController = async (req, res) => {
         });
     }
 };
+export const getAllProductReviewsController = async (req, res) => { 
+    try {
+        const { product_id } = req.params;
+        if (!product_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required.',
+            });
+        }
 
+        const result = await getAllProductReviews(product_id);
+
+        if (!result.success) {
+            return res.status(404).json({
+                success: false,
+                message: result.message,
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: result,
+        });
+    } catch (error) {
+        console.error('Error in getAllProductReviewsController:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error.',
+        });
+    }
+};
