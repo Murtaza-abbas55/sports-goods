@@ -45,3 +45,50 @@ export const getAllGivenReviews=async(user_id)=>{
     }
     return review.rows;
 }
+export const getAllProductReviews = async (product_id) => {
+    try {
+        console.log(`Fetching reviews for product_id: ${product_id}`);
+
+        const query = `
+            SELECT 
+                r.product_id,
+                AVG(r.rating) AS average_rating,
+                COUNT(r.review_id) AS review_count,
+                r.rating,
+                r.comments,
+                u.user_id,
+                CONCAT(u.first_name, ' ', u.last_name) AS user_name
+            FROM 
+                Reviews r
+            JOIN 
+                Users u ON r.user_id = u.user_id
+            WHERE 
+                r.product_id = $1
+            GROUP BY 
+                r.product_id, r.rating, r.comments, u.user_id, u.first_name, u.last_name;
+        `;
+
+        const { rows } = await pool.query(query, [product_id]);
+
+        if (rows.length === 0) {
+            return { success: false, message: 'No reviews found for this product.' };
+        }
+        const reviews = rows.map(row => ({
+            user_id: row.user_id,
+            user_name: row.user_name,
+            rating: row.rating,
+            comments: row.comments,
+        }));
+
+        return {
+            success: true,
+            product_id: product_id,
+            average_rating: parseFloat(rows[0].average_rating).toFixed(2),
+            review_count: rows[0].review_count,
+            reviews: reviews,
+        };
+    } catch (error) {
+        console.error('Error fetching product reviews:', error.message);
+        return { success: false, message: 'Failed to fetch reviews.' };
+    }
+};
