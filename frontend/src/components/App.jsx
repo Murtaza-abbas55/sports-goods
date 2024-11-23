@@ -19,9 +19,12 @@ import ProductLayout from "../pages/ProductLayout";
 import { useEffect } from "react";
 import Cart from "../pages/Cart";
 import Sale from "../pages/Sale";
+import Loading from "./Loading";
 
 function App() {
-    const { Data } = useAuth(); // Access auth state and user data
+    const { Data, localLoading } = useAuth(); // Access auth state and user data
+    console.log("Data now");
+    console.log(Data);
 
     const clearAnonymousCart = async () => {
         try {
@@ -35,6 +38,8 @@ function App() {
     useEffect(() => {
         clearAnonymousCart();
     }, []);
+
+    if (localLoading) return <Loading />;
 
     return (
         <Routes>

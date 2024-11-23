@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [Data, setData] = useState(null);
     const [cartID, setCartID] = useState(null);
+    const [localLoading, setLocalLoading] = useState(true);
 
     // Load user data from local storage on initialization
     useEffect(() => {
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             setData(savedData);
         }
+        setLocalLoading(false);
     }, []);
 
     // Merge anonymous cart if user logs in
@@ -43,6 +45,9 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setData(data);
         localStorage.setItem("authData", JSON.stringify(data)); // Save user data to local storage
+        console.log(
+            localStorage.setItem("authData", JSON.stringify(data)) // Save user data to local storage
+        );
     };
 
     // Logout and clear user data from local storage
@@ -55,7 +60,15 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider
-            value={{ isAuthenticated, Data, login, logout, cartID, setCartID }}
+            value={{
+                isAuthenticated,
+                Data,
+                login,
+                logout,
+                cartID,
+                setCartID,
+                localLoading,
+            }}
         >
             {children}
         </AuthContext.Provider>
