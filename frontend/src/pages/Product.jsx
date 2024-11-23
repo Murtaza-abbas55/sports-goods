@@ -10,6 +10,7 @@ import Wishlist from "../components/Wishlist";
 import IconButton from "@mui/material/IconButton";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import Reviews from "../components/Reviews";
 
 const modalStyle = {
     position: "absolute",
@@ -160,6 +161,7 @@ function Product() {
                     </Stack>
                 </Box>
             </Stack>
+            <Reviews product_id={product_id} />
         </>
     );
 }
