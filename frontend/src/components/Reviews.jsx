@@ -9,14 +9,36 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import ReviewForm from "./ReviewForm";
+import Modal from "@mui/material/Modal";
+import { Link as RouterLink } from "react-router-dom";
+import Box from "@mui/material/Box";
+
+const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+};
 
 function Reviews({ product_id }) {
     const { Data } = useAuth();
     const [reviews, setReviews] = useState([]);
     const [formDialogOpen, setFormDialogOpen] = useState(false);
+    const [openLoginMessage, setOpenLoginMessage] = useState(false);
+    const [editingStatus, setEditingStatus] = useState(false);
 
     function openForm() {
-        setFormDialogOpen(true);
+        if (Data) setFormDialogOpen(true);
+        else handleLogin();
+    }
+
+    function handleLogin() {
+        setOpenLoginMessage(true);
     }
 
     useEffect(() => {
@@ -52,6 +74,11 @@ function Reviews({ product_id }) {
             );
         }
     }
+
+    function editReview(product_id, rating, comments) {
+        console.log({ product_id, rating, comments });
+    }
+
     console.log("reviews");
     console.log(reviews);
 
@@ -93,7 +120,15 @@ function Reviews({ product_id }) {
                                     </Typography>
                                     {Data?.user_id === review.user_id && (
                                         <Stack marginTop={3} direction={"row"}>
-                                            <IconButton>
+                                            <IconButton
+                                                onClick={() =>
+                                                    editReview(
+                                                        product_id,
+                                                        review.rating,
+                                                        review.comments
+                                                    )
+                                                }
+                                            >
                                                 <EditIcon />
                                             </IconButton>
                                             <IconButton
@@ -126,6 +161,32 @@ function Reviews({ product_id }) {
                 setFormDialogOpen={setFormDialogOpen}
                 product_id={product_id}
             />
+            <Modal
+                open={openLoginMessage}
+                onClose={() => {
+                    setOpenLoginMessage(false);
+                }}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                        textTransform={"capitalize"}
+                    >
+                        Login to review product
+                    </Typography>
+                    <Button
+                        component={RouterLink}
+                        to={"/login"}
+                        variant="contained"
+                    >
+                        Log In
+                    </Button>
+                </Box>
+            </Modal>
         </>
     );
 }
