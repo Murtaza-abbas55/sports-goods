@@ -41,7 +41,9 @@ function AddToCart({
                     sx={style}
                     size="large"
                     variant="outlined"
-                    onClick={() => handleAddToCart(product_id, quantity)}
+                    onClick={() =>
+                        handleAddToCart(product_id, quantity, setQuantity)
+                    }
                     disabled={loading} // Disable button during loading
                 >
                     {loading ? <CircularProgress size={20} /> : "Add to Cart"}

@@ -36,7 +36,7 @@ function ProductListing() {
     }, []);
     console.log(wishlistItems);
 
-    async function handleAddToCart(product_id, quantity) {
+    async function handleAddToCart(product_id, quantity, setQuantity) {
         // setLoading(true); // Show loading spinner
 
         console.log("these are add to cart");
@@ -49,7 +49,14 @@ function ProductListing() {
             });
             console.log(response.data);
             setCartID(response.data.cartId);
-            // setToastMessage("Added to cart successfully!"); // Set success message
+            setQuantity(1);
+            setProducts((prevProducts) =>
+                prevProducts.map((product) =>
+                    product.product_id === product_id
+                        ? { ...product, stock: product.stock - quantity }
+                        : product
+                )
+            ); // setToastMessage("Added to cart successfully!"); // Set success message
             // setToastOpen(true); // Show toast
         } catch (error) {
             console.error(
