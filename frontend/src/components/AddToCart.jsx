@@ -16,7 +16,15 @@ import { useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import { Link as RouterLink } from "react-router-dom";
 
-function AddToCart({ product_id, cartID, quantity, stock, style }) {
+function AddToCart({
+    product_id,
+    cartID,
+    quantity,
+    setQuantity,
+    stock,
+    style,
+    handleAddToCart,
+}) {
     const [loading, setLoading] = useState(false);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -26,31 +34,6 @@ function AddToCart({ product_id, cartID, quantity, stock, style }) {
         setToastOpen(false);
     };
 
-    async function handleAddToCart() {
-        setLoading(true); // Show loading spinner
-        try {
-            const response = await axios.post("/api/add", {
-                product_id,
-                cartId: cartID,
-                quantity,
-            });
-            console.log(response.data);
-            setCartID(response.data.cartId);
-            setToastMessage("Added to cart successfully!"); // Set success message
-            setToastOpen(true); // Show toast
-        } catch (error) {
-            console.error(
-                "Error while adding product to cart:",
-                error.response?.data || error.message
-            );
-
-            setToastMessage("Failed to add to cart! Please try again."); // Set error message
-            setToastOpen(true); // Show toast
-        } finally {
-            setLoading(false); // Hide loading spinner
-        }
-    }
-
     return (
         <>
             {stock > 0 ? (
@@ -58,7 +41,7 @@ function AddToCart({ product_id, cartID, quantity, stock, style }) {
                     sx={style}
                     size="large"
                     variant="outlined"
-                    onClick={handleAddToCart}
+                    onClick={() => handleAddToCart(product_id, quantity)}
                     disabled={loading} // Disable button during loading
                 >
                     {loading ? <CircularProgress size={20} /> : "Add to Cart"}
@@ -77,13 +60,13 @@ function AddToCart({ product_id, cartID, quantity, stock, style }) {
                 </Button>
             )}
             {/* Toast Notification */}
-            <Snackbar
+            {/* <Snackbar
                 open={toastOpen}
                 autoHideDuration={3000} // Auto-close after 3 seconds
                 onClose={handleCloseToast}
                 message={toastMessage}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            />
+            /> */}
         </>
     );
 }

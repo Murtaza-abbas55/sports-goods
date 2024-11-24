@@ -11,9 +11,9 @@ import { Outlet } from "react-router-dom";
 function ProductListing() {
     // const [cartID, setCartID] = useState(null);
     const [wishlistItems, setWishlistItems] = useState([]);
-    const { products, loading, error } = useFetch("/api/products");
+    const { products, setProducts, loading, error } = useFetch("/api/products");
     const { Data } = useAuth();
-    const { cartID } = useAuth();
+    const { cartID, setCartID } = useAuth();
 
     useEffect(() => {
         const fetchWishlist = async () => {
@@ -35,6 +35,35 @@ function ProductListing() {
         fetchWishlist();
     }, []);
     console.log(wishlistItems);
+
+    async function handleAddToCart(product_id, quantity) {
+        // setLoading(true); // Show loading spinner
+
+        console.log("these are add to cart");
+        console.log({ product_id, quantity });
+        try {
+            const response = await axios.post("/api/add", {
+                product_id,
+                cartId: cartID,
+                quantity,
+            });
+            console.log(response.data);
+            setCartID(response.data.cartId);
+            // setToastMessage("Added to cart successfully!"); // Set success message
+            // setToastOpen(true); // Show toast
+        } catch (error) {
+            console.error(
+                "Error while adding product to cart:",
+                error.response?.data || error.message
+            );
+
+            // setToastMessage("Failed to add to cart! Please try again."); // Set error message
+            // setToastOpen(true); // Show toast
+        } finally {
+            // setLoading(false); // Hide loading spinner
+            // setQuantity(1);
+        }
+    }
 
     if (loading) return <Loading />;
     if (error) return <p>error</p>;
@@ -62,6 +91,7 @@ function ProductListing() {
                             cartID={cartID}
                             wishlistItems={wishlistItems}
                             setWishlistItems={setWishlistItems}
+                            handleAddToCart={handleAddToCart}
                         />
                     </div>
                 ))}
