@@ -32,7 +32,7 @@ function Product() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { cartID } = useAuth();
+    const { cartID, setCartID } = useAuth();
     const [quantity, setQuantity] = useState(1);
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
@@ -55,6 +55,36 @@ function Product() {
 
         fetchProducts();
     }, [product_id]);
+
+    async function handleAddToCart(product_id, quantity, setQuantity) {
+        // setLoading(true); // Show loading spinner
+
+        console.log("these are add to cart");
+        console.log({ product_id, quantity });
+        try {
+            const response = await axios.post("/api/add", {
+                product_id,
+                cartId: cartID,
+                quantity,
+            });
+            console.log(response.data);
+            setCartID(response.data.cartId);
+            setQuantity(1);
+            setProducts((prevProduct) => ({
+                ...prevProduct,
+                stock: prevProduct.stock - quantity,
+            })); // setToastMessage("Added to cart successfully!"); // Set success message
+            // setToastOpen(true); // Show toast
+        } catch (error) {
+            console.error(
+                "Error while adding product to cart:",
+                error.response?.data || error.message
+            );
+
+            // setToastMessage("Failed to add to cart! Please try again."); // Set error message
+            // setToastOpen(true); // Show toast
+        }
+    }
 
     if (loading) return <Loading />;
     if (error) return <p>error</p>;
@@ -152,9 +182,11 @@ function Product() {
                                     stock={products.stock}
                                     cartID={cartID}
                                     quantity={quantity}
+                                    setQuantity={setQuantity}
                                     style={{
                                         alignSelf: "start",
                                     }}
+                                    handleAddToCart={handleAddToCart}
                                 />
                             </Box>
                         </Box>

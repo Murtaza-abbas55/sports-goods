@@ -50,11 +50,12 @@ function AddToCart({
                 </Button>
             ) : (
                 <Button
-                    sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        margin: "0.5rem auto",
-                    }}
+                    sx={
+                        // display: "flex",
+                        // justifyContent: "center",
+                        // margin: "0.5rem auto",
+                        style
+                    }
                     variant="contained"
                     disabled
                 >

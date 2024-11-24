@@ -66,9 +66,6 @@ function ProductListing() {
 
             // setToastMessage("Failed to add to cart! Please try again."); // Set error message
             // setToastOpen(true); // Show toast
-        } finally {
-            // setLoading(false); // Hide loading spinner
-            // setQuantity(1);
         }
     }
 
