@@ -11,7 +11,13 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
-function ReviewForm({ formDialogOpen, setFormDialogOpen, product_id }) {
+function ReviewForm({
+    formDialogOpen,
+    setFormDialogOpen,
+    product_id,
+    reviews,
+    setReviews,
+}) {
     const [comments, setComments] = useState("");
     const [rating, setRating] = useState(null); // Tracks the rating
     const [ratingError, setRatingError] = useState(false); // Tracks if rating is missing
@@ -38,6 +44,18 @@ function ReviewForm({ formDialogOpen, setFormDialogOpen, product_id }) {
             });
             console.log(response.data);
             handleClose();
+            setReviews((prevReviews) => [
+                ...prevReviews,
+                {
+                    comments: response.data.review.comments,
+                    rating: response.data.review.rating,
+                    user_id: Data.user_id,
+                    user_name:
+                        response.data.review.first_name +
+                        " " +
+                        response.data.review.last_name,
+                },
+            ]);
         } catch (error) {
             console.error(
                 "Error while adding product to cart:",

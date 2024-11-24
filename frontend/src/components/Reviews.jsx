@@ -113,10 +113,7 @@ function Reviews({ product_id }) {
                                         color="text.secondary"
                                         marginTop={1}
                                     >
-                                        {review.comments
-                                            .charAt(0)
-                                            .toUpperCase() +
-                                            review.comments.slice(1)}{" "}
+                                        {review.comments}
                                     </Typography>
                                     {Data?.user_id === review.user_id && (
                                         <Stack marginTop={3} direction={"row"}>
@@ -160,6 +157,8 @@ function Reviews({ product_id }) {
                 formDialogOpen={formDialogOpen}
                 setFormDialogOpen={setFormDialogOpen}
                 product_id={product_id}
+                reviews={reviews}
+                setReviews={setReviews}
             />
             <Modal
                 open={openLoginMessage}
