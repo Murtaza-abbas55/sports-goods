@@ -2,13 +2,13 @@ import axios from "axios";
 
 async function handleDecrease(
     product_id,
-    setLoading,
+    setLoadingProductID,
     setToastMessage,
     setToastOpen,
     setCartProducts,
     cartID
 ) {
-    setLoading(true); // Show loading spinner
+    setLoadingProductID(product_id); // Show loading spinner
     try {
         const response = await axios.post("/api/change-quantity", {
             product_id,
@@ -43,19 +43,19 @@ async function handleDecrease(
         setToastMessage("Failed to deduct from cart! Please try again."); // Set error message
         setToastOpen(true); // Show toast
     } finally {
-        setLoading(false); // Hide loading spinner
+        setLoadingProductID(null); // Hide loading spinner
     }
 }
 
 async function handleRemove(
     product_id,
-    setLoading,
+    setLoadingProductID,
     setToastMessage,
     setToastOpen,
     setCartProducts,
     cartID
 ) {
-    setLoading(true); // Show loading spinner
+    setLoadingProductID(product_id); // Show loading spinner
     try {
         const response = await axios.post("/api/remove", {
             product_id,
@@ -78,19 +78,19 @@ async function handleRemove(
         setToastMessage("Failed to remove from cart! Please try again."); // Set error message
         setToastOpen(true); // Show toast
     } finally {
-        setLoading(false); // Hide loading spinner
+        setLoadingProductID(null); // Hide loading spinner
     }
 }
 
 async function handleAdd(
     product_id,
-    setLoading,
+    setLoadingProductID,
     setToastMessage,
     setToastOpen,
     setCartProducts,
     cartID
 ) {
-    setLoading(true); // Show loading spinner
+    setLoadingProductID(product_id); // Show loading spinner
     try {
         const response = await axios.post("/api/add", {
             product_id,
@@ -125,7 +125,7 @@ async function handleAdd(
         setToastMessage("Failed to add to cart! Please try again."); // Set error message
         setToastOpen(true); // Show toast
     } finally {
-        setLoading(false); // Hide loading spinner
+        setLoadingProductID(null); // Hide loading spinner
     }
 }
 
