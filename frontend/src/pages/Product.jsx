@@ -1,16 +1,19 @@
-import { Box, Button, colors, Divider, Stack, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import Loading from "../components/Loading";
-import AddToCart from "../components/AddToCart";
-import { useAuth } from "../context/AuthContext";
-import useFetchWishlist from "../hooks/useFetchWishlist";
-import Wishlist from "../components/Wishlist";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import Loading from "../components/Loading";
+import AddToCart from "../components/AddToCart";
+import Wishlist from "../components/Wishlist";
 import Reviews from "../components/Reviews";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import useFetchWishlist from "../hooks/useFetchWishlist";
 
 const modalStyle = {
     position: "absolute",
@@ -56,8 +59,15 @@ function Product() {
         fetchProducts();
     }, [product_id]);
 
-    async function handleAddToCart(product_id, quantity, setQuantity) {
-        // setLoading(true); // Show loading spinner
+    async function handleAddToCart(
+        product_id,
+        quantity,
+        setQuantity,
+        setLoadingAddToCart,
+        setToastMessage,
+        setToastOpen
+    ) {
+        setLoadingAddToCart(true);
 
         console.log("these are add to cart");
         console.log({ product_id, quantity });
@@ -73,16 +83,18 @@ function Product() {
             setProducts((prevProduct) => ({
                 ...prevProduct,
                 stock: prevProduct.stock - quantity,
-            })); // setToastMessage("Added to cart successfully!"); // Set success message
-            // setToastOpen(true); // Show toast
+            }));
+            setLoadingAddToCart(false);
+            setToastMessage("Added to cart successfully!");
+            setToastOpen(true);
         } catch (error) {
             console.error(
                 "Error while adding product to cart:",
                 error.response?.data || error.message
             );
 
-            // setToastMessage("Failed to add to cart! Please try again."); // Set error message
-            // setToastOpen(true); // Show toast
+            setToastMessage("Failed to add to cart! Please try again.");
+            setToastOpen(true);
         }
     }
 
@@ -103,9 +115,7 @@ function Product() {
                 direction={{ sm: "row" }}
                 justifyContent={"center"}
                 alignItems={{ xs: "center", sm: "start" }}
-                // border={"solid 3px blue"}
                 gap={2}
-                // marginTop={{ xs: "5rem", sm: "10rem" }}
             >
                 <Box alignSelf={"center"}>
                     <img
@@ -114,6 +124,7 @@ function Product() {
                         alt="basket"
                         width={"600px"}
                         height={"600px"}
+                        loading="lazy"
                     />
                 </Box>
                 <Divider />
