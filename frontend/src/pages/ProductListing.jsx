@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import ListingCard from "../components/ListingCard";
 import useFetch from "../hooks/useFetch";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import DrawerAppBar from "../components/Navbar";
 import Loading from "../components/Loading";
-import { Outlet } from "react-router-dom";
 
 function ProductListing() {
-    // const [cartID, setCartID] = useState(null);
     const [wishlistItems, setWishlistItems] = useState([]);
     const { products, setProducts, loading, error } = useFetch("/api/products");
     const { Data } = useAuth();
@@ -21,7 +18,7 @@ function ProductListing() {
                 if (Data !== null) {
                     const response = await axios.get("/api/getallwishlist");
                     setWishlistItems(response.data.wishlistItems);
-                    // console.log(response.data);
+                    console.log(response.data);
                     console.log("we wish");
                     console.log(response.data.wishlistItems);
                 }
@@ -36,9 +33,15 @@ function ProductListing() {
     }, []);
     console.log(wishlistItems);
 
-    async function handleAddToCart(product_id, quantity, setQuantity) {
-        // setLoading(true); // Show loading spinner
-
+    async function handleAddToCart(
+        product_id,
+        quantity,
+        setQuantity,
+        setLoadingAddToCart,
+        setToastMessage,
+        setToastOpen
+    ) {
+        setLoadingAddToCart(true);
         console.log("these are add to cart");
         console.log({ product_id, quantity });
         try {
@@ -56,16 +59,18 @@ function ProductListing() {
                         ? { ...product, stock: product.stock - quantity }
                         : product
                 )
-            ); // setToastMessage("Added to cart successfully!"); // Set success message
-            // setToastOpen(true); // Show toast
+            );
+            setLoadingAddToCart(false);
+            setToastMessage("Added to cart successfully!");
+            setToastOpen(true);
         } catch (error) {
             console.error(
                 "Error while adding product to cart:",
                 error.response?.data || error.message
             );
 
-            // setToastMessage("Failed to add to cart! Please try again."); // Set error message
-            // setToastOpen(true); // Show toast
+            setToastMessage("Failed to add to cart! Please try again.");
+            setToastOpen(true);
         }
     }
 
