@@ -14,6 +14,8 @@ import { handleDecrease } from "../services/cart";
 import { handleAdd } from "../services/cart";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import OrderSummary from "../components/OrderSummary";
+import Empty from "../components/Empty";
 
 function Cart() {
     const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
@@ -30,15 +32,16 @@ function Cart() {
     console.log("cart page");
     console.log(cartProducts);
 
+    // color fafafa
     if (fetchLoading) return <Loading />;
     return (
         <>
-            <div style={{ backgroundColor: "#fafafa" }}>
-                <DrawerAppBar />
-                <Typography textAlign={"center"} component={"h1"} variant="h5">
-                    SHOPPING CART
-                </Typography>
-                <Divider sx={{ margin: "20px 0" }} />
+            <DrawerAppBar />
+            <Typography textAlign={"center"} component={"h1"} variant="h5">
+                SHOPPING CART
+            </Typography>
+            <Divider sx={{ margin: "20px 0" }} />
+            {cartProducts.length !== 0 ? (
                 <Stack direction={"row"}>
                     <Stack flex={0.5}>
                         {cartProducts.map((cartProduct) => (
@@ -141,7 +144,9 @@ function Cart() {
                             </Box>
                         ))}
                     </Stack>
-                    <Stack></Stack>
+                    <Stack position={"sticky"} flex={0.5} alignItems={"center"}>
+                        <OrderSummary cartProducts={cartProducts} />
+                    </Stack>
                     {/* Toast Notification */}
                     <Snackbar
                         open={toastOpen}
@@ -161,7 +166,9 @@ function Cart() {
                         </Alert>
                     </Snackbar>
                 </Stack>
-            </div>
+            ) : (
+                <Empty size={"10rem"} message={"Add Items To Cart"} />
+            )}
         </>
     );
 }
