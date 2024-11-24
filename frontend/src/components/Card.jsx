@@ -36,6 +36,7 @@ function ImgMediaCard({
                     alt="green iguana"
                     image={image_url}
                     height={"250px"}
+                    loading="lazy"
                 />
                 <Divider />
                 <CardContent

@@ -39,6 +39,7 @@ function ListingCard({
     cartID,
     wishlistItems,
     setWishlistItems,
+    handleAddToCart,
 }) {
     const [quantity, setQuantity] = useState(1);
     const handleAdd = () => setQuantity(quantity + 1);
@@ -139,6 +140,7 @@ function ListingCard({
                 quantity={quantity}
                 setQuantity={setQuantity}
                 stock={stock}
+                handleAddToCart={handleAddToCart}
                 style={{
                     display: "flex",
                     justifyContent: "center",
