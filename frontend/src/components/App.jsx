@@ -20,6 +20,10 @@ import { useEffect } from "react";
 import Cart from "../pages/Cart";
 import Sale from "../pages/Sale";
 import Loading from "./Loading";
+import UserDashboard from "../pages/UserDashboard";
+
+// Inside your Routes:
+
 
 function App() {
     const { Data, localLoading } = useAuth(); // Access auth state and user data
@@ -103,7 +107,7 @@ function App() {
                 <Route path="new-admin" element={<CreateAdminAccount />} />
                 <Route path="sale" element={<Sale />} />
             </Route>
-
+            <Route path="/dashboard/:user_id" element={<UserDashboard />} />
             <Route
                 path="/list"
                 element={Data ? <ProductList /> : <Navigate to={"/login"} />}
