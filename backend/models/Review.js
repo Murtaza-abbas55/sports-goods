@@ -1,6 +1,8 @@
 import pool from "../db.js";
 
 export const addReview = async (user_id, product_id, rating, comments) => {
+    console.log("Adding Review with:", { user_id, product_id, rating, comments });
+
     const existingReview = await pool.query(
         `SELECT * FROM Reviews WHERE user_id = $1 AND product_id = $2`,
         [user_id, product_id]

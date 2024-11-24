@@ -5,17 +5,43 @@ import {
     getAllProductReviews,
 } from "../models/Review.js";
 
+// export const AddReviewController = async (req, res) => {
+//     const { product_id, rating, comments } = req.body;
+//     const { user_id } = req.userId;
+
+//     try {
+//         const newReview = await addReview(
+//             user_id,
+//             product_id,
+//             rating,
+//             comments
+//         );
+//         res.status(201).json({
+//             success: true,
+//             review: newReview,
+//             message: "Review added successfully.",
+//         });
+//     } catch (error) {
+//         res.status(400).json({
+//             success: false,
+//             error: error.message,
+//         });
+//     }
+// };
 export const AddReviewController = async (req, res) => {
+    console.log("User ID:", req.userId); // Debugging
     const { product_id, rating, comments } = req.body;
-    const { user_id } = req.userId;
+    const user_id = req.userId;
+
+    if (!user_id) {
+        return res.status(400).json({
+            success: false,
+            message: "User ID is required.",
+        });
+    }
 
     try {
-        const newReview = await addReview(
-            user_id,
-            product_id,
-            rating,
-            comments
-        );
+        const newReview = await addReview(user_id, product_id, rating, comments);
         res.status(201).json({
             success: true,
             review: newReview,
