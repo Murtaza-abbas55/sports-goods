@@ -26,9 +26,19 @@ export const addToCart = async (req, res) => {
         console.log("Using Cart ID:", cartId);
 
         // Add the product to the cart
-        await addProductToCart(cartId, product_id, quantity);
+        const addProductResult = await addProductToCart(cartId, product_id, quantity);
+
+        // Check the result of adding the product
+        if (!addProductResult.success) {
+            return res.status(400).json({ 
+                success: false, 
+                message: addProductResult.message, // Send the message from addProductToCart
+            });
+        }
+
         console.log(`Product ${product_id} added to cart with ID:`, cartId); // Log the result
         res.status(200).json({
+            success: true,
             message: "Product added to cart",
             cartId: cartId,
         });
