@@ -18,6 +18,15 @@ async function handleDecrease(
         console.log(response.data);
         setToastMessage("Deducted From Cart Successfully"); // Set success message
         setToastOpen(true); // Show toast
+
+        setCartProducts((prevProducts) =>
+            prevProducts.map((cartProduct) =>
+                cartProduct.product_id === product_id
+                    ? { ...cartProduct, stock: cartProduct.stock + 1 }
+                    : cartProduct
+            )
+        );
+
         setCartProducts((prevProducts) =>
             prevProducts.map((cartProduct) =>
                 cartProduct.product_id === product_id
@@ -91,6 +100,15 @@ async function handleAdd(
         console.log(response.data);
         setToastMessage("Added to cart successfully!"); // Set success message
         setToastOpen(true); // Show toast
+
+        setCartProducts((prevProducts) =>
+            prevProducts.map((cartProduct) =>
+                cartProduct.product_id === product_id
+                    ? { ...cartProduct, stock: cartProduct.stock - 1 }
+                    : cartProduct
+            )
+        );
+
         setCartProducts((prevProducts) =>
             prevProducts.map((cartProduct) =>
                 cartProduct.product_id === product_id
