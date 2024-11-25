@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 
 const UserDashboard = () => {
-    const { userId } = useParams();
+    const { user_id } = useParams();
+    console.log("user_id");
+    console.log(user_id);
     const { Data } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!Data?.isUser || Data?.user_id !== userId) {
+        if (!Data?.isUser || Data?.user_id != user_id) {
             navigate("/login"); // Redirect to login if not authenticated
         }
-    }, [Data, userId, navigate]);
+    }, [Data, user_id, navigate]);
 
     return (
         <div>
