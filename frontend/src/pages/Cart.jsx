@@ -16,10 +16,11 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import OrderSummary from "../components/OrderSummary";
 import Empty from "../components/Empty";
+import useFetch from "../hooks/useFetch";
 
 function Cart() {
     const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
-    const [loading, setLoading] = useState(false);
+    const [loadingProductID, setLoadingProductID] = useState(null);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const { cartID } = useAuth();
@@ -73,7 +74,7 @@ function Cart() {
                                                     onClick={() =>
                                                         handleDecrease(
                                                             cartProduct.product_id,
-                                                            setLoading,
+                                                            setLoadingProductID,
                                                             setToastMessage,
                                                             setToastOpen,
                                                             setCartProducts,
@@ -85,7 +86,8 @@ function Cart() {
                                                     <RemoveCircleIcon />
                                                 </IconButton>
                                                 <Typography marginTop={1}>
-                                                    {!loading ? (
+                                                    {loadingProductID !==
+                                                    cartProduct.product_id ? (
                                                         cartProduct.quantity
                                                     ) : (
                                                         <CircularProgress
@@ -94,10 +96,13 @@ function Cart() {
                                                     )}
                                                 </Typography>
                                                 <IconButton
+                                                    disabled={
+                                                        cartProduct.stock === 0
+                                                    }
                                                     onClick={() =>
                                                         handleAdd(
                                                             cartProduct.product_id,
-                                                            setLoading,
+                                                            setLoadingProductID,
                                                             setToastMessage,
                                                             setToastOpen,
                                                             setCartProducts,
@@ -118,7 +123,7 @@ function Cart() {
                                                     onClick={() =>
                                                         handleRemove(
                                                             cartProduct.product_id,
-                                                            setLoading,
+                                                            setLoadingProductID,
                                                             setToastMessage,
                                                             setToastOpen,
                                                             setCartProducts,
