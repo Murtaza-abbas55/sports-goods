@@ -49,14 +49,23 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem("authData", JSON.stringify(data)) // Save user data to local storage
         );
     };
-
-    // Logout and clear user data from local storage
     const logout = () => {
+    axios
+    .post("/api/logout")
+    .then((response) => {
+        console.log(response.data.message);
+    })
+    .catch((error) => {
+        console.error("Error during logout:", error);
+    })
+    .finally(() => { 
         setIsAuthenticated(false);
         setData(null);
-        setCartID(null); // Clear cart ID
-        localStorage.removeItem("authData"); // Remove user data from local storage
+        setCartID(null);
+        localStorage.removeItem("authData");
+            });
     };
+    
 
     return (
         <AuthContext.Provider

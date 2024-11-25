@@ -35,13 +35,13 @@ export const login = async (req, res) => {
             return res.status(400).json({ error: 'Incorrect password' });
         }
 
-        const token = jwt.sign({ userId: user.user_id}, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.user_id}, JWT_SECRET, { expiresIn: '3h' });
 
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 3600000
+            maxAge: 3 * 60 * 60 * 1000
         });
         res.status(200).json({ 
             isAdmin: false, 

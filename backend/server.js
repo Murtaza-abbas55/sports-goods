@@ -16,6 +16,9 @@ import trendingRoutes from './routes/TrendingRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 import filterProductRoutes from './routes/filterProductRoutes.js'
+import logoutRoutes from './routes/logoutRoutes.js'
+
+
 import cors from 'cors';
 dotenv.config();
 
@@ -48,6 +51,8 @@ app.use('/api',trendingRoutes);
 app.use('/api',categoryRoutes);
 app.use('/api',paymentRoutes);
 app.use('/api',filterProductRoutes);
+
+app.use('/api',logoutRoutes);
 app.get('*', (req, res) => {
     res.send('Welcome to the Products API');
 });
