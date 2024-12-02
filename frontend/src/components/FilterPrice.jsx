@@ -8,29 +8,24 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useState } from "react";
-import FilterPrice from "./FilterPrice";
 
-function Filter({ products, setProducts }) {
+function FilterPrice({ products, setProducts, currentCategory }) {
     const [backupProducts, setBackupProducts] = useState(products);
-    const {
-        products: categories,
-        loading,
-        error,
-    } = useFetch("/api/categories");
-    console.log(categories);
 
-    const fetchData = async (id) => {
+    const fetchData = async (url) => {
         try {
-            const response = await axios.get(`/api/category-products/${id}`);
+            const response = await axios.get(`/api/sort/${url}`, {
+                category_id: currentCategory,
+            });
             setProducts(response.data);
-            console.log("Categories Products response.data");
+            console.log("Filter Price response.data");
             console.log(response.data);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
     };
 
-    const [value, setValue] = useState("all");
+    const [value, setValue] = useState("none");
 
     const handleChange = (event) => {
         setValue(event.target.value);
@@ -53,7 +48,7 @@ function Filter({ products, setProducts }) {
                     }}
                     id="demo-controlled-radio-buttons-group"
                 >
-                    Category
+                    Filter
                 </FormLabel>
                 <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
@@ -62,26 +57,28 @@ function Filter({ products, setProducts }) {
                     onChange={handleChange}
                 >
                     <FormControlLabel
-                        value="all"
+                        value="none"
                         control={<Radio size="small" />}
-                        label="All"
+                        label="None"
                     />
-                    {categories.map((category) => (
-                        <FormControlLabel
-                            key={category.category_id}
-                            value={category.category_id}
-                            control={<Radio size="small" />}
-                            label={category.name}
-                        />
-                    ))}
+                    <FormControlLabel
+                        value="most-popular"
+                        control={<Radio size="small" />}
+                        label="Most Popular"
+                    />
+                    <FormControlLabel
+                        value="price-high-to-low"
+                        control={<Radio size="small" />}
+                        label="Price (High To Low)"
+                    />
+                    <FormControlLabel
+                        value="price-low-to-high"
+                        control={<Radio size="small" />}
+                        label="Price (Low To High)"
+                    />
                 </RadioGroup>
             </FormControl>
-            <FilterPrice
-                products={products}
-                setProducts={setProducts}
-                currentCategory={value}
-            />
         </>
     );
 }
-export default Filter;
+export default FilterPrice;

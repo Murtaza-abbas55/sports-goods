@@ -6,6 +6,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import Loading from "../components/Loading";
 import Filter from "../components/Filter";
+import FilterPrice from "../components/FilterPrice";
 
 function ProductListing() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -84,7 +85,7 @@ function ProductListing() {
     return (
         <>
             <Stack direction={"row"}>
-                <Stack flex={1}>
+                <Stack gap={5} flex={1}>
                     <Filter products={products} setProducts={setProducts} />
                 </Stack>
                 <Stack
