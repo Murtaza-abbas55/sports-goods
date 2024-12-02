@@ -10,7 +10,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { useState } from "react";
 import FilterPrice from "./FilterPrice";
 
-function Filter({ products, setProducts }) {
+function Filter({ setFilterLoading, products, setProducts }) {
     const [backupProducts, setBackupProducts] = useState(products);
     const {
         products: categories,
@@ -21,12 +21,16 @@ function Filter({ products, setProducts }) {
 
     const fetchData = async (id) => {
         try {
+            setFilterLoading(true);
             const response = await axios.get(`/api/category-products/${id}`);
             setProducts(response.data);
             console.log("Categories Products response.data");
             console.log(response.data);
         } catch (error) {
+            // setFilterLoading(false);
             console.error("Error fetching products:", error);
+        } finally {
+            // setFilterLoading(false);
         }
     };
 
@@ -80,6 +84,7 @@ function Filter({ products, setProducts }) {
                 products={products}
                 setProducts={setProducts}
                 currentCategory={value}
+                setFilterLoading={setFilterLoading}
             />
         </>
     );

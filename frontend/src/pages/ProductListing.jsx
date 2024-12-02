@@ -10,6 +10,7 @@ import FilterPrice from "../components/FilterPrice";
 
 function ProductListing() {
     const [wishlistItems, setWishlistItems] = useState([]);
+    const [filterLoading, setFilterLoading] = useState(false);
     const { products, setProducts, loading, error } = useFetch("/api/products");
     const { Data } = useAuth();
     const { cartID, setCartID } = useAuth();
@@ -86,7 +87,11 @@ function ProductListing() {
         <>
             <Stack direction={"row"}>
                 <Stack gap={5} flex={1}>
-                    <Filter products={products} setProducts={setProducts} />
+                    <Filter
+                        setFilterLoading={setFilterLoading}
+                        products={products}
+                        setProducts={setProducts}
+                    />
                 </Stack>
                 <Stack
                     direction={"row"}
@@ -96,24 +101,28 @@ function ProductListing() {
                     marginBottom={5}
                     flex={5}
                 >
-                    {products.map((product) => (
-                        <div
-                            style={{ display: "flex" }}
-                            key={product.product_id}
-                        >
-                            <ListingCard
-                                product_id={product.product_id}
-                                name={product.name}
-                                price={product.price}
-                                stock={product.stock}
-                                image_url={"/images/" + product.image_url}
-                                cartID={cartID}
-                                wishlistItems={wishlistItems}
-                                setWishlistItems={setWishlistItems}
-                                handleAddToCart={handleAddToCart}
-                            />
-                        </div>
-                    ))}
+                    {!filterLoading ? (
+                        products.map((product) => (
+                            <div
+                                style={{ display: "flex" }}
+                                key={product.product_id}
+                            >
+                                <ListingCard
+                                    product_id={product.product_id}
+                                    name={product.name}
+                                    price={product.price}
+                                    stock={product.stock}
+                                    image_url={"/images/" + product.image_url}
+                                    cartID={cartID}
+                                    wishlistItems={wishlistItems}
+                                    setWishlistItems={setWishlistItems}
+                                    handleAddToCart={handleAddToCart}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <Loading />
+                    )}
                 </Stack>
             </Stack>
         </>

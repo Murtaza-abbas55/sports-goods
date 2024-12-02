@@ -9,7 +9,12 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useEffect, useState } from "react";
 
-function FilterPrice({ products, setProducts, currentCategory }) {
+function FilterPrice({
+    products,
+    setProducts,
+    currentCategory,
+    setFilterLoading,
+}) {
     const [backupProducts, setBackupProducts] = useState(products);
     console.log("current category " + currentCategory);
 
@@ -17,8 +22,12 @@ function FilterPrice({ products, setProducts, currentCategory }) {
 
     useEffect(() => {
         const fetchData = async (url) => {
-            if (url === "none") return;
+            if (url === "none") {
+                setFilterLoading(false);
+                return;
+            }
             try {
+                setFilterLoading(true);
                 const params =
                     currentCategory !== "all"
                         ? { category_id: currentCategory }
@@ -31,6 +40,8 @@ function FilterPrice({ products, setProducts, currentCategory }) {
                 console.log(response.data);
             } catch (error) {
                 console.error("Error fetching products:", error);
+            } finally {
+                setFilterLoading(false);
             }
         };
         fetchData(value);
