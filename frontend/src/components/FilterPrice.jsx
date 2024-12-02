@@ -7,34 +7,42 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function FilterPrice({ products, setProducts, currentCategory }) {
     const [backupProducts, setBackupProducts] = useState(products);
-
-    const fetchData = async (url) => {
-        try {
-            const response = await axios.get(`/api/sort/${url}`, {
-                category_id: currentCategory,
-            });
-            setProducts(response.data);
-            console.log("Filter Price response.data");
-            console.log(response.data);
-        } catch (error) {
-            console.error("Error fetching products:", error);
-        }
-    };
+    console.log("current category " + currentCategory);
 
     const [value, setValue] = useState("none");
+
+    useEffect(() => {
+        const fetchData = async (url) => {
+            if (url === "none") return;
+            try {
+                const params =
+                    currentCategory !== "all"
+                        ? { category_id: currentCategory }
+                        : {};
+                const response = await axios.get(`/api/sort/${url}`, {
+                    params,
+                });
+                setProducts(response.data);
+                console.log("Filter Price response.data");
+                console.log(response.data);
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            }
+        };
+        fetchData(value);
+    }, [value, currentCategory, setProducts]);
 
     const handleChange = (event) => {
         setValue(event.target.value);
         console.log(event.target.value);
-        if (event.target.value === "all") {
+        if (event.target.value === "none") {
             setProducts(backupProducts);
             return;
         }
-        fetchData(event.target.value);
     };
 
     return (
