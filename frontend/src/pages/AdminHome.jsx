@@ -10,7 +10,6 @@ function AdminHome() {
     function handleLogOut() {
         logout();
         navigate("/");
-        console.log(localStorage.getItem("authData"));
     }
     return (
         <Box

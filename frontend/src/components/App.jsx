@@ -107,7 +107,7 @@ function App() {
                 <Route path="new-admin" element={<CreateAdminAccount />} />
                 <Route path="sale" element={<Sale />} />
             </Route>
-            <Route path="/dashboard/:user_id" element={<UserDashboard />} />
+            <Route path="/dashboard/:userId" element={<UserDashboard />} />
             <Route
                 path="/list"
                 element={Data ? <ProductList /> : <Navigate to={"/login"} />}
