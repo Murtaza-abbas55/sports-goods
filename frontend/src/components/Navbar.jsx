@@ -1,3 +1,180 @@
+// import PropTypes from "prop-types";
+// import AppBar from "@mui/material/AppBar";
+// import Box from "@mui/material/Box";
+// import CssBaseline from "@mui/material/CssBaseline";
+// import Drawer from "@mui/material/Drawer";
+// import IconButton from "@mui/material/IconButton";
+// import List from "@mui/material/List";
+// import ListItem from "@mui/material/ListItem";
+// import ListItemButton from "@mui/material/ListItemButton";
+// import ListItemText from "@mui/material/ListItemText";
+// import MenuIcon from "@mui/icons-material/Menu";
+// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+// import Toolbar from "@mui/material/Toolbar";
+// import Typography from "@mui/material/Typography";
+// import Button from "@mui/material/Button";
+// import { Divider, Badge } from "@mui/material";
+// import { Link as RouterLink } from "react-router-dom";
+// import { useAuth } from "../context/AuthContext";
+// import useFetchCartItems from "../hooks/useFetchCartItems";
+// import { useState } from "react";
+
+// const drawerWidth = 240;
+
+// function DrawerAppBar(props) {
+//     const { window } = props;
+//     const [mobileOpen, setMobileOpen] = useState(false);
+//     const { Data } = useAuth();
+//     const { cartProductsLength } = useFetchCartItems();
+
+//     // Navigation items
+//     const navItems = [
+//         "Cricket",
+//         "Football",
+//         "Tennis",
+//         "Badminton",
+//         Data?.isUser ? Data?.user_id : "Login",
+//     ];
+
+//     // Define navigation paths
+//     const getNavItemPath = (item) => {
+//         if (item === Data?.user_id) return `/dashboard/${item}`;
+//         if (item === "Login") return "/login";
+//         return `/${item.toLowerCase()}`;
+//     };
+
+//     const handleDrawerToggle = () => {
+//         setMobileOpen((prevState) => !prevState);
+//     };
+
+//     // Drawer content for mobile
+//     const drawer = (
+//         <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+//             <Typography variant="h6" sx={{ my: 2, fontWeight: "bold" }}>
+//                 Categories
+//             </Typography>
+//             <Divider />
+//             <List>
+//                 {navItems.map((item) => (
+//                     <ListItem key={item} disablePadding>
+//                         <ListItemButton
+//                             component={RouterLink}
+//                             to={getNavItemPath(item)}
+//                             sx={{ textAlign: "center" }}
+//                             aria-label={`Navigate to ${item}`}
+//                         >
+//                             <ListItemText primary={item} />
+//                         </ListItemButton>
+//                     </ListItem>
+//                 ))}
+//             </List>
+//         </Box>
+//     );
+
+//     const container =
+//         window !== undefined ? () => window().document.body : undefined;
+
+//     return (
+//         <Box sx={{ display: "flex" }}>
+//             <CssBaseline />
+//             <AppBar component="nav">
+//                 <Toolbar>
+//                     {/* App title */}
+//                     <Box sx={{ display: "flex", flexGrow: { xs: 0, sm: 1 } }}>
+//                         <Typography>MyStore</Typography>
+//                     </Box>
+
+//                     {/* Desktop navigation */}
+//                     <Typography
+//                         variant="h6"
+//                         component="div"
+//                         sx={{
+//                             display: { xs: "none", sm: "block" },
+//                         }}
+//                     >
+//                         <Box sx={{ display: { xs: "none", sm: "block" } }}>
+//                             {navItems.map((item) => (
+//                                 <Button
+//                                     component={RouterLink}
+//                                     to={getNavItemPath(item)}
+//                                     key={item}
+//                                     sx={{ color: "#fff" }}
+//                                     aria-label={`Navigate to ${item}`}
+//                                 >
+//                                     {item}
+//                                 </Button>
+//                             ))}
+//                         </Box>
+//                     </Typography>
+
+//                     {/* Shopping Cart Icon */}
+//                     <IconButton
+//                         component={RouterLink}
+//                         to={`/cart/${Data?.user_id ?? "guest"}`}
+//                         sx={{
+//                             color: "white",
+//                             display: "flex",
+//                             verticalAlign: "text-top",
+//                             flexGrow: { xs: 1, sm: 0 },
+//                         }}
+//                     >
+//                         <Badge
+//                             color="secondary"
+//                             badgeContent={cartProductsLength}
+//                         >
+//                             <ShoppingCartIcon />
+//                         </Badge>
+//                     </IconButton>
+
+//                     {/* Mobile menu button */}
+//                     <IconButton
+//                         color="inherit"
+//                         aria-label="open drawer"
+//                         edge="start"
+//                         onClick={handleDrawerToggle}
+//                         sx={{ mr: 2, display: { sm: "none" } }}
+//                     >
+//                         <MenuIcon />
+//                     </IconButton>
+//                 </Toolbar>
+//             </AppBar>
+
+//             {/* Drawer for mobile navigation */}
+//             <nav>
+//                 <Drawer
+//                     container={container}
+//                     variant="temporary"
+//                     open={mobileOpen}
+//                     onClose={handleDrawerToggle}
+//                     anchor="right"
+//                     ModalProps={{
+//                         keepMounted: true, // Better open performance on mobile.
+//                     }}
+//                     sx={{
+//                         display: { xs: "block", sm: "none" },
+//                         "& .MuiDrawer-paper": {
+//                             boxSizing: "border-box",
+//                             width: drawerWidth,
+//                         },
+//                     }}
+//                 >
+//                     {drawer}
+//                 </Drawer>
+//             </nav>
+
+//             {/* Main content */}
+//             <Box component="main" sx={{ p: 3 }}>
+//                 <Toolbar />
+//             </Box>
+//         </Box>
+//     );
+// }
+
+// DrawerAppBar.propTypes = {
+//     window: PropTypes.func, // Used for rendering in iframes
+// };
+
+// export default DrawerAppBar;
 import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -83,16 +260,16 @@ function DrawerAppBar(props) {
                         }}
                     >
                         <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                            {navItems.map((item) => (
-                                <Button
-                                    component={RouterLink}
-                                    to={"/" + item}
-                                    key={item}
-                                    sx={{ color: "#fff" }}
-                                >
-                                    {item}
-                                </Button>
-                            ))}
+                        {navItems.map((item) => (
+                            <Button
+                                component={RouterLink}
+                                to={item === Data?.user_id ? `/dashboard/${item}` : `/${item}`}
+                                key={item}
+                                sx={{ color: "#fff" }}
+                            >
+                                {item}
+                            </Button>
+                        ))}
                         </Box>
                     </Typography>
 
