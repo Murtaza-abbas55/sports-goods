@@ -1,12 +1,15 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import ShoppingCartCheckoutOutlinedIcon from "@mui/icons-material/ShoppingCartCheckoutOutlined";
+import { Link as RouterLink } from "react-router-dom";
 
-function OrderSummary({ cartProducts }) {
+function OrderSummary({ userID, cartProducts }) {
     const marginFields = 2;
     const shipping = 300;
     const totalSum = cartProducts.reduce((sum, product) => {
         return sum + product.price * product.quantity; // Adjust based on your data structure
     }, 0);
+    const tax = 0.05 * totalSum;
+    const finalSum = tax + totalSum;
 
     console.log("cartProducts");
     console.log(cartProducts);
@@ -30,9 +33,9 @@ function OrderSummary({ cartProducts }) {
                 </Stack>
                 <Stack margin={marginFields} direction={"row"}>
                     <Typography flex={0.95} variant="h6">
-                        SHIPPING
+                        Tax(5%)
                     </Typography>
-                    <Typography margin={"auto"}>{"RS." + shipping}</Typography>
+                    <Typography margin={"auto"}>{"RS." + tax}</Typography>
                 </Stack>
                 <Stack
                     borderBottom={"solid 3px black"}
@@ -48,7 +51,7 @@ function OrderSummary({ cartProducts }) {
                         TOTAL
                     </Typography>
                     <Typography fontWeight={"bold"} margin={"auto 10px"}>
-                        {"RS." + (shipping + totalSum)}
+                        {"RS." + finalSum}
                     </Typography>
                 </Stack>
                 <Box textAlign="center" fontWeight={"bold"}>
@@ -56,6 +59,8 @@ function OrderSummary({ cartProducts }) {
                         variant="contained"
                         fullWidth
                         size="large"
+                        component={RouterLink}
+                        to={`/checkout/${userID}`}
                         startIcon={<ShoppingCartCheckoutOutlinedIcon />}
                         sx={{
                             borderRadius: "0",

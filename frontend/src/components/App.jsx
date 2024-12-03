@@ -21,9 +21,9 @@ import Cart from "../pages/Cart";
 import Sale from "../pages/Sale";
 import Loading from "./Loading";
 import UserDashboard from "../pages/UserDashboard";
+import Checkout from "../pages/Checkout";
 
 // Inside your Routes:
-
 
 function App() {
     const { Data, localLoading } = useAuth(); // Access auth state and user data
@@ -94,6 +94,10 @@ function App() {
             <Route
                 path="cart/:cartID"
                 element={Data?.isAdmin ? <ErrorPage /> : <Cart />}
+            />
+            <Route
+                path="checkout/:userID"
+                element={Data?.isAdmin ? <ErrorPage /> : <Checkout />}
             />
             <Route
                 path="/admin"

@@ -17,13 +17,14 @@ import Alert from "@mui/material/Alert";
 import OrderSummary from "../components/OrderSummary";
 import Empty from "../components/Empty";
 import useFetch from "../hooks/useFetch";
+import { Outlet } from "react-router-dom";
 
 function Cart() {
     const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
     const [loadingProductID, setLoadingProductID] = useState(null);
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
-    const { cartID } = useAuth();
+    const { Data, cartID } = useAuth();
     console.log("cart id cart page " + cartID);
 
     const handleCloseToast = () => {
@@ -150,7 +151,10 @@ function Cart() {
                         ))}
                     </Stack>
                     <Stack position={"sticky"} flex={0.5} alignItems={"center"}>
-                        <OrderSummary cartProducts={cartProducts} />
+                        <OrderSummary
+                            userID={Data.user_id}
+                            cartProducts={cartProducts}
+                        />
                     </Stack>
                     {/* Toast Notification */}
                     <Snackbar
