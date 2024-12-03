@@ -1,6 +1,6 @@
 import { AllCategories,ProductsByCategory,addCategoryController,updateCategoryController } from "../controllers/CategoriesController.js";
 import express from "express";
-import verifyAdmin from "../middleware/verifyAdmin.js";
+import {verifyAdmin} from "../middlewares/adminauth.js";
 const router= express.Router();
 
 router.get('/categories',AllCategories);
