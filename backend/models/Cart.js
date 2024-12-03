@@ -204,85 +204,99 @@ export const removeProductFromCart = async (cartId, productId) => {
         return { success: false, message: "Product not found in cart." };
     }
 };
-
 export const clearCartProducts = async () => {
-    const { rows: cartIds } = await pool.query(
-        `SELECT cart_id FROM Cart WHERE user_id IS NULL`
-    );
-
-    if (cartIds.length === 0) {
-        console.log("No carts with NULL user_id found.");
-        return { success: false, message: "No carts with NULL user_id found." };
-    }
-
-    for (const { cart_id } of cartIds) {
-        const { rowCount: deletedProducts } = await pool.query(
-            `DELETE FROM CartProducts WHERE cart_id = $1`,
-            [cart_id]
-        );
-
-        if (deletedProducts > 0) {
-            console.log(`Cleared all products from cart ${cart_id}`);
-        } else {
-            console.log(`Cart ${cart_id} is already empty.`);
-        }
-
-        const { rowCount: deletedCart } = await pool.query(
-            `DELETE FROM Cart WHERE cart_id = $1`,
-            [cart_id]
-        );
-
-        if (deletedCart > 0) {
-            console.log(`Deleted cart ${cart_id}`);
-        } else {
-            console.log(`Cart ${cart_id} was not found for deletion.`);
-        }
-    }
-
-    return {
-        success: true,
-        message: "Cleared products and deleted carts with NULL user_id.",
-    };
-};
-export const clearuserCartProducts = async (user_id) => {
+    const client = await pool.connect();
     try {
-        const { rows: userCart } = await pool.query(
-            `SELECT * FROM Cart WHERE user_id = $1 LIMIT 1`,
+        console.log("Clearing carts with NULL user_id...");
+        await client.query('BEGIN');
+        const { rows: cartIds } = await client.query(
+            `SELECT cart_id FROM Cart WHERE user_id IS NULL`
+        );
+
+        if (cartIds.length === 0) {
+            console.log("No carts with NULL user_id found.");
+            return { success: false, message: "No carts with NULL user_id found." };
+        }
+
+        for (const { cart_id } of cartIds) {
+            const { rows: cartProducts } = await client.query(
+                `SELECT product_id, quantity FROM CartProducts WHERE cart_id = $1`,
+                [cart_id]
+            );
+            for (const { product_id, quantity } of cartProducts) {
+                await client.query(
+                    `UPDATE Products SET stock = stock + $1 WHERE product_id = $2`,
+                    [quantity, product_id]
+                );
+                console.log(
+                    `Restored ${quantity} units to product ${product_id}`
+                );
+            }
+            await client.query(`DELETE FROM CartProducts WHERE cart_id = $1`, [cart_id]);
+            console.log(`Cleared all products from cart ${cart_id}`);
+            await client.query(`DELETE FROM Cart WHERE cart_id = $1`, [cart_id]);
+            console.log(`Deleted cart ${cart_id}`);
+        }
+
+        await client.query('COMMIT');
+        return {
+            success: true,
+            message: "Cleared all products and deleted carts with NULL user_id.",
+        };
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error("Error clearing carts:", error.message);
+        return { success: false, message: "Error clearing carts.", error: error.message };
+    } finally {
+        client.release();
+    }
+};
+
+export const clearuserCartProducts = async (userId) => {
+    const client = await pool.connect();
+    try {
+        console.log(`Clearing cart for user ${userId}...`);
+        await client.query('BEGIN');
+        const { rows: userCart } = await client.query(
+            `SELECT cart_id FROM Cart WHERE user_id = $1 LIMIT 1`,
             [userId]
         );
+
         if (userCart.length === 0) {
-            console.log("No Cart for user_id: " + user_id);
+            console.log("No cart found for user:", userId);
             return { success: false, message: "No cart found for the user." };
         }
 
         const cartId = userCart[0].cart_id;
-        const { rowCount } = await pool.query(
-            `DELETE FROM CartProducts WHERE cart_id = $1`,
+
+        const { rows: cartProducts } = await client.query(
+            `SELECT product_id, quantity FROM CartProducts WHERE cart_id = $1`,
             [cartId]
         );
-
-        if (rowCount > 0) {
-            console.log(`Cleared ${rowCount} products from cart_id: ${cartId}`);
-            return {
-                success: true,
-                message: "Cleared all products from the user's cart.",
-            };
-        } else {
-            console.log(`No products found in cart_id: ${cartId}`);
-            return {
-                success: false,
-                message: "No products found in the user's cart.",
-            };
+        for (const { product_id, quantity } of cartProducts) {
+            await client.query(
+                `UPDATE Products SET stock = stock + $1 WHERE product_id = $2`,
+                [quantity, product_id]
+            );
+            console.log(
+                `Restored ${quantity} units to product ${product_id}`
+            );
         }
+
+        await client.query(`DELETE FROM CartProducts WHERE cart_id = $1`, [cartId]);
+        console.log(`Cleared all products from cart ${cartId}`);
+
+        await client.query('COMMIT');
+        return { success: true, message: "Cleared all products from the user's cart and updated stock." };
     } catch (error) {
-        console.error("Error clearing user cart products:", error);
-        return {
-            success: false,
-            message: "Error clearing user cart products.",
-            error,
-        };
+        await client.query('ROLLBACK');
+        console.error("Error clearing user cart products:", error.message);
+        return { success: false, message: "Error clearing user cart products.", error: error.message };
+    } finally {
+        client.release();
     }
 };
+
 
 export const mergeAnonymousCartWithUserCart = async (
     userCartId,

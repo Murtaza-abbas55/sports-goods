@@ -23,3 +23,54 @@ export const getProductsByCategoryId = async (category_id) =>{
         throw new Error('Error retrieving products by category: ' + error.message);
     }
 };
+export const insertCategory = async ( category_id, name, description ) => {
+    console.log("Inserting new category...");
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+  
+      const insertQuery = `
+        INSERT INTO Category (category_id, name, description)
+        VALUES ($1, $2, $3)
+        RETURNING *;
+      `;
+      const result = await client.query(insertQuery, [category_id, name, description]);
+  
+      await client.query("COMMIT");
+      return result.rows[0];
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw new Error("Error inserting new category: " + error.message);
+    } finally {
+      client.release(); 
+    }
+  };
+  export const updateCategory = async (category_id, name,description) => {
+  
+    console.log(`Updating category with ID ${category_id}...`);
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+  
+      const updateQuery = `
+        UPDATE Category
+        SET name = $1, description = $2
+        WHERE category_id = $3
+        RETURNING *;
+      `;
+      const result = await client.query(updateQuery, [name, description, category_id]);
+  
+      if (result.rowCount === 0) {
+        throw new Error(`Category with ID ${category_id} does not exist.`);
+      }
+  
+      await client.query("COMMIT");
+      return result.rows[0];
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw new Error("Error updating category: " + error.message);
+    } finally {
+      client.release();
+    }
+  };
+  
