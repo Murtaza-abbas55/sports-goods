@@ -1,8 +1,18 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import ShoppingCartCheckoutOutlinedIcon from "@mui/icons-material/ShoppingCartCheckoutOutlined";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 function OrderSummary({ userID, cartProducts }) {
+    const navigate = useNavigate();
+
+    const handleButtonClick = () => {
+        if (userID) {
+            navigate(`/checkout/${userID}`);
+        } else {
+            navigate("/login");
+        }
+    };
+
     const marginFields = 2;
     const shipping = 300;
     const totalSum = cartProducts.reduce((sum, product) => {
@@ -59,8 +69,9 @@ function OrderSummary({ userID, cartProducts }) {
                         variant="contained"
                         fullWidth
                         size="large"
-                        component={RouterLink}
-                        to={`/checkout/${userID}`}
+                        // component={RouterLink}
+                        // to={`/checkout/${userID ? userID : "guest"}`}
+                        onClick={handleButtonClick}
                         startIcon={<ShoppingCartCheckoutOutlinedIcon />}
                         sx={{
                             borderRadius: "0",

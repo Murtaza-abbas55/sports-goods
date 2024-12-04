@@ -152,7 +152,7 @@ function Cart() {
                     </Stack>
                     <Stack position={"sticky"} flex={0.5} alignItems={"center"}>
                         <OrderSummary
-                            userID={Data.user_id}
+                            userID={Data?.user_id}
                             cartProducts={cartProducts}
                         />
                     </Stack>
