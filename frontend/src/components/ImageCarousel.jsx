@@ -5,7 +5,7 @@ function ImageCarousel() {
         {
             name: (
                 <img
-                    src="./public/images/basketball.jpg"
+                    src="./public/images/logo_3_.png"
                     alt="hola"
                     height={"300px"}
                 />
