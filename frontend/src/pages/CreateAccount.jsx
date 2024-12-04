@@ -4,6 +4,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 function CreateAccount() {
     const {
@@ -11,6 +12,8 @@ function CreateAccount() {
         handleSubmit,
         formState: { errors },
     } = useForm();
+
+    const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         try {
@@ -23,6 +26,8 @@ function CreateAccount() {
             // Handle user login success
         } catch (userError) {
             console.warn(userError);
+        } finally {
+            navigate("/login");
         }
     };
 
