@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography, Container } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Box,
+    Typography,
+    Container,
+    CircularProgress,
+} from "@mui/material";
 import { createOrder } from "../services/order";
 
 function CheckoutForm({
@@ -10,6 +17,7 @@ function CheckoutForm({
     order_id,
     setOrderID,
 }) {
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -28,19 +36,23 @@ function CheckoutForm({
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData);
-
+        setLoading(true);
         try {
             await createOrder(
                 user_id,
                 formData.shipping_address,
                 total_amount,
-                setOrderID
+                setOrderID,
+                setCheckoutTurn,
+                checkoutTurn
             );
             console.log("Order created successfully");
-            setCheckoutTurn(!checkoutTurn); // This will execute after createOrder completes
+            // This will execute after createOrder completes
         } catch (error) {
             console.error("Error creating order:", error);
             // Handle error (e.g., show an error message to the user)
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -102,8 +114,13 @@ function CheckoutForm({
                     variant="contained"
                     color="primary"
                     fullWidth
+                    disabled={loading}
                 >
-                    Submit
+                    {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                    ) : (
+                        "Submit"
+                    )}
                 </Button>
             </Box>
         </Container>

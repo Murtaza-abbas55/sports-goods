@@ -5,7 +5,9 @@ async function createOrder(
     user_id,
     shipping_address,
     total_amount,
-    setOrderID
+    setOrderID,
+    setCheckoutTurn,
+    checkoutTurn
 ) {
     try {
         const response = await axios.post("/api/order/create", {
@@ -19,6 +21,7 @@ async function createOrder(
             "response.data.order.order_id" + response.data.order.order_id
         );
         setOrderID(response.data.order.order_id);
+        setCheckoutTurn(!checkoutTurn);
     } catch (error) {
         console.error("Error while creating order:", error);
     }
