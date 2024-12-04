@@ -22,6 +22,7 @@ import Sale from "../pages/Sale";
 import Loading from "./Loading";
 import UserDashboard from "../pages/UserDashboard";
 import Checkout from "../pages/Checkout";
+import ManageCategories from "../pages/ManageCategories";
 
 // Inside your Routes:
 
@@ -109,6 +110,10 @@ function App() {
                 <Route path="update-product" element={<UpdateProduct />} />
                 <Route path="view-products" element={<ProductList />} />
                 <Route path="new-admin" element={<CreateAdminAccount />} />
+                <Route
+                    path="manage-categories"
+                    element={<ManageCategories />}
+                />
                 <Route path="sale" element={<Sale />} />
             </Route>
             <Route path="/dashboard/:userId" element={<UserDashboard />} />
