@@ -17,11 +17,13 @@ import {
     DialogTitle,
 } from "@mui/material";
 import Loading from "../components/Loading";
+import AddCategoryDialog from "../components/AddCategoryDialog";
 
 function ManageCategories() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const [editCategory, setEditCategory] = useState(null); // Stores category to edit
     const [updatedName, setUpdatedName] = useState("");
@@ -97,6 +99,20 @@ function ManageCategories() {
         } catch (error) {
             console.error("Error updating category:", error);
         }
+    };
+
+    //Add Category logiv
+
+    const handleOpenDialog = () => {
+        setDialogOpen(true);
+    };
+
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+    };
+
+    const handleCategoryAdded = (newCategory) => {
+        setCategories((prev) => [...prev, newCategory]);
     };
 
     return (
@@ -189,6 +205,19 @@ function ManageCategories() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Button
+                sx={{ marginTop: "10px" }}
+                variant="contained"
+                color="success"
+                onClick={handleOpenDialog}
+            >
+                Add Category
+            </Button>
+            <AddCategoryDialog
+                open={dialogOpen}
+                onClose={handleCloseDialog}
+                onCategoryAdded={handleCategoryAdded}
+            />
         </section>
     );
 }
