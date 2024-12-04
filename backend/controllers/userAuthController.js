@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
-import { findUserByEmail, createUser } from '../models/Users.js';
+import { findUserByEmail, createUser,getAllUserDetails } from '../models/Users.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || '&Sports#$**'; // Use environment variable for security
 
@@ -35,7 +35,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ error: 'Incorrect password' });
         }
 
-        const token = jwt.sign({ userId: user.user_id}, JWT_SECRET, { expiresIn: '3h' });
+        const token = jwt.sign({ userId: user.user_id}, JWT_SECRET, { expiresIn: '24h' });
 
         res.cookie('token', token, {
             httpOnly: true,
@@ -96,3 +96,28 @@ export const updateUserController = async (req, res) => {
         });
     }
 };
+
+export const getAllUserDetailsController = async (req,res)=>{
+      try{
+        const {user_id} = req.userId;
+        if(!user_id){
+            return res.status(400).json({
+                success: false,
+                message: 'Undefined user id provided'
+            });
+        }
+        const result = await getAllUserDetails(user_id);
+        if (result.success) {
+            return res.status(200).json(result);
+        } else {
+            return res.status(400).json(result);
+        }
+    } catch (error) {
+        console.error('Error in getAllUserController:', error.message);
+
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while getting user details.',
+        });
+    }
+}
