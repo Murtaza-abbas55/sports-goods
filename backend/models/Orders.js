@@ -2,7 +2,7 @@ import pool from '../db.js';
 
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-export const createOrder = async (user_id) => {
+export const createOrder = async (user_id,shipping_address,total_amount) => {
     let order_id;
     let unique = false;
 
@@ -36,10 +36,10 @@ export const createOrder = async (user_id) => {
         console.log(`Selected admin_username: ${admin_username}`);
 
         const result = await pool.query(
-            `INSERT INTO Orders (order_id, status, created_at, user_id, admin_username)
-             VALUES ($1, $2, $3, $4, $5)
+            `INSERT INTO Orders (order_id,shipping_address,total_amount,status, created_at, user_id, admin_username)
+             VALUES ($1, $2, $3, $4, $5,$6,$7)
              RETURNING *`,
-            [order_id, 'pending', new Date(), user_id, admin_username]
+            [order_id,shipping_address,total_amount, 'pending', new Date(), user_id, admin_username]
         );
 
         console.log('Order created successfully:', result.rows[0]);
@@ -187,7 +187,7 @@ export const getUserAllOrders = async (user_id) => {
         console.log(`Fetching all orders for user_id: ${user_id}`);
 
         const { rows: orders } = await pool.query(
-            `SELECT order_id, created_at, status 
+            `SELECT order_id,total_amount, created_at, status 
              FROM Orders 
              WHERE user_id = $1 
              ORDER BY created_at DESC`,
@@ -205,3 +205,52 @@ export const getUserAllOrders = async (user_id) => {
         throw new Error('Error fetching orders: ' + error.message);
     }
 };
+export const getAdminAssociatedOrders = async (admin_username) => {
+    try {
+        console.log(`Fetching all orders for admin: ${admin_username}`);
+
+        const { rows: orders } = await pool.query(
+            `SELECT order_id,total_amount, created_at, status 
+             FROM Orders 
+             WHERE admin_username = $1 
+             ORDER BY created_at DESC`,
+            [admin_username]
+        );
+
+        if (orders.length === 0) {
+            return { success: false, message: 'No orders associated found for this admin.' };
+        }
+
+        console.log(`Found ${orders.length} orders for admin_username: ${admin_username}`);
+        return { success: true, orders };
+    } catch (error) {
+        console.error('Error fetching user orders:', error.message);
+        throw new Error('Error fetching orders: ' + error.message);
+    }
+}
+
+export const updateorderstatus = async (order_id,status,admin_username) => {
+        try {
+            console.log(`Updating order status for order_id: ${order_id} to status: ${status}`);
+            const validStatuses = ['pending', 'shipped', 'delivered', 'canceled'];
+            if (!validStatuses.includes(status)) {
+                throw new Error(`Invalid status: ${status}. Allowed values are ${validStatuses.join(', ')}`);
+            }
+            const { rowCount } = await pool.query(
+                `UPDATE Orders SET status = $1 WHERE order_id = $2 AND admin_username = $3`,
+                [status, order_id,admin_username]
+            );
+    
+            if (rowCount === 0) {
+                console.log(`No order found with order_id: ${order_id}`);
+                return { success: false, message: 'Order not found.' };
+            }
+    
+            console.log(`Order status updated successfully for order_id: ${order_id}`);
+            return { success: true, message: 'Order status updated successfully by admin.' };
+        } catch (error) {
+            console.error('Error updating order status:', error.message);
+            throw new Error('Error updating order status: ' + error.message);
+        }
+    
+}

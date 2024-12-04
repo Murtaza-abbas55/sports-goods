@@ -12,7 +12,7 @@ export const createPayment = async (order_id, payment_method) => {
              RETURNING *`,
             [payment_id, status, payment_method, payment_date, order_id]
         );
-
+        await pool.query(`UPDATE Orders SET status =shipped WHERE order_id = $2`,[order_id] );
         return result.rows[0];
     } catch (error) {
         console.error('Error creating payment:', error);
