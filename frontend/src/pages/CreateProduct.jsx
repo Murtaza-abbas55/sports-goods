@@ -1,11 +1,18 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, Snackbar, TextField, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import { useState } from "react";
+import { CircularProgress, Alert } from "@mui/material";
 
 function CreateProduct() {
+    const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -14,6 +21,9 @@ function CreateProduct() {
 
     const onSubmit = async (data) => {
         // Create FormData object for file upload
+        setLoading(true);
+        setSuccessMessage("");
+        setErrorMessage("");
         const formData = new FormData();
 
         // Append each form field to FormData
@@ -35,6 +45,8 @@ function CreateProduct() {
                 withCredentials: true,
             });
             console.log(response.data.message); // Log success message
+            setSuccessMessage("Product added successfully!");
+            setSnackbarOpen(true);
         } catch (error) {
             console.error("Error adding product:", error);
             if (error.response) {
@@ -44,7 +56,14 @@ function CreateProduct() {
             } else {
                 console.error("Axios error:", error.message);
             }
+            setErrorMessage("Failed to add product. Please try again.");
+            setSnackbarOpen(true);
         }
+        setLoading(false);
+    };
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
     };
 
     return (
@@ -55,6 +74,22 @@ function CreateProduct() {
                 border: "solid 5px green",
             }}
         >
+            <Snackbar
+                anchorOrigin={{ vertical: "center", horizontal: "center" }}
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+            >
+                {successMessage ? (
+                    <Alert onClose={handleSnackbarClose} severity="success">
+                        {successMessage}
+                    </Alert>
+                ) : (
+                    <Alert onClose={handleSnackbarClose} severity="error">
+                        {errorMessage}
+                    </Alert>
+                )}
+            </Snackbar>
             <Paper
                 elevation={10}
                 sx={{
@@ -170,8 +205,23 @@ function CreateProduct() {
                         justifyContent={"center"}
                         gap={2}
                     >
-                        <Button variant="contained" type="submit">
-                            Add Product
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            color="primary"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <Box display="flex" alignItems="center" gap={1}>
+                                    <CircularProgress
+                                        size={20}
+                                        color="inherit"
+                                    />
+                                    Adding...
+                                </Box>
+                            ) : (
+                                "Add Product"
+                            )}
                         </Button>
                     </Stack>
                 </form>

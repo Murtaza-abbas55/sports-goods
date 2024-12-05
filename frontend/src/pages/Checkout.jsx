@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { createOrder, cancelOrder } from "../services/order";
 import axios from "axios";
@@ -7,19 +7,39 @@ import useFetchCartItems from "../hooks/useFetchCartItems";
 import Typography from "@mui/material/Typography";
 import DrawerAppBar from "../components/Navbar";
 import CheckoutForm from "../components/CheckoutForm";
+import PaymentForm from "../components/PaymentForm";
 
 function Checkout() {
     const { Data } = useAuth();
     const { cartProducts, setCartProducts, fetchLoading } = useFetchCartItems();
+    const [order_id, setOrderID] = useState(null);
+    const [checkoutTurn, setCheckoutTurn] = useState(true);
+
     console.log(cartProducts);
     console.log(Data.user_id + "in check");
+    const totalSum = cartProducts.reduce((sum, product) => {
+        return sum + product.price * product.quantity; // Adjust based on your data structure
+    }, 0);
+    const tax = 0.05 * totalSum;
+    const finalSum = tax + totalSum;
 
     return (
         <>
             <DrawerAppBar />
             <Stack direction={"row"}>
                 <Stack flex={0.5}>
-                    <CheckoutForm />
+                    {checkoutTurn ? (
+                        <CheckoutForm
+                            user_id={Data.user_id}
+                            total_amount={finalSum}
+                            checkoutTurn={checkoutTurn}
+                            setCheckoutTurn={setCheckoutTurn}
+                            order_id={order_id}
+                            setOrderID={setOrderID}
+                        />
+                    ) : (
+                        <PaymentForm order_id={order_id} />
+                    )}
                     <Button onClick={() => createOrder(Data.user_id)}>
                         Click
                     </Button>

@@ -18,7 +18,7 @@ function ImgMediaCard({
         <Card elevation={5} sx={{ display: "flex", width: 350 }}>
             <CardActionArea
                 component={RouterLink}
-                to={`product-listing/product/${product_id}`}
+                to={`/product-listing/product/${product_id}`}
             >
                 {discount_percentage && (
                     <Typography

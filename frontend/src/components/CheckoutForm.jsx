@@ -1,11 +1,28 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography, Container } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Box,
+    Typography,
+    Container,
+    CircularProgress,
+} from "@mui/material";
+import { createOrder } from "../services/order";
 
-function CheckoutForm() {
+function CheckoutForm({
+    user_id,
+    total_amount,
+    checkoutTurn,
+    setCheckoutTurn,
+    order_id,
+    setOrderID,
+}) {
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         password: "",
+        shipping_address: "",
     });
 
     const handleChange = (e) => {
@@ -16,10 +33,27 @@ function CheckoutForm() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData);
-        // Add your form submission logic here
+        setLoading(true);
+        try {
+            await createOrder(
+                user_id,
+                formData.shipping_address,
+                total_amount,
+                setOrderID,
+                setCheckoutTurn,
+                checkoutTurn
+            );
+            console.log("Order created successfully");
+            // This will execute after createOrder completes
+        } catch (error) {
+            console.error("Error creating order:", error);
+            // Handle error (e.g., show an error message to the user)
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -49,6 +83,15 @@ function CheckoutForm() {
                     fullWidth
                 />
                 <TextField
+                    label="Shipping Address"
+                    name="shipping_address"
+                    variant="outlined"
+                    value={formData.shipping_address}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                />
+                <TextField
                     label="Email"
                     name="email"
                     type="email"
@@ -71,8 +114,13 @@ function CheckoutForm() {
                     variant="contained"
                     color="primary"
                     fullWidth
+                    disabled={loading}
                 >
-                    Submit
+                    {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                    ) : (
+                        "Submit"
+                    )}
                 </Button>
             </Box>
         </Container>

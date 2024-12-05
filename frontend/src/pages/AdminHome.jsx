@@ -72,6 +72,16 @@ function AdminHome() {
                 sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
                 size="large"
                 component={RouterLink}
+                to={"manage-categories"}
+            >
+                Manage Categories
+            </Button>
+
+            <Button
+                variant="contained"
+                sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
+                size="large"
+                component={RouterLink}
                 to={"sale"}
             >
                 Manage Sale

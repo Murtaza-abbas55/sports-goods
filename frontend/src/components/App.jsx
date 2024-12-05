@@ -22,6 +22,9 @@ import Sale from "../pages/Sale";
 import Loading from "./Loading";
 import UserDashboard from "../pages/UserDashboard";
 import Checkout from "../pages/Checkout";
+import ManageCategories from "../pages/ManageCategories";
+import UserLayout from "../pages/UserLayout";
+import ViewWishlist from "../pages/ViewWishlist";
 
 // Inside your Routes:
 
@@ -109,9 +112,18 @@ function App() {
                 <Route path="update-product" element={<UpdateProduct />} />
                 <Route path="view-products" element={<ProductList />} />
                 <Route path="new-admin" element={<CreateAdminAccount />} />
+                <Route
+                    path="manage-categories"
+                    element={<ManageCategories />}
+                />
                 <Route path="sale" element={<Sale />} />
             </Route>
-            <Route path="/dashboard/:userId" element={<UserDashboard />} />
+
+            <Route path="/dashboard/:userId" element={<UserLayout />}>
+                <Route index element={<UserDashboard />} />
+                <Route path="view-wishlist" element={<ViewWishlist />} />
+            </Route>
+
             <Route
                 path="/list"
                 element={Data ? <ProductList /> : <Navigate to={"/login"} />}
