@@ -49,7 +49,17 @@ const UserDashboard = () => {
                     component={RouterLink}
                     to={"view-wishlist"}
                 >
-                    View Wishlist
+                    My Wishlist
+                </Button>
+
+                <Button
+                    variant="contained"
+                    sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
+                    size="large"
+                    component={RouterLink}
+                    to={"orders"}
+                >
+                    Orders
                 </Button>
 
                 <Button
