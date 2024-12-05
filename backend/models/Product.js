@@ -79,26 +79,26 @@ export const createProduct = async (productData) => {
             [product_id, name, image_url, description, price, stock, category_id, admin_username]
         );
         console.log("Product Insert Result:", result.rows);
-
-        // Insert product_id into New_Arrival table
-        const newArrivalResult = await pool.query(
-            `INSERT INTO New_Arrival (product_id) VALUES ($1) RETURNING *`,
-            [product_id]
-        );
-        console.log("New Arrival Insert Result:", newArrivalResult.rows);
-
-        // Delete old entries in New_Arrival to keep only the last 5 products
-        const deleteOldEntriesResult = await pool.query(
-            `DELETE FROM New_Arrival
-             WHERE product_id NOT IN (
-                 SELECT product_id
-                 FROM Products
-                 ORDER BY created_at DESC
-                 LIMIT 5
-             ) RETURNING *`
-        );
-        console.log("Deleted Old New_Arrival Entries:", deleteOldEntriesResult.rowCount);
-
+       /* CREATE OR REPLACE FUNCTION new_arrival_trigger() 
+            RETURNS TRIGGER AS $$
+            BEGIN
+            INSERT INTO New_Arrival (product_id) 
+            VALUES (NEW.product_id);
+            DELETE FROM New_Arrival
+            WHERE product_id NOT IN (
+                SELECT product_id
+                FROM Products
+                ORDER BY created_at DESC
+                LIMIT 5
+                );
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+            CREATE TRIGGER insert_new_arrival
+            AFTER INSERT ON Products
+            FOR EACH ROW
+            EXECUTE FUNCTION new_arrival_trigger();*/
+        //applied trigger in backend 
         return result.rows[0];
     } catch (error) {
         console.error('Error in createProduct:', error.message);

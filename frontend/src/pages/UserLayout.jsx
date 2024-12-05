@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import DrawerAppBar from "../components/Navbar";
+import useFetchUserDetails from "../hooks/useFetchUserDetails";
 
 function UserLayout() {
     return (

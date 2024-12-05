@@ -264,10 +264,6 @@ export const getAdminAssociatedOrders = async (admin_username) => {
 export const updateorderstatus = async (order_id,status,admin_username) => {
         try {
             console.log(`Updating order status for order_id: ${order_id} to status: ${status}`);
-            const validStatuses = ['pending', 'shipped', 'delivered', 'canceled'];
-            if (!validStatuses.includes(status)) {
-                throw new Error(`Invalid status: ${status}. Allowed values are ${validStatuses.join(', ')}`);
-            }
             const { rowCount } = await pool.query(
                 `UPDATE Orders SET status = $1 WHERE order_id = $2 AND admin_username = $3`,
                 [status, order_id,admin_username]

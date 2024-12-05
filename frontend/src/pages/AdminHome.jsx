@@ -19,7 +19,6 @@ function AdminHome() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                border: "solid 3px red",
             }}
             component={"section"}
         >
@@ -75,6 +74,16 @@ function AdminHome() {
                 to={"manage-categories"}
             >
                 Manage Categories
+            </Button>
+
+            <Button
+                variant="contained"
+                sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
+                size="large"
+                component={RouterLink}
+                to={"manage-orders"}
+            >
+                Manage Orders
             </Button>
 
             <Button
