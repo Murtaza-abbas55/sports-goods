@@ -26,6 +26,7 @@ import ManageCategories from "../pages/ManageCategories";
 import UserLayout from "../pages/UserLayout";
 import ViewWishlist from "../pages/ViewWishlist";
 import UserOrders from "../pages/UserOrders";
+import ManageOrders from "../pages/ManageOrders";
 
 // Inside your Routes:
 
@@ -117,6 +118,7 @@ function App() {
                     path="manage-categories"
                     element={<ManageCategories />}
                 />
+                <Route path="manage-orders" element={<ManageOrders />} />
                 <Route path="sale" element={<Sale />} />
             </Route>
 

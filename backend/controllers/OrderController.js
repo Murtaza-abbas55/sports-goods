@@ -107,7 +107,7 @@ export const getUserOrdersController = async (req, res) => {
     }
 };
 export const getAdminAssociatedOrdersController = async (req, res) => {
-    const { admin_username } = req.adminUsername;
+    const { admin_username } = req.query;
     try {
         if (!admin_username) {
             return res

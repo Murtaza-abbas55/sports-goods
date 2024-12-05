@@ -51,14 +51,11 @@ function ManageCategories() {
 
     // Handle category deletion
     const handleDelete = async (category_id) => {
+        console.log(Number(category_id));
         try {
-            await axios.post(
-                "/api/categories/delete",
-                { category_id },
-                {
-                    headers: { "Content-Type": "application/json" },
-                }
-            );
+            await axios.post("/api/delete-category", {
+                category_id: Number(category_id),
+            });
             setCategories((prevCategories) =>
                 prevCategories.filter(
                     (category) => category.category_id !== category_id
@@ -143,7 +140,9 @@ function ManageCategories() {
                             <TableRow key={category.category_id}>
                                 <TableCell>{category.category_id}</TableCell>
                                 <TableCell>{category.name}</TableCell>
-                                <TableCell>{category.description}</TableCell>
+                                <TableCell sx={{ maxWidth: "250px" }}>
+                                    {category.description}
+                                </TableCell>
                                 <TableCell>
                                     <Button
                                         variant="contained"
