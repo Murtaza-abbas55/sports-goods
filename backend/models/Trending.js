@@ -62,7 +62,7 @@ export const fetchTrendingProducts = async () => {
             throw new Error("No trending products found.");
         }
 
-        return result.rows;
+        return { success: true, products: result.rows };
     } catch (error) {
         throw new Error('Error retrieving trending products: ' + error.message);
     }
