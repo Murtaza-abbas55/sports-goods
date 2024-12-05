@@ -10,11 +10,12 @@ import {
 } from "@mui/material";
 import useFetchUserOrders from "../hooks/useFetchUserOrders";
 import Empty from "../components/Empty";
+import Loading from "../components/Loading";
 
 function UserOrders() {
     const { orders, loading, error } = useFetchUserOrders();
 
-    if (loading) return <Typography>Loading...</Typography>;
+    if (loading) return <Loading />;
     if (error) return <Typography>Error loading orders.</Typography>;
     if (orders === undefined)
         return <Empty message={"You Have Not Ordered Anything"} size={100} />;

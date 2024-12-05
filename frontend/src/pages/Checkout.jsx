@@ -18,9 +18,10 @@ function Checkout() {
     console.log(cartProducts);
     console.log(Data.user_id + "in check");
     const totalSum = cartProducts.reduce((sum, product) => {
-        return sum + product.price * product.quantity; // Adjust based on your data structure
+        const price = product.sale ? product.new_price : product.regular_price;
+        return sum + price * product.quantity;
     }, 0);
-    const tax = 0.05 * totalSum;
+    const tax = Math.round(0.05 * totalSum);
     const finalSum = tax + totalSum;
 
     return (
@@ -40,10 +41,6 @@ function Checkout() {
                     ) : (
                         <PaymentForm order_id={order_id} />
                     )}
-                    <Button onClick={() => createOrder(Data.user_id)}>
-                        Click
-                    </Button>
-                    <Button onClick={cancelOrder}>Remove</Button>
                 </Stack>
                 <Stack gap={10} flex={0.5}>
                     {cartProducts.map((cartProduct) => (
@@ -77,7 +74,10 @@ function Checkout() {
                                     variant="body1"
                                 >
                                     RS.
-                                    {cartProduct.quantity * cartProduct.price}
+                                    {cartProduct.quantity *
+                                        (cartProduct.sale
+                                            ? cartProduct.new_price
+                                            : cartProduct.regular_price)}
                                 </Typography>
                             </Stack>
                         </Stack>
