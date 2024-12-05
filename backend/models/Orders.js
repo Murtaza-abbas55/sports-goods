@@ -161,24 +161,56 @@ export const getOrder = async (order_id) => {
     try {
         console.log(`Fetching order details for order_id: ${order_id}`);
 
-        const { rows: orderProducts } = await pool.query(
-            `SELECT o.product_id, p.name,p.image_url, o.quantity, o.price_at_order
-             FROM OrderProducts o
-             JOIN Products p ON o.product_id = p.product_id
-             WHERE o.order_id = $1`,
-            [order_id]
-        );
+        const query = `
+            SELECT 
+                o.product_id, 
+                p.name, 
+                p.image_url, 
+                o.quantity, 
+                o.price_at_order,
+                CASE 
+                    WHEN s.product_id IS NOT NULL THEN true 
+                    ELSE false 
+                END AS sale,
+                s.new_price,
+                s.discount_percentage
+            FROM 
+                OrderProducts o
+            JOIN 
+                Products p 
+            ON 
+                o.product_id = p.product_id
+            LEFT JOIN 
+                Sale s 
+            ON 
+                o.product_id = s.product_id
+            WHERE 
+                o.order_id = $1
+        `;
+
+        const { rows: orderProducts } = await pool.query(query, [order_id]);
 
         if (orderProducts.length === 0) {
             console.log(`No products found for order_id: ${order_id}`);
-            return { success: false, message: 'No products found for this order.' };
+            return {
+                success: false,
+                message: "No products found for this order."
+            };
         }
 
-        console.log(`Order details retrieved successfully for order_id: ${order_id}`);
-        return { success: true, order_id, products: orderProducts };
+        return {
+            success: true,
+            order_id,
+            products: orderProducts,
+            message: "Order details retrieved successfully."
+        };
     } catch (error) {
-        console.error('Error fetching order details:', error.message);
-        throw new Error(`Error fetching order details: ${error.message}`);
+        console.error("Error fetching order details:", error.message);
+        return {
+            success: false,
+            message: "Failed to fetch order details.",
+            error: error.message
+        };
     }
 };
 

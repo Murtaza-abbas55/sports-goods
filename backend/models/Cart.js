@@ -376,25 +376,66 @@ export const mergeAnonymousCartWithUserCart = async (
     }
 };
 
+import pool from "../db.js";
+
 export const getCartProducts = async (cart_id) => {
     try {
-        console.log(`Getting cart ${cart_id}`);
-        const { rows: cart } = await pool.query(
+        console.log(`Fetching products for cart ${cart_id}...`);
+        
+        const query = `
+            SELECT 
+                c.cart_id, 
+                c.product_id, 
+                c.quantity, 
+                p.name, 
+                p.image_url, 
+                p.price AS regular_price, 
+                CASE 
+                    WHEN s.product_id IS NOT NULL THEN true 
+                    ELSE false 
+                END AS sale,
+                s.new_price,
+                s.discount_percentage
+            FROM 
+                CartProducts c
+            JOIN 
+                Products p 
+            ON 
+                c.product_id = p.product_id
+            LEFT JOIN 
+                Sale s 
+            ON 
+                c.product_id = s.product_id
+            WHERE 
+                c.cart_id = $1
+        `;
 
-            `SELECT c.*,p.* FROM CartProducts c JOIN Products p ON c.product_id=p.product_id WHERE c.cart_id = $1`,
-            [cart_id]
-        );
+        const { rows: cartProducts } = await pool.query(query, [cart_id]);
 
-        if (cart.length === 0) {
+        if (cartProducts.length === 0) {
             console.log("No items in cart...");
-            return { success: false, message: "No items in cart." };
+            return {
+                success: false,
+                message: "No items in cart."
+            };
         }
 
-        return { success: true, message: "Cart found", cart: cart };
+        return {
+            success: true,
+            products: cartProducts,
+            message: "Fetched cart products successfully."
+        };
     } catch (error) {
-        throw new Error("Error: " + error.message);
+        console.error("Error fetching cart products:", error.message);
+        return {
+            success: false,
+            message: "Failed to fetch cart products.",
+            error: error.message
+        };
     }
 };
+
+
 export const ChangeProductQuantity = async (cart_id, product_id, cflag) => {
     try {
         console.log(`${cflag === "increase" ? "Increasing" : "Decreasing"} quantity for product ${product_id} in cart ${cart_id}`  );
