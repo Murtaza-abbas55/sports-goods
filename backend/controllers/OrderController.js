@@ -128,7 +128,7 @@ export const getAdminAssociatedOrdersController = async (req, res) => {
     }
 };
 export const Updateorderstatuscontroller = async (req,res) => {
-    const { admin_username } = req.adminUsername;
+    const admin_username  = req.adminUsername;
     const {order_id,status}=req.body;
     try {
         if (!admin_username) {
