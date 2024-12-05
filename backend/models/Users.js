@@ -28,6 +28,7 @@ export const updateUserDetails = async ({
     email,
 }) => {
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
         if (!user_id || !phone_number || !first_name || !last_name || !password || !address || !email) {
             return { success: false, message: 'All fields are required.' };
         }
@@ -40,7 +41,7 @@ export const updateUserDetails = async ({
                  address = $6, 
                  email = $7
              WHERE user_id = $1 RETURNING *`,
-            [user_id, phone_number, first_name, last_name, password, address, email]
+            [user_id, phone_number, first_name, last_name, hashedPassword, address, email]
         );
         if (rowCount === 0) {
             return { success: false, message: `No user found with user_id: ${user_id}` };

@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
-import { findUserByEmail, createUser,getAllUserDetails } from '../models/Users.js';
+import { findUserByEmail, createUser,updateUserDetails,getAllUserDetails } from '../models/Users.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || '&Sports#$**'; // Use environment variable for security
 
