@@ -11,17 +11,16 @@ function useFetchUserDetails() {
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
-                const response = await axios.get("/api/auth/userdetails");
-                console.log("my user info");
-                console.log(response);
+                const response = await axios.get("/api/auth/userdetails", { withCredentials: true });
+                console.log("Fetched user details:", response.data);
+                setUserDetails(response.data); // Update state with the fetched details
             } catch (error) {
                 console.error("Error fetching info:", error);
                 setError("Error");
             } finally {
                 setLoading(false);
             }
-        };
-
+        };        
         fetchUserDetails();
     }, [Data.user_id]);
     console.log(userDetails);
