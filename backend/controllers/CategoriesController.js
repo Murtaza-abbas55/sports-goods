@@ -53,7 +53,7 @@ export const updateCategoryController = async (req, res) => {
 };
 export const  deleteCategoryController = async (req, res) => {
   try {
-    const category_id = req.body;
+    const {category_id}= req.body;
 
     if (!category_id) {
       return res.status(400).json({ message: "Category ID is required for deletion" });

@@ -99,7 +99,7 @@ export const updateUserController = async (req, res) => {
 
 export const getAllUserDetailsController = async (req,res)=>{
       try{
-        const {user_id} = req.userId;
+        const user_id = req.userId;
         if(!user_id){
             return res.status(400).json({
                 success: false,
