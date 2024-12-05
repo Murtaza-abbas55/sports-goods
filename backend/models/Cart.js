@@ -421,7 +421,7 @@ export const getCartProducts = async (cart_id) => {
 
         return {
             success: true,
-            products: cartProducts,
+            cart: cartProducts,
             message: "Fetched cart products successfully."
         };
     } catch (error) {
