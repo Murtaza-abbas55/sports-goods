@@ -66,6 +66,14 @@ const UserDashboard = () => {
                     variant="contained"
                     sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
                     size="large"
+                >
+                    Update Profile
+                </Button>
+
+                <Button
+                    variant="contained"
+                    sx={{ fontSize: "24px", width: "60vw", margin: "20px 0" }}
+                    size="large"
                     onClick={handleLogout}
                     style={{ marginTop: "20px" }}
                 >
