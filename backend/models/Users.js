@@ -62,13 +62,13 @@ export const updateUserDetails = async ({
 
 export const getAllUserDetails = async (user_id) => {
      try{
-        const result = await pool.query(`SELECT * FROM USers WHERE user_id =$1`,user_id);
-        if (rowCount === 0) {
+        const result = await pool.query(`SELECT * FROM Users WHERE user_id =$1`,[user_id]);
+        if (result.rowCount === 0) {
             return { success: false, message: `No user found with user_id: ${user_id}` };
         }
         return result.rows[0];
      }
      catch(error){
-        throw new Error('Error updating user details: ' + error.message);
+        throw new Error('Error fetching  user details: ' + error.message);
      }
 }

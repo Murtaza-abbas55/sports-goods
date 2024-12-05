@@ -107,11 +107,8 @@ export const getAllUserDetailsController = async (req,res)=>{
             });
         }
         const result = await getAllUserDetails(user_id);
-        if (result.success) {
-            return res.status(200).json(result);
-        } else {
-            return res.status(400).json(result);
-        }
+        return res.status(200).json(result);
+        
     } catch (error) {
         console.error('Error in getAllUserController:', error.message);
 
