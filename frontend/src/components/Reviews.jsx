@@ -75,10 +75,6 @@ function Reviews({ product_id }) {
         }
     }
 
-    function editReview(product_id, rating, comments) {
-        console.log({ product_id, rating, comments });
-    }
-
     console.log("reviews");
     console.log(reviews);
 
@@ -117,17 +113,6 @@ function Reviews({ product_id }) {
                                     </Typography>
                                     {Data?.user_id === review.user_id && (
                                         <Stack marginTop={3} direction={"row"}>
-                                            <IconButton
-                                                onClick={() =>
-                                                    editReview(
-                                                        product_id,
-                                                        review.rating,
-                                                        review.comments
-                                                    )
-                                                }
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
                                             <IconButton
                                                 onClick={() =>
                                                     deleteReview(

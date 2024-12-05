@@ -117,6 +117,7 @@ function ProductListing() {
                                     wishlistItems={wishlistItems}
                                     setWishlistItems={setWishlistItems}
                                     handleAddToCart={handleAddToCart}
+                                    newPrice={product.new_price}
                                 />
                             </div>
                         ))
