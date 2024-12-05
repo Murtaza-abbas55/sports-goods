@@ -7,13 +7,88 @@ import {
     TableRow,
     Typography,
     Paper,
+    Button,
 } from "@mui/material";
 import useFetchAdminOrders from "../hooks/useFetchAdminOrders";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import Loading from "../components/Loading";
 
 function ManageOrders() {
     const { orders, loading, error } = useFetchAdminOrders();
+    const [updatedOrders, setUpdatedOrders] = useState([]);
 
-    if (loading) return <Typography>Loading...</Typography>;
+    useEffect(() => {
+        if (orders) {
+            setUpdatedOrders(orders);
+        }
+    }, [orders]);
+
+    console.log("updatedOrders:", updatedOrders);
+    console.log("orders:", orders);
+
+    const getNextStatus = (currentStatus) => {
+        const statusFlow = ["pending", "approved", "dispatched", "shipped"];
+        const currentIndex = statusFlow.indexOf(currentStatus);
+        return currentIndex !== -1 && currentIndex < statusFlow.length - 1
+            ? statusFlow[currentIndex + 1]
+            : currentStatus;
+    };
+
+    const handleStatusUpdate = async (orderId, currentStatus) => {
+        const newStatus = getNextStatus(currentStatus);
+
+        try {
+            await axios.post(
+                `/api/order/updatestatus`,
+                {
+                    order_id: orderId,
+                    status: newStatus,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            setUpdatedOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.order_id === orderId
+                        ? { ...order, status: newStatus }
+                        : order
+                )
+            );
+        } catch (error) {
+            console.error("Error updating order status:", error);
+        }
+    };
+
+    const handleCancelOrder = async (orderId) => {
+        try {
+            await axios.post(
+                `/api/order/updatestatus`,
+                {
+                    order_id: orderId,
+                    status: "cancelled",
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            // Update the state locally
+            setUpdatedOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.order_id === orderId
+                        ? { ...order, status: "cancelled" }
+                        : order
+                )
+            );
+        } catch (error) {
+            console.error("Error cancelling order:", error);
+        }
+    };
+
+    if (loading) return <Loading />;
     if (error) return <Typography>Error loading orders.</Typography>;
 
     return (
@@ -24,7 +99,7 @@ function ManageOrders() {
                 fontWeight={"bold"}
                 textAlign={"center"}
             >
-                My Orders
+                Manage Orders
             </Typography>
             <TableContainer
                 component={Paper}
@@ -49,10 +124,13 @@ function ManageOrders() {
                             <TableCell>
                                 <b>Status</b>
                             </TableCell>
+                            <TableCell>
+                                <b>Action</b>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {orders.map((order) => (
+                        {updatedOrders.map((order) => (
                             <TableRow key={order.order_id}>
                                 <TableCell>{order.order_id}</TableCell>
                                 <TableCell>
@@ -64,17 +142,57 @@ function ManageOrders() {
                                     ).toLocaleString()}
                                 </TableCell>
                                 <TableCell
-                                    style={{
-                                        color:
-                                            order.status === "shipped"
-                                                ? "green"
-                                                : "#D9512C",
+                                    sx={{
+                                        color: {
+                                            shipped: "green",
+                                            cancelled: "red",
+                                            approved: "blue",
+                                            dispatched: "orange",
+                                            pending: "#D9512C",
+                                        }[order.status],
                                         fontWeight: "bold",
+                                        textTransform: "capitalize",
                                     }}
                                 >
                                     <Typography textTransform={"capitalize"}>
                                         {order.status}
                                     </Typography>
+                                </TableCell>
+                                <TableCell>
+                                    {order.status !== "shipped" &&
+                                        order.status !== "cancelled" && (
+                                            <Button
+                                                variant="contained"
+                                                size="small"
+                                                onClick={() =>
+                                                    handleStatusUpdate(
+                                                        order.order_id,
+                                                        order.status
+                                                    )
+                                                }
+                                                style={{
+                                                    marginRight: "8px",
+                                                }}
+                                            >
+                                                Mark as{" "}
+                                                {getNextStatus(order.status)}
+                                            </Button>
+                                        )}
+
+                                    {order.status === "pending" && (
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            size="small"
+                                            onClick={() =>
+                                                handleCancelOrder(
+                                                    order.order_id
+                                                )
+                                            }
+                                        >
+                                            Cancel
+                                        </Button>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}

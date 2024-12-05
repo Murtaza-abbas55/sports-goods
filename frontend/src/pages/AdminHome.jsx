@@ -19,7 +19,6 @@ function AdminHome() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                border: "solid 3px red",
             }}
             component={"section"}
         >
