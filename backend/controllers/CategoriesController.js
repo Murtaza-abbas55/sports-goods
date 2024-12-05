@@ -1,4 +1,4 @@
-import { getAllCategories,getProductsByCategoryId,insertCategory,updateCategory } from "../models/Categories.js";
+import { getAllCategories,getProductsByCategoryId,insertCategory,updateCategory,deleteCategory } from "../models/Categories.js";
 
 export const AllCategories = async (req,res)=>{
    try{
@@ -48,6 +48,24 @@ export const updateCategoryController = async (req, res) => {
     res.status(200).json({ message: "Category updated successfully", category: updatedCategory });
   } catch (error) {
     console.error("Error in updateCategoryController:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+export const  deleteCategoryController = async (req, res) => {
+  try {
+    const category_id = req.body;
+
+    if (!category_id) {
+      return res.status(400).json({ message: "Category ID is required for deletion" });
+    }
+    const deletedCategory = await deleteCategory(category_id);
+    if (!deletedCategory) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.status(200).json({ message: "Category deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteCategoryController:", error.message);
     res.status(500).json({ message: error.message });
   }
 };

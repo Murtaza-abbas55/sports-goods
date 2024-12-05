@@ -73,4 +73,31 @@ export const insertCategory = async ( category_id, name, description ) => {
       client.release();
     }
   };
+  export const deleteCategory = async (category_id) => {
+  
+    console.log(`Updating category with ID ${category_id}...`);
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+  
+      const deleteQuery = `
+        DELETE FROM Category
+        WHERE category_id = $1
+        RETURNING *;
+      `;
+      const result = await client.query(deleteQuery, [category_id]);
+  
+      if (result.rowCount === 0) {
+        throw new Error(`Category with ID ${category_id} does not exist.`);
+      }
+  
+      await client.query("COMMIT");
+      return result.rows[0];
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw new Error("Error to delete category: " + error.message);
+    } finally {
+      client.release();
+    }
+  };
   
