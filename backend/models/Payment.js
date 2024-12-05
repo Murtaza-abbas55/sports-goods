@@ -1,5 +1,4 @@
 import pool from '../db.js';
-
 export const createPayment = async (order_id, payment_method) => {
     try {
         const payment_id = Math.floor(Math.random() * 1000000); 
@@ -12,13 +11,16 @@ export const createPayment = async (order_id, payment_method) => {
              RETURNING *`,
             [payment_id, status, payment_method, payment_date, order_id]
         );
-        await pool.query(`UPDATE Orders SET status =shipped WHERE order_id = $2`,[order_id] );
+
+        await pool.query(`UPDATE Orders SET status = $1 WHERE order_id = $2`, ['shipped', order_id]);
+
         return result.rows[0];
     } catch (error) {
         console.error('Error creating payment:', error);
         throw new Error('Failed to create payment');
     }
 };
+
 
 export const getPaymentByOrderId = async (order_id) => {
     try {
