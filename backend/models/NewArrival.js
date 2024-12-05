@@ -37,17 +37,9 @@ export const getNewArrivalProducts = async () => {
 
         const { rows: newArrivalProducts } = await pool.query(query);
 
-        return {
-            success: true,
-            products: newArrivalProducts,
-            message: "Fetched new arrival products successfully."
-        };
+        return newArrivalProducts;  // Return the array directly
     } catch (error) {
         console.error("Error fetching new arrival products:", error.message);
-        return {
-            success: false,
-            message: "Failed to fetch new arrival products.",
-            error: error.message
-        };
+        throw new Error("Failed to fetch new arrival products.");
     }
 };
