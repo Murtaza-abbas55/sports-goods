@@ -143,7 +143,8 @@ function Product() {
                                 variant="h5"
                                 fontWeight={"bold"}
                             >
-                                {"RS " + products.price}
+                                {"RS " +
+                                    (products?.new_price || products.price)}
                             </Typography>
                             <Typography
                                 textAlign={"justify"}

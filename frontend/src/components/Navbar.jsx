@@ -69,7 +69,7 @@ function DrawerAppBar(props) {
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <AppBar component="nav">
+            <AppBar component="nav" sx={{ backgroundColor: "black" }}>
                 <Toolbar>
                     <Box sx={{ display: "flex", flexGrow: { xs: 0, sm: 1 } }}>
                         <Typography>MyStore</Typography>
@@ -83,16 +83,20 @@ function DrawerAppBar(props) {
                         }}
                     >
                         <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                        {navItems.map((item) => (
-                            <Button
-                                component={RouterLink}
-                                to={item === Data?.user_id ? `/dashboard/${item}` : `/${item}`}
-                                key={item}
-                                sx={{ color: "#fff" }}
-                            >
-                                {item}
-                            </Button>
-                        ))}
+                            {navItems.map((item) => (
+                                <Button
+                                    component={RouterLink}
+                                    to={
+                                        item === Data?.user_id
+                                            ? `/dashboard/${item}`
+                                            : `/${item}`
+                                    }
+                                    key={item}
+                                    sx={{ color: "#fff" }}
+                                >
+                                    {item}
+                                </Button>
+                            ))}
                         </Box>
                     </Typography>
 
@@ -106,10 +110,7 @@ function DrawerAppBar(props) {
                             flexGrow: { xs: 1, sm: 0 },
                         }}
                     >
-                        <Badge
-                            color="secondary"
-                            badgeContent={cartProductsLength}
-                        >
+                        <Badge color="error" badgeContent={cartProductsLength}>
                             <ShoppingCartIcon />
                         </Badge>
                     </IconButton>
