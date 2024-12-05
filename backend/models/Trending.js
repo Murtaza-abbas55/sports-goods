@@ -29,7 +29,7 @@ export const refreshTrendingProducts = async () => {
     }
 };
 
-import pool from "../db.js";
+
 
 export const fetchTrendingProducts = async () => { 
     try {

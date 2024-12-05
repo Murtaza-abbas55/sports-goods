@@ -376,7 +376,6 @@ export const mergeAnonymousCartWithUserCart = async (
     }
 };
 
-import pool from "../db.js";
 
 export const getCartProducts = async (cart_id) => {
     try {
