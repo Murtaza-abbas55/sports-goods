@@ -5,12 +5,14 @@ import CategoryList from "../components/CategoryLists";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import SaleSection from "../components/SaleSection";
+import Hero from "../components/Hero";
 
 function Header() {
     return (
         <>
             <DrawerAppBar />
-            <ImageCarousel />
+            {/* <ImageCarousel /> */}
+            <Hero />
             <Section sectionHeading={"New Arrival"} url={"/api/new-arrivals"} />
             <Section
                 sectionHeading={"Trending"}
