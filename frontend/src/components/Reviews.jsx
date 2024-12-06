@@ -12,6 +12,7 @@ import ReviewForm from "./ReviewForm";
 import Modal from "@mui/material/Modal";
 import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Empty from "./Empty";
 
 const style = {
     position: "absolute",
@@ -81,11 +82,11 @@ function Reviews({ product_id }) {
     return (
         <>
             <Divider />
-            <Typography textAlign={"center"} variant="h4">
+            <Typography mb={3} textAlign={"center"} variant="h4">
                 Reviews
             </Typography>
             {reviews.length === 0 ? (
-                <h1>Empty</h1>
+                <Empty message={"No Reviews"} size={50}/>
             ) : (
                 <>
                     <List>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
-    TextField,
+    Select,
+    MenuItem,
     Button,
     Box,
     Typography,
@@ -93,15 +94,21 @@ function PaymentForm({ order_id }) {
                     >
                         Payment Form
                     </Typography>
-                    <TextField
-                        label="Payment Method"
+                    <Select
                         name="payment_method"
-                        variant="outlined"
                         value={formData.payment_method}
                         onChange={handleChange}
                         fullWidth
                         required
-                    />
+                        displayEmpty
+                        sx={{ backgroundColor: "#fff" }}
+                    >
+                        <MenuItem value="" disabled>
+                            Select Payment Method
+                        </MenuItem>
+                        <MenuItem value="Cash on Delivery">Cash on Delivery</MenuItem>
+                        <MenuItem value="Account">Account</MenuItem>
+                    </Select>
 
                     <Button
                         type="submit"

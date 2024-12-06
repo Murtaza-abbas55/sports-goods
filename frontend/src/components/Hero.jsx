@@ -1,7 +1,7 @@
 // * Components
 
 // * Images
-import HeroImg from "/public/images/rb_14478.png";
+// import HeroImg from "/public/images/rb_14478.png";
 
 // * MUI Components
 import { Box, Button, Container, Typography, styled } from "@mui/material";
@@ -58,7 +58,7 @@ export default function Hero() {
                             Welcome to Besnik Agency
                         </Typography> */}
                         <Title variant="h2">
-                            SportsShop Your Ultimate Sports Destination.
+                            Play Max Your Ultimate Sports Destination.
                         </Title>
                         <Typography
                             variant="body2"
@@ -92,7 +92,7 @@ export default function Hero() {
 
                     <Box sx={{ flex: 1.25 }}>
                         <img
-                            src={HeroImg}
+                            src={"/public/images/rb_14478.png"}
                             alt="hero illustration"
                             style={{ maxWidth: "100%" }}
                         />

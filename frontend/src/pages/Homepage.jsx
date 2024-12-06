@@ -21,9 +21,6 @@ function Header() {
             <SaleSection />
             <CategoryList />
             <Footer />
-            <Link to={"/admin"}>Admin Only</Link>
-            <Link to={"/list"}>User Only</Link>
-            <Link to={"/product-listing"}>ListProducts</Link>
         </>
     );
 }

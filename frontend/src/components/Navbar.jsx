@@ -71,7 +71,8 @@ function DrawerAppBar(props) {
             <AppBar component="nav" sx={{ backgroundColor: "black" }}>
                 <Toolbar>
                     <Box sx={{ display: "flex", flexGrow: { xs: 0, sm: 1 } }}>
-                        <Typography>MyStore</Typography>
+                        {/* <Typography>Play Max</Typography> */}
+                        <Button component={RouterLink} to={"/"} color="inherit">Play Max</Button>
                     </Box>
                     <Typography
                         variant="h6"
