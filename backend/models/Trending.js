@@ -29,26 +29,41 @@ export const refreshTrendingProducts = async () => {
     }
 };
 
-export const fetchTrendingProducts = async () => {
+
+
+export const fetchTrendingProducts = async () => { 
     try {
-        console.log("Fetching trending products...");
-        const fetchProductsQuery = `
-            SELECT p.*
-            FROM Products p
-            JOIN Trending t ON p.product_id = t.product_id;
+        const query = `
+            SELECT 
+                p.product_id, 
+                p.name, 
+                p.image_url, 
+                p.stock, 
+                p.price AS regular_price, 
+                p.description, 
+                p.created_at, 
+                s.discount_percentage, 
+                s.new_price
+            FROM 
+                Products p
+            JOIN 
+                Trending t
+            ON 
+                p.product_id = t.product_id
+            LEFT JOIN 
+                Sale s
+            ON 
+                p.product_id = s.product_id
         `;
-        const { rows: trendingProducts } = await pool.query(fetchProductsQuery);
-        return {
-            success: true,
-            products: trendingProducts,
-            message: "Fetched trending products successfully."
-        };
+
+        const result = await pool.query(query);
+
+        if (result.rows.length === 0) {
+            throw new Error("No trending products found.");
+        }
+
+        return { success: true, products: result.rows };
     } catch (error) {
-        console.error("Error fetching trending products:", error);
-        return {
-            success: false,
-            message: "Failed to fetch trending products.",
-            error
-        };
+        throw new Error('Error retrieving trending products: ' + error.message);
     }
 };

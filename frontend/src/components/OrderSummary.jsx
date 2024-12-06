@@ -16,9 +16,10 @@ function OrderSummary({ userID, cartProducts }) {
     const marginFields = 2;
     const shipping = 300;
     const totalSum = cartProducts.reduce((sum, product) => {
-        return sum + product.price * product.quantity; // Adjust based on your data structure
+        const price = product.sale ? product.new_price : product.regular_price;
+        return sum + price * product.quantity;
     }, 0);
-    const tax = 0.05 * totalSum;
+    const tax = Math.round(0.05 * totalSum);
     const finalSum = tax + totalSum;
 
     console.log("cartProducts");

@@ -5,6 +5,7 @@ import ImgMediaCard from "../components/Card";
 import Loading from "../components/Loading";
 import Stack from "@mui/material/Stack";
 import { Typography, Box } from "@mui/material";
+import Empty from "../components/Empty";
 
 function ViewWishlist() {
     const { wishlistItems } = useFetchUserWishlist(); // Fetch wishlist items
@@ -42,6 +43,8 @@ function ViewWishlist() {
 
     if (loading) return <Loading />;
     if (error) return <div>Error: {error}</div>;
+    if (wishlistItems.length === 0)
+        return <Empty message={"Add items to Wishlist"} size={100} />;
 
     return (
         <div>

@@ -83,7 +83,12 @@ const ProductList = () => {
                                     <TableCell>{product.product_id}</TableCell>
                                     <TableCell>{product.name}</TableCell>
                                     <TableCell>{product.category_id}</TableCell>
-                                    <TableCell>{product.description}</TableCell>
+                                    <TableCell
+                                        align="justify"
+                                        sx={{ maxWidth: "250px" }}
+                                    >
+                                        {product.description}
+                                    </TableCell>
                                     <TableCell>{product.price}</TableCell>
                                     <TableCell>{product.stock}</TableCell>
                                     <TableCell>

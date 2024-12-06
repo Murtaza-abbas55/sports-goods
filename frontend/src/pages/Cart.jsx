@@ -31,7 +31,7 @@ function Cart() {
         setToastOpen(false);
     };
 
-    console.log("cart page");
+    console.log("cart.jsx page");
     console.log(cartProducts);
 
     // color fafafa
@@ -63,8 +63,11 @@ function Cart() {
                                         >
                                             RS.
                                             {cartProduct.quantity *
-                                                cartProduct.price}
+                                                (cartProduct.sale
+                                                    ? cartProduct.new_price
+                                                    : cartProduct.regular_price)}
                                         </Typography>
+
                                         <Box marginLeft={-1} marginTop={5}>
                                             <Stack direction={"row"}>
                                                 <IconButton

@@ -40,10 +40,12 @@ function ListingCard({
     wishlistItems,
     setWishlistItems,
     handleAddToCart,
+    newPrice,
 }) {
     const [quantity, setQuantity] = useState(1);
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
+    console.log("newPrice" + newPrice);
 
     return (
         <Card
@@ -72,12 +74,23 @@ function ListingCard({
                 to={`product/${product_id}`}
                 // href={product_id}
             >
-                <CardMedia
+                {/* <CardMedia
                     component="img"
                     alt="green iguana"
                     image={image_url}
+                    sx={{ height: "250px" }}
                     loading="lazy"
                     height={"250px"}
+                /> */}
+                <img
+                    src={image_url || "/public/images/fallback.jpg"}
+                    alt={name}
+                    height={"300px"}
+                    width={"100%"}
+                    onError={(e) => {
+                        e.target.onerror = null; // Prevent infinite loop
+                        e.target.src = "/public/images/fallback.jpg"; // Set fallback image
+                    }}
                 />
 
                 <Divider />
@@ -102,7 +115,29 @@ function ListingCard({
                         variant="body2"
                         sx={{ flex: "1", color: "text.secondary" }}
                     >
-                        {"RS. " + price}
+                        {newPrice !== null ? (
+                            <>
+                                <span>{"RS. " + newPrice}</span>
+                                <span
+                                    style={{
+                                        textDecoration: "line-through",
+                                        marginLeft: "8px",
+                                    }}
+                                >
+                                    {"RS. " + price}
+                                </span>
+                                <Typography
+                                    ml={1.5}
+                                    fontWeight={"bolder"}
+                                    color="error"
+                                    component={"span"}
+                                >
+                                    SALE
+                                </Typography>
+                            </>
+                        ) : (
+                            "RS. " + price
+                        )}
                     </Typography>
                 </CardContent>
             </CardActionArea>
