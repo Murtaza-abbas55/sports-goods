@@ -53,6 +53,7 @@ function Section({ sectionHeading, url }) {
                                 name={sectionProduct.name}
                                 price={sectionProduct.price}
                                 image_url={`/images/${sectionProduct.image_url}`}
+                                new_price={sectionProduct.new_price}
                             />
                         )
                 )}

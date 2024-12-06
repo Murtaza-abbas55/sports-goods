@@ -31,13 +31,25 @@ function ImgMediaCard({
                     </Typography>
                 )}
 
-                <CardMedia
+                {/* <CardMedia
                     component="img"
                     alt="green iguana"
                     image={image_url}
                     height={"250px"}
                     loading="lazy"
+                /> */}
+
+                <img
+                    src={image_url || "/public/images/fallback.jpg"}
+                    alt={name}
+                    height={"300px"}
+                    width={"100%"}
+                    onError={(e) => {
+                        e.target.onerror = null; // Prevent infinite loop
+                        e.target.src = "/public/images/fallback.jpg"; // Set fallback image
+                    }}
                 />
+
                 <Divider />
                 <CardContent
                     sx={{
@@ -57,23 +69,32 @@ function ImgMediaCard({
 
                     <Typography
                         variant="body2"
-                        sx={{
-                            color: "text.secondary",
-                            textDecoration: new_price ? "line-through" : "none",
-                        }}
+                        sx={{ flex: "1", color: "text.secondary" }}
                     >
-                        {"RS. " + price}
+                        {new_price !== null ? (
+                            <>
+                                <span>{"RS. " + new_price}</span>
+                                <span
+                                    style={{
+                                        textDecoration: "line-through",
+                                        marginLeft: "8px",
+                                    }}
+                                >
+                                    {"RS. " + price}
+                                </span>
+                                <Typography
+                                    ml={1.5}
+                                    fontWeight={"bolder"}
+                                    color="error"
+                                    component={"span"}
+                                >
+                                    SALE
+                                </Typography>
+                            </>
+                        ) : (
+                            "RS. " + price
+                        )}
                     </Typography>
-
-                    {new_price && (
-                        <Typography
-                            variant="body2"
-                            sx={{ color: "text.secondary" }}
-                            marginTop={2}
-                        >
-                            {"RS. " + new_price}
-                        </Typography>
-                    )}
                 </CardContent>
             </CardActionArea>
         </Card>

@@ -19,6 +19,9 @@ function Filter({ setFilterLoading, products, setProducts, category_id }) {
     } = useFetch("/api/categories");
     console.log(categories);
 
+    console.log("backup new");
+    console.log(backupProducts);
+
     const fetchData = async (id) => {
         try {
             setFilterLoading(true);

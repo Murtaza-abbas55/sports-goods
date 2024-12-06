@@ -19,6 +19,10 @@ function ProductListing() {
     const category_id = searchParams.get("category_id");
     console.log("category_id" + category_id);
 
+    console.log(products);
+    console.log("productsNewPrice");
+
+
     useEffect(() => {
         const fetchWishlist = async () => {
             try {
