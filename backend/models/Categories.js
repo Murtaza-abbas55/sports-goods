@@ -16,8 +16,29 @@ export const getAllCategories = async () =>{
 export const getProductsByCategoryId = async (category_id) =>{
     console.log(`Getting product by category....`);
     try {
-        const result= await pool.query(`Select * from Products where category_id=$1`,[category_id]);
-        return result.rows;
+        const result= await pool.query(  `SELECT 
+          p.product_id, 
+          p.name, 
+          p.image_url, 
+          p.stock, 
+          p.price, 
+          p.description, 
+          p.category_id, 
+          p.created_at, 
+          p.admin_username,
+          s.discount_percentage, 
+          s.new_price
+      FROM 
+          Products p
+      LEFT JOIN 
+          Sale s
+      ON 
+          p.product_id = s.product_id
+      WHERE 
+          p.category_id = $1
+  `,[category_id]);
+  
+    return result.rows;
     }
     catch(error) {
         throw new Error('Error retrieving products by category: ' + error.message);
