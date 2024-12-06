@@ -43,51 +43,6 @@ export const RemoveSale = async (product_id) => {
     };
 };
 
-export const updateSaleById = async (
-    newdiscount_percent,
-    product_id,
-    admin_username
-) => {
-    try {
-        const saleExistResult = await pool.query(
-            `SELECT * FROM Sale WHERE product_id = $1`,
-            [product_id]
-        );
-        if (saleExistResult.rows.length === 0) {
-            throw new Error("Product has no sale related to it");
-        }
-        const productPriceResult = await pool.query(
-            `SELECT price FROM Products WHERE product_id = $1`,
-            [product_id]
-        );
-        if (productPriceResult.rows.length === 0) {
-            throw new Error("Product not found.");
-        }
-
-        const productPrice = productPriceResult.rows[0].price;
-        console.log(`The product price is ${productPrice}`);
-
-        const updatedPrice =
-            productPrice - (productPrice * newdiscount_percent) / 100;
-
-        const result = await pool.query(
-            `UPDATE Sale SET discount_percentage = $1, new_price = $2, admin_username = $3 WHERE product_id = $4 RETURNING *`,
-            [newdiscount_percent, updatedPrice, admin_username, product_id]
-        );
-
-        console.log("Number of rows updated:", result.rowCount);
-
-        if (result.rowCount === 0) {
-            throw new Error("No sale entry was updated.");
-        }
-
-        console.log("Updated sale:", result.rows[0]);
-        return result.rows[0];
-    } catch (error) {
-        console.error("Error updating sale:", error);
-        throw error;
-    }
-};
 export const getSale = async () => {
     try {
         const query = `

@@ -1,5 +1,5 @@
 
-import { AddSale, RemoveSale, updateSaleById,getSale } from "../models/Sale.js";
+import { AddSale, RemoveSale,getSale } from "../models/Sale.js";
 export const AddSaleController = async (req, res) => {
     const { product_id, discount_percent } = req.body;
     const admin_username = req.adminUsername;
