@@ -17,7 +17,7 @@ function Section({ sectionHeading, url }) {
                 console.log(response.data.products);
                 if (sectionHeading === "New Arrival")
                     setSectionProducts(response.data.products);
-                else setSectionProducts(response.data);
+                else setSectionProducts(response.data.Result);
             } catch (error) {
                 console.error("Error calling API:", error);
             } finally {

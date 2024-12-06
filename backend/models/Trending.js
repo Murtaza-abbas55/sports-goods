@@ -35,15 +35,13 @@ export const fetchTrendingProducts = async () => {
     try {
         const query = `
             SELECT 
-                p.product_id, 
-                p.name, 
-                p.image_url, 
-                p.stock, 
-                p.price AS regular_price, 
-                p.description, 
-                p.created_at, 
-                s.discount_percentage, 
-                s.new_price
+               p.*, 
+                CASE 
+                    WHEN s.product_id IS NOT NULL THEN true
+                    ELSE false 
+                END AS sale, 
+                s.new_price, 
+                s.discount_percentage
             FROM 
                 Products p
             JOIN 
@@ -62,7 +60,7 @@ export const fetchTrendingProducts = async () => {
             throw new Error("No trending products found.");
         }
 
-        return { success: true, products: result.rows };
+        return result.rows;
     } catch (error) {
         throw new Error('Error retrieving trending products: ' + error.message);
     }

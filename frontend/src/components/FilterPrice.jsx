@@ -17,6 +17,8 @@ function FilterPrice({
 }) {
     const [backupProducts, setBackupProducts] = useState(products);
     console.log("current category " + currentCategory);
+    console.log("these are new backup");
+    console.log(backupProducts);
 
     const [value, setValue] = useState("none");
 
@@ -50,10 +52,6 @@ function FilterPrice({
     const handleChange = (event) => {
         setValue(event.target.value);
         console.log(event.target.value);
-        if (event.target.value === "none") {
-            setProducts(backupProducts);
-            return;
-        }
     };
 
     return (
