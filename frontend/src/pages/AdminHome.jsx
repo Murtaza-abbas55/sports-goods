@@ -112,7 +112,7 @@ function AdminHome() {
                 size="large"
                 onClick={handleLogOut}
             >
-                Back To home
+                Log out
             </Button>
             <Outlet />
         </Box>
