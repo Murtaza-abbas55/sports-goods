@@ -82,19 +82,36 @@ export const CartToOrderProducts = async (user_id, order_id) => {
         console.log('Products in cart:', cartProducts);
         for (const product of cartProducts) {
             const { product_id, quantity } = product;
+
             const existingProductResult = await pool.query(
                 `SELECT * FROM OrderProducts WHERE order_id = $1 AND product_id = $2`,
                 [order_id, product_id]
             );
 
-            if (existingProductResult.rows.length > 0) {
-                console.log(`Product ${product_id} already exists in order ${order_id}. Updating quantity...`);
+            let price_at_order;
+
+            // Check if the product is on sale
+            const saleResult = await pool.query(
+                `SELECT new_price FROM Sale WHERE product_id = $1`,
+                [product_id]
+            );
+
+            if (saleResult.rows.length > 0) {
+                // Use the sale price
+                price_at_order = saleResult.rows[0].new_price * quantity;
+                console.log(`Product ${product_id} is on sale. Sale price used.`);
+            } else {
+                // Use the regular price
                 const productPriceResult = await pool.query(
                     `SELECT price FROM Products WHERE product_id = $1`,
                     [product_id]
                 );
-                const price_at_order = productPriceResult.rows[0].price * quantity;
+                price_at_order = productPriceResult.rows[0].price * quantity;
+                console.log(`Product ${product_id} is not on sale. Regular price used.`);
+            }
 
+            if (existingProductResult.rows.length > 0) {
+                console.log(`Product ${product_id} already exists in order ${order_id}. Updating quantity...`);
                 await pool.query(
                     `UPDATE OrderProducts
                      SET quantity = $1, price_at_order = $2
@@ -104,13 +121,6 @@ export const CartToOrderProducts = async (user_id, order_id) => {
                 console.log(`Updated Product ${product_id} in OrderProducts with new quantity and price`);
             } else {
                 console.log(`Product ${product_id} does not exist in order ${order_id}. Adding to OrderProducts...`);
-
-                const productPriceResult = await pool.query(
-                    `SELECT price FROM Products WHERE product_id = $1`,
-                    [product_id]
-                );
-                const price_at_order = productPriceResult.rows[0].price * quantity;
-
                 await pool.query(
                     `INSERT INTO OrderProducts (order_id, product_id, quantity, price_at_order)
                      VALUES ($1, $2, $3, $4)`,
@@ -119,6 +129,7 @@ export const CartToOrderProducts = async (user_id, order_id) => {
                 console.log(`Product ${product_id} added to OrderProducts with order_id ${order_id}`);
             }
         }
+
         await pool.query(`DELETE FROM CartProducts WHERE cart_id = $1`, [cart_id]);
         console.log(`Cleared CartProducts for cart ID: ${cart_id}`);
 
@@ -128,6 +139,7 @@ export const CartToOrderProducts = async (user_id, order_id) => {
         throw new Error('Error transferring cart to order: ' + error.message);
     }
 };
+
 export const cancelOrder = async (order_id) => {
     try {
         console.log(`Attempting to cancel order with order_id: ${order_id}`);
@@ -161,24 +173,56 @@ export const getOrder = async (order_id) => {
     try {
         console.log(`Fetching order details for order_id: ${order_id}`);
 
-        const { rows: orderProducts } = await pool.query(
-            `SELECT o.product_id, p.name,p.image_url, o.quantity, o.price_at_order
-             FROM OrderProducts o
-             JOIN Products p ON o.product_id = p.product_id
-             WHERE o.order_id = $1`,
-            [order_id]
-        );
+        const query = `
+            SELECT 
+                o.product_id, 
+                p.name, 
+                p.image_url, 
+                o.quantity, 
+                o.price_at_order,
+                CASE 
+                    WHEN s.product_id IS NOT NULL THEN true 
+                    ELSE false 
+                END AS sale,
+                s.new_price,
+                s.discount_percentage
+            FROM 
+                OrderProducts o
+            JOIN 
+                Products p 
+            ON 
+                o.product_id = p.product_id
+            LEFT JOIN 
+                Sale s 
+            ON 
+                o.product_id = s.product_id
+            WHERE 
+                o.order_id = $1
+        `;
+
+        const { rows: orderProducts } = await pool.query(query, [order_id]);
 
         if (orderProducts.length === 0) {
             console.log(`No products found for order_id: ${order_id}`);
-            return { success: false, message: 'No products found for this order.' };
+            return {
+                success: false,
+                message: "No products found for this order."
+            };
         }
 
-        console.log(`Order details retrieved successfully for order_id: ${order_id}`);
-        return { success: true, order_id, products: orderProducts };
+        return {
+            success: true,
+            order_id,
+            products: orderProducts,
+            message: "Order details retrieved successfully."
+        };
     } catch (error) {
-        console.error('Error fetching order details:', error.message);
-        throw new Error(`Error fetching order details: ${error.message}`);
+        console.error("Error fetching order details:", error.message);
+        return {
+            success: false,
+            message: "Failed to fetch order details.",
+            error: error.message
+        };
     }
 };
 

@@ -8,6 +8,7 @@ import {
     CircularProgress,
 } from "@mui/material";
 import { createOrder } from "../services/order";
+import { useNavigate } from "react-router-dom";
 
 function CheckoutForm({
     user_id,
@@ -17,6 +18,7 @@ function CheckoutForm({
     order_id,
     setOrderID,
 }) {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -69,19 +71,18 @@ function CheckoutForm({
                     p: 3,
                     border: "1px solid #ccc",
                     borderRadius: 2,
+                    boxShadow: 5,
                 }}
             >
-                <Typography variant="h5" textAlign="center" gutterBottom>
-                    Simple Material-UI Form
+                <Typography
+                    fontWeight={"bold"}
+                    variant="h5"
+                    textAlign="center"
+                    gutterBottom
+                >
+                    Shipping Address
                 </Typography>
-                <TextField
-                    label="Name"
-                    name="name"
-                    variant="outlined"
-                    value={formData.name}
-                    onChange={handleChange}
-                    fullWidth
-                />
+
                 <TextField
                     label="Shipping Address"
                     name="shipping_address"
@@ -91,24 +92,7 @@ function CheckoutForm({
                     fullWidth
                     required
                 />
-                <TextField
-                    label="Email"
-                    name="email"
-                    type="email"
-                    variant="outlined"
-                    value={formData.email}
-                    onChange={handleChange}
-                    fullWidth
-                />
-                <TextField
-                    label="Password"
-                    name="password"
-                    type="password"
-                    variant="outlined"
-                    value={formData.password}
-                    onChange={handleChange}
-                    fullWidth
-                />
+
                 <Button
                     type="submit"
                     variant="contained"
@@ -120,6 +104,19 @@ function CheckoutForm({
                         <CircularProgress size={24} color="inherit" />
                     ) : (
                         "Submit"
+                    )}
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                    disabled={loading}
+                    onClick={() => navigate(-1)}
+                >
+                    {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                    ) : (
+                        "Cancel"
                     )}
                 </Button>
             </Box>

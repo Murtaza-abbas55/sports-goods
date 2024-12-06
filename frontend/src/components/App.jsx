@@ -106,7 +106,7 @@ function App() {
             />
             <Route
                 path="/admin"
-                element={Data?.isAdmin ? <AdminLayout /> : <ErrorPage />}
+                element={Data?.isAdmin ? <AdminLayout /> : <Navigate to="/" />}
             >
                 <Route index element={<AdminHome />} />
                 <Route path="add-product" element={<CreateProduct />} />

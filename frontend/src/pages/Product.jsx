@@ -143,9 +143,33 @@ function Product() {
                                 variant="h5"
                                 fontWeight={"bold"}
                             >
-                                {"RS " +
-                                    (products?.new_price || products.price)}
+                                {products?.new_price ? (
+                                    <>
+                                        <span
+                                            style={{
+                                                textDecoration: "line-through",
+                                                marginRight: "8px",
+                                            }}
+                                        >
+                                            {"RS " + products.price}
+                                        </span>
+                                        <span>
+                                            {"RS " + products.new_price}
+                                        </span>
+                                        <Typography
+                                            fontWeight={"bolder"}
+                                            color="error"
+                                            variant="h5"
+                                        >
+                                            {products.discount_percentage +
+                                                "% OFF"}
+                                        </Typography>
+                                    </>
+                                ) : (
+                                    "RS " + products.price
+                                )}
                             </Typography>
+
                             <Typography
                                 textAlign={"justify"}
                                 gutterBottom

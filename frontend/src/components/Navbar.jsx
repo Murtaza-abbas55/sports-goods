@@ -28,14 +28,13 @@ function DrawerAppBar(props) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const { Data, cartID } = useAuth();
     const { cartProductsLength } = useFetchCartItems();
+    const {
+        products: categories,
+        loading,
+        error,
+    } = useFetch("/api/categories");
 
-    const navItems = [
-        "Cricket",
-        "Football",
-        "Tennis",
-        "Badminton",
-        Data?.isUser ? Data?.user_id : "Login",
-    ];
+    const navItems = [Data?.isUser ? Data?.user_id : "Login"];
 
     const handleDrawerToggle = () => {
         setMobileOpen((prevState) => !prevState);
@@ -83,6 +82,17 @@ function DrawerAppBar(props) {
                         }}
                     >
                         <Box sx={{ display: { xs: "none", sm: "block" } }}>
+                            {categories.map((category) => (
+                                <Button
+                                    component={RouterLink}
+                                    to={`/product-listing?category_id=${category.category_id}`} // Use the category_id in the URL
+                                    key={category.category_id}
+                                    sx={{ color: "#fff" }}
+                                >
+                                    {category.name}{" "}
+                                    {/* Display the category name */}
+                                </Button>
+                            ))}
                             {navItems.map((item) => (
                                 <Button
                                     component={RouterLink}

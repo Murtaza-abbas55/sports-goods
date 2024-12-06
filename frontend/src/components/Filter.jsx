@@ -7,10 +7,10 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FilterPrice from "./FilterPrice";
 
-function Filter({ setFilterLoading, products, setProducts }) {
+function Filter({ setFilterLoading, products, setProducts, category_id }) {
     const [backupProducts, setBackupProducts] = useState(products);
     const {
         products: categories,
@@ -35,6 +35,12 @@ function Filter({ setFilterLoading, products, setProducts }) {
     };
 
     const [value, setValue] = useState("all");
+    useEffect(() => {
+        if (category_id !== null) {
+            fetchData(category_id);
+            setValue(category_id);
+        }
+    }, [category_id]); // Runs only when category_id changes
 
     const handleChange = (event) => {
         setValue(event.target.value);

@@ -11,7 +11,7 @@ function CategoryCard({ name, category_id }) {
         <Card sx={{ display: "flex", width: 400 }}>
             <CardActionArea
                 component={RouterLink}
-                to={`category/${category_id}`}
+                to={`product-listing?category_id=${category_id}`}
             >
                 <CardMedia
                     component="img"

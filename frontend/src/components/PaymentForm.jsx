@@ -82,9 +82,15 @@ function PaymentForm({ order_id }) {
                         p: 3,
                         border: "1px solid #ccc",
                         borderRadius: 2,
+                        boxShadow: 5,
                     }}
                 >
-                    <Typography variant="h5" textAlign="center" gutterBottom>
+                    <Typography
+                        fontWeight={"bold"}
+                        variant="h5"
+                        textAlign="center"
+                        gutterBottom
+                    >
                         Payment Form
                     </Typography>
                     <TextField
@@ -113,7 +119,7 @@ function PaymentForm({ order_id }) {
                     <Button
                         onClick={handleCancel}
                         variant="contained"
-                        color="secondary"
+                        color="error"
                         fullWidth
                         disabled={loading}
                     >

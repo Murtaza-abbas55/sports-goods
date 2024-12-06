@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import Loading from "../components/Loading";
 import Filter from "../components/Filter";
 import FilterPrice from "../components/FilterPrice";
+import { useSearchParams } from "react-router-dom";
 
 function ProductListing() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -14,6 +15,9 @@ function ProductListing() {
     const { products, setProducts, loading, error } = useFetch("/api/products");
     const { Data } = useAuth();
     const { cartID, setCartID } = useAuth();
+    const [searchParams] = useSearchParams();
+    const category_id = searchParams.get("category_id");
+    console.log("category_id" + category_id);
 
     useEffect(() => {
         const fetchWishlist = async () => {
@@ -91,6 +95,7 @@ function ProductListing() {
                         setFilterLoading={setFilterLoading}
                         products={products}
                         setProducts={setProducts}
+                        category_id={category_id}
                     />
                 </Stack>
                 <Stack
@@ -117,6 +122,7 @@ function ProductListing() {
                                     wishlistItems={wishlistItems}
                                     setWishlistItems={setWishlistItems}
                                     handleAddToCart={handleAddToCart}
+                                    newPrice={product.new_price}
                                 />
                             </div>
                         ))
