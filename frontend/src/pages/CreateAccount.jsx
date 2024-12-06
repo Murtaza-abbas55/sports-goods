@@ -36,7 +36,6 @@ function CreateAccount() {
             sx={{
                 display: "flex",
                 justifyContent: "center",
-                border: "solid 5px green",
             }}
         >
             <Paper

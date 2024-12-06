@@ -263,7 +263,6 @@ function Login() {
                 justifyContent: "center",
                 height: "100vh",
                 background: "linear-gradient(to bottom, #ffffff, #f0f0f0, #d9d9d9)",
-                color: "#000",
             }}
         >
             <Paper
@@ -275,8 +274,6 @@ function Login() {
                     justifyContent: "center",
                     padding: 4,
                     width: 400,
-                    backgroundColor: "#000",
-                    color: "#fff",
                 }}
             >
                 <Typography variant="h5" sx={{ marginBottom: 2 }}>
@@ -286,13 +283,6 @@ function Login() {
                     <TextField
                         label="Email"
                         variant="filled"
-                        InputLabelProps={{ style: { color: "#bbb" } }}
-                        InputProps={{
-                            style: {
-                                background: "linear-gradient(to right, #e0e0e0, #f9f9f9)",
-                                color: "#000",
-                            },
-                        }}
                         {...register("email", {
                             required: "This field is required",
                             pattern: {
@@ -309,13 +299,6 @@ function Login() {
                         label="Password"
                         variant="filled"
                         type="password"
-                        InputLabelProps={{ style: { color: "#bbb" } }}
-                        InputProps={{
-                            style: {
-                                background: "linear-gradient(to right, #e0e0e0, #f9f9f9)",
-                                color: "#000",
-                            },
-                        }}
                         {...register("password", { required: "This field is required" })}
                         error={!!errors.password}
                         helperText={errors.password ? "This field is required" : ""}
