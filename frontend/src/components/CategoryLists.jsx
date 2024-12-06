@@ -1,9 +1,10 @@
 import { Box, Stack, Typography } from "@mui/material";
-import CategoryCard from "./CategoryCard";
 import useFetch from "../hooks/useFetch";
 import Loading from "./Loading";
+import { Link as RouterLink } from "react-router-dom";
+import { Link } from "@mui/material";
 
-function CategoryList() {
+function CategoryLists() {
     const {
         products: categories,
         loading,
@@ -26,18 +27,41 @@ function CategoryList() {
             <Stack
                 direction={"row"}
                 flexWrap={"wrap"}
-                gap={5}
+                gap={3}
                 justifyContent={"center"}
             >
                 {categories.map((category) => (
-                    <CategoryCard
+                    <Link
+                        component={RouterLink}
+                        to={`/product-listing?category_id=${category.category_id}`}
                         key={category.category_id}
-                        name={category.name}
-                        category_id={category.category_id}
-                    />
+                        underline="none" // Removes underline
+                        sx={{
+                            textDecoration: "none", // Redundant but ensures no underline
+                            color: "inherit", // Ensures the color remains unchanged
+                            width: "200px",
+                            height: "100px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#f5f5f5",
+                            borderRadius: "8px",
+                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                            transition: "transform 0.3s, box-shadow 0.3s",
+                            "&:hover": {
+                                transform: "scale(1.05)",
+                                boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.15)",
+                            },
+                        }}
+                    >
+                        <Typography variant="h6" fontWeight={"bold"} align="center">
+                            {category.name}
+                        </Typography>
+                    </Link>
                 ))}
             </Stack>
         </Box>
     );
 }
-export default CategoryList;
+
+export default CategoryLists;
