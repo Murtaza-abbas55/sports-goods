@@ -1,5 +1,4 @@
 import Card from "@mui/material/Card";
-// import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
@@ -45,8 +44,8 @@ function ImgMediaCard({
                     height={"300px"}
                     width={"100%"}
                     onError={(e) => {
-                        e.target.onerror = null; // Prevent infinite loop
-                        e.target.src = "/public/images/fallback.jpg"; // Set fallback image
+                        e.target.onerror = null; // stop infinite loop
+                        e.target.src = "/public/images/fallback.jpg"; // for fallback image
                     }}
                 />
 

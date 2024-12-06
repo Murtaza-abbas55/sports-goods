@@ -1,15 +1,7 @@
-// * Components
 
-// * Images
-// import HeroImg from "/public/images/rb_14478.png";
-
-// * MUI Components
 import { Box, Button, Container, Typography, styled } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
-// * MUI Icons
-
-// * Styled Components
 const CustomHeroBox = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",

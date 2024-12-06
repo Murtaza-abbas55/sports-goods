@@ -32,10 +32,8 @@ function AddCategoryDialog({ open, onClose, onCategoryAdded }) {
             setDescription("");
             console.log("Category added:", response.data);
 
-            // Notify parent of new category
             onCategoryAdded(response.data.category);
 
-            // Close the dialog after adding
             onClose();
         } catch (error) {
             console.error("Error adding category:", error);

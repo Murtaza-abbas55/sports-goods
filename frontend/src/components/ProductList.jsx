@@ -22,7 +22,7 @@ const ProductList = () => {
 
     const { Data } = useAuth(); // Access Data instead of user
 
-    // Fetch the products from the backend using axios
+    
     useEffect(() => {
         const fetchProducts = async () => {
             try {

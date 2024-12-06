@@ -71,14 +71,13 @@ function DrawerAppBar(props) {
             <AppBar component="nav" sx={{ backgroundColor: "black" }}>
                 <Toolbar>
                     <Box sx={{ display: "flex", flexGrow: { xs: 0, sm: 1 } }}>
-                        {/* <Typography>Play Max</Typography> */}
+                        
                         <Button component={RouterLink} to={"/"} color="inherit">Play Max</Button>
                     </Box>
                     <Typography
                         variant="h6"
                         component="div"
                         sx={{
-                            // flexGrow: 1,
                             display: { xs: "none", sm: "block" },
                         }}
                     >
@@ -91,7 +90,6 @@ function DrawerAppBar(props) {
                                     sx={{ color: "#fff" }}
                                 >
                                     {category.name}{" "}
-                                    {/* Display the category name */}
                                 </Button>
                             ))}
                             {navItems.map((item) => (
@@ -145,7 +143,7 @@ function DrawerAppBar(props) {
                     onClose={handleDrawerToggle}
                     anchor="right"
                     ModalProps={{
-                        keepMounted: true, // Better open performance on mobile.
+                        keepMounted: true, // for mobile.
                     }}
                     sx={{
                         display: { xs: "block", sm: "none" },
@@ -165,12 +163,5 @@ function DrawerAppBar(props) {
     );
 }
 
-DrawerAppBar.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
-    window: PropTypes.func,
-};
 
 export default DrawerAppBar;

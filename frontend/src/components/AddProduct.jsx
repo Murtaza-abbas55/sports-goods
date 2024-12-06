@@ -10,11 +10,9 @@ const AddProductForm = () => {
     const [categoryId, setCategoryId] = useState("");
     const [image, setImage] = useState(null);
 
-    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // FormData to include product details and image
         const formData = new FormData();
         formData.append("product_id", productId);
         formData.append("name", productName);
@@ -22,14 +20,14 @@ const AddProductForm = () => {
         formData.append("price", price);
         formData.append("stock", stock);
         formData.append("category_id", categoryId);
-        if (image) formData.append("image", image); // Only append if image is selected
+        if (image) formData.append("image", image); //doing because append only when image is selected
 
         try {
             const response = await axios.post("/api/products", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true,
             });
-            console.log(response.data.message); // Log success message
+            console.log(response.data.message); 
         } catch (error) {
             console.error("Error adding product:", error);
             if (error.response) {

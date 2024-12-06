@@ -37,8 +37,8 @@ function CategoryLists() {
                         key={category.category_id}
                         underline="none" // Removes underline
                         sx={{
-                            textDecoration: "none", // Redundant but ensures no underline
-                            color: "inherit", // Ensures the color remains unchanged
+                            textDecoration: "none", // remove underline
+                            color: "inherit", 
                             width: "200px",
                             height: "100px",
                             display: "flex",

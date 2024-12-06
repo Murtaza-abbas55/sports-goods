@@ -56,7 +56,7 @@ function ListingCard({
                 flexDirection: "column",
                 width: 300,
                 "&:hover": {
-                    boxShadow: 10, // Elevation on hover
+                    boxShadow: 10, 
                 },
                 borderRadius: "1rem 1rem 0 0",
             }}

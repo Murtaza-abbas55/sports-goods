@@ -42,7 +42,6 @@ function Footer() {
                 </Box>
             </Stack>
 
-            {/* Footer Bottom Section */}
             <Box
                 sx={{
                     borderTop: "1px solid gray",

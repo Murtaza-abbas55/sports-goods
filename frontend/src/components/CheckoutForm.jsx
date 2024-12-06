@@ -49,10 +49,10 @@ function CheckoutForm({
                 checkoutTurn
             );
             console.log("Order created successfully");
-            // This will execute after createOrder completes
+            //  will execute after createOrder
         } catch (error) {
             console.error("Error creating order:", error);
-            // Handle error (e.g., show an error message to the user)
+            // for errors/validation
         } finally {
             setLoading(false);
         }

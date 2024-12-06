@@ -28,10 +28,9 @@ import ViewWishlist from "../pages/ViewWishlist";
 import UserOrders from "../pages/UserOrders";
 import ManageOrders from "../pages/ManageOrders";
 
-// Inside your Routes:
 
 function App() {
-    const { Data, localLoading } = useAuth(); // Access auth state and user data
+    const { Data, localLoading } = useAuth(); // Access auth here
     console.log("Data now");
     console.log(Data);
 
