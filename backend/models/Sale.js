@@ -18,10 +18,12 @@ export const AddSale = async (discount_percent, product_id, admin_username) => {
     const productprice = productpriceresult.rows[0].price;
     console.log(`The product price is ${productprice}`);
     const newprice = productprice - (productprice * discount_percent) / 100;
+    const roundedPrice = Math.round(newprice);
+
     const newSale = await pool.query(
         `INSERT INTO Sale(discount_percentage,new_price,product_id,admin_username)
          VALUES ($1,$2,$3,$4)`,
-        [discount_percent, newprice, product_id, admin_username]
+        [discount_percent, roundedPrice, product_id, admin_username]
     );
     return newSale.rows[0];
 };
