@@ -12,38 +12,72 @@ export const getAllCategories = async () =>{
     throw new Error('Error retrieving categories: ' + error.message);
 }
 };
+export const getProductsByCategoryId = async (category_id) => {
+  console.log(`Getting products by category with rating...`);
+  try {
+      const result = await pool.query(`
+          SELECT 
+              p.product_id, 
+              p.name, 
+              p.image_url, 
+              p.stock, 
+              p.price, 
+              p.description, 
+              p.category_id, 
+              p.created_at, 
+              p.admin_username,
+              s.discount_percentage, 
+              s.new_price,
+              COALESCE(AVG(r.rating), 0) AS average_rating
+          FROM 
+              Products p
+          LEFT JOIN 
+              Sale s ON p.product_id = s.product_id
+          LEFT JOIN 
+              Reviews r ON p.product_id = r.product_id
+          WHERE 
+              p.category_id = $1
+          GROUP BY 
+              p.product_id, s.discount_percentage, s.new_price
+      `, [category_id]);
 
-export const getProductsByCategoryId = async (category_id) =>{
-    console.log(`Getting product by category....`);
-    try {
-        const result= await pool.query(  `SELECT 
-          p.product_id, 
-          p.name, 
-          p.image_url, 
-          p.stock, 
-          p.price, 
-          p.description, 
-          p.category_id, 
-          p.created_at, 
-          p.admin_username,
-          s.discount_percentage, 
-          s.new_price
-      FROM 
-          Products p
-      LEFT JOIN 
-          Sale s
-      ON 
-          p.product_id = s.product_id
-      WHERE 
-          p.category_id = $1
-  `,[category_id]);
-  
-    return result.rows;
-    }
-    catch(error) {
-        throw new Error('Error retrieving products by category: ' + error.message);
-    }
+      return result.rows;
+  } catch (error) {
+      throw new Error('Error retrieving products by category: ' + error.message);
+  }
 };
+
+// export const getProductsByCategoryId = async (category_id) =>{
+//     console.log(`Getting product by category....`);
+//     try {
+//         const result= await pool.query(  `SELECT 
+//           p.product_id, 
+//           p.name, 
+//           p.image_url, 
+//           p.stock, 
+//           p.price, 
+//           p.description, 
+//           p.category_id, 
+//           p.created_at, 
+//           p.admin_username,
+//           s.discount_percentage, 
+//           s.new_price
+//       FROM 
+//           Products p
+//       LEFT JOIN 
+//           Sale s
+//       ON 
+//           p.product_id = s.product_id
+//       WHERE 
+//           p.category_id = $1
+//   `,[category_id]);
+  
+//     return result.rows;
+//     }
+//     catch(error) {
+//         throw new Error('Error retrieving products by category: ' + error.message);
+//     }
+// };
 export const insertCategory = async ( category_id, name, description ) => {
     console.log("Inserting new category...");
     const client = await pool.connect();

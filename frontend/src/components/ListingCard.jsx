@@ -17,7 +17,7 @@ import Modal from "@mui/material/Modal";
 import { Link as RouterLink } from "react-router-dom";
 import AddToCart from "./AddToCart";
 import Wishlist from "./Wishlist";
-
+import StarRating from "./StarRating"; 
 const style = {
     position: "absolute",
     top: "50%",
@@ -41,7 +41,9 @@ function ListingCard({
     setWishlistItems,
     handleAddToCart,
     newPrice,
+    average_rating,
 }) {
+    console.log(`Average rating for ${name}:`, average_rating);
     const [quantity, setQuantity] = useState(1);
     const handleAdd = () => setQuantity(quantity + 1);
     const handleRemove = () => setQuantity(quantity - 1);
@@ -111,6 +113,8 @@ function ListingCard({
                     >
                         {name}
                     </Typography>
+                      {/* ⭐️ Star Rating Display (Add This) */}
+                      <StarRating rating={average_rating} />  
                     <Typography
                         variant="body2"
                         sx={{ flex: "1", color: "text.secondary" }}

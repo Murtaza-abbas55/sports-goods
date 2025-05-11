@@ -62,6 +62,8 @@ export const updateProduct = async (req, res) => {
             image_url: sanitizedImageUrl,
             admin_username: req.adminUsername 
         };
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
         const UpdatedProduct = await UpdateProduct(productData);
         res.status(200).json({message:'Product updated succesfully',product:UpdatedProduct});
     } catch (error) {

@@ -10,6 +10,11 @@ import {
     Paper,
     Button,
     Typography,
+    Snackbar,
+    Alert,
+    Dialog,
+    DialogTitle,
+    DialogActions,
 } from "@mui/material";
 import Loading from "../components/Loading";
 import SaleForm from "../components/SaleForm";
@@ -22,8 +27,14 @@ function Sale() {
     const [formDialogOpen, setFormDialogOpen] = useState(false);
     const [discount, setDiscount] = useState(0);
     const [selectedProductID, setSelectedProductID] = useState(null);
-
     const { saleProducts, setSaleProducts } = useFetchSale();
+    const [snackbar, setSnackbar] = useState({
+        open: false,
+        message: "",
+        severity: "success",
+    });
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [productToRemove, setProductToRemove] = useState(null);
     console.log("saleProducts");
     console.log(saleProducts);
 
@@ -68,6 +79,7 @@ function Sale() {
                 )
             );
             console.log(response.data);
+            setSnackbar({ open: true, message: "Product removed from sale.", severity: "success" });
         } catch (error) {
             console.error("Error fetching products:", error);
         } finally {
@@ -136,20 +148,18 @@ function Sale() {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button
-                                        disabled={
-                                            !getProductSaleStatus(
-                                                product.product_id
-                                            )
-                                        }
-                                        variant="contained"
-                                        color="error"
-                                        onClick={() =>
-                                            handleRemoveSale(product.product_id)
-                                        }
-                                    >
-                                        remove sale
-                                    </Button>
+                            <Button
+                            disabled={!getProductSaleStatus(product.product_id)}
+                            variant="contained"
+                            color="error"
+                            onClick={() => {
+                                setProductToRemove(product); // set full product object
+                                setConfirmOpen(true);
+                            }}
+                        >
+                            remove sale
+                          </Button>
+
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -164,7 +174,48 @@ function Sale() {
                 selectedProductID={selectedProductID}
                 setSaleProducts={setSaleProducts}
                 saleProducts={saleProducts}
+                setSnackbar={setSnackbar}
             />
+                        <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>
+                    Are you sure you want to remove the product from sale?
+                    <br />
+                    <strong>
+                        [{productToRemove?.product_id}] {productToRemove?.name}
+                    </strong>
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            handleRemoveSale(productToRemove.product_id);
+                            setConfirmOpen(false);
+                        }}
+                        color="error"
+                        variant="contained"
+                    >
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                anchorOrigin={{ vertical: "center", horizontal: "center" }}
+            >
+                <Alert
+                    onClose={() => setSnackbar({ ...snackbar, open: false })}
+                    severity={snackbar.severity}
+                    sx={{ width: "100%" }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
         </div>
     );
 }

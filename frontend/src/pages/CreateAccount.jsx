@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import axios from "axios";
 import { Button, TextField, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-
+import {Snackbar,Alert} from "@mui/material";
 function CreateAccount() {
     const {
         register,
@@ -14,7 +15,7 @@ function CreateAccount() {
     } = useForm();
 
     const navigate = useNavigate();
-
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
     const onSubmit = async (data) => {
         try {
             const response = await axios.post("/api/auth/signup", data, {
@@ -23,7 +24,7 @@ function CreateAccount() {
                 },
             });
             console.log(response.data);
-            // Handle user login success
+            setSnackbar({ open: true, message: "User created successfully!", severity: "success" });
         } catch (userError) {
             console.warn(userError);
         } finally {
@@ -58,18 +59,20 @@ function CreateAccount() {
                     Create Account
                 </Typography>
                 <form style={{}} onSubmit={handleSubmit(onSubmit)}>
-                    <TextField
-                        margin="dense"
-                        label="User ID"
-                        variant="filled"
-                        placeholder="integer"
-                        {...register("user_id", { required: true })}
-                        error={!!errors.user_id}
-                        helperText={
-                            errors.phone ? "This field is required" : ""
-                        }
-                        size="large"
-                        fullWidth
+                <TextField
+                    margin="dense"
+                    label="User ID"
+                    variant="filled"
+                    placeholder="integer"
+                    {...register("user_id", {
+                        required: "User ID is required",
+                        validate: (value) =>
+                        !isNaN(value) && Number.isInteger(Number(value)) || "User ID must be an integer",
+                    })}
+                    error={!!errors.user_id}
+                    helperText={errors.user_id?.message}
+                    size="large"
+                    fullWidth
                     />
 
                     <TextField
@@ -114,18 +117,23 @@ function CreateAccount() {
                     />
 
                     <TextField
-                        margin="dense"
-                        label="Email"
-                        variant="filled"
-                        placeholder="4344@example.com"
-                        {...register("email", { required: true })}
-                        error={!!errors.email}
-                        helperText={
-                            errors.email ? "This field is required" : ""
-                        }
-                        size="large"
-                        fullWidth
-                    />
+                                margin="dense"
+                                label="Email"
+                                variant="filled"
+                                placeholder="4344@example.com"
+                                {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                    value:
+                                    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: "Invalid email format",
+                                },
+                                })}
+                                error={!!errors.email}
+                                helperText={errors.email?.message}
+                                size="large"
+                                fullWidth
+                            />
 
                     <TextField
                         margin="dense"
@@ -166,6 +174,20 @@ function CreateAccount() {
                     </Stack>
                 </form>
             </Paper>
+                         <Snackbar
+                                                open={snackbar.open}
+                                                autoHideDuration={3000}
+                                                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                                            >
+                                                <Alert
+                                                    onClose={() => setSnackbar({ ...snackbar, open: false })}
+                                                    severity={snackbar.severity}
+                                                    sx={{ width: "100%" }}
+                                                >
+                                                    {snackbar.message}
+                                                </Alert>
+                                            </Snackbar>
         </Box>
     );
 }

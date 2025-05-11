@@ -17,6 +17,7 @@ function SaleForm({
     selectedProductID,
     setSaleProducts,
     saleProducts,
+    setSnackbar,
 }) {
     function handleClose() {
         setFormDialogOpen(false);
@@ -56,6 +57,11 @@ function SaleForm({
                     discount_percent: discountValue,
                 },
             ]);
+            setSnackbar({
+                open: true,
+                message: "Product added to sale successfully!",
+                severity: "success",
+            });
         } catch (error) {
             console.error(
                 "Error while adding product to cart:",

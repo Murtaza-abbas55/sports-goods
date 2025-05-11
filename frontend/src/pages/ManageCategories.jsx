@@ -15,6 +15,9 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Snackbar,
+    Alert,
+
 } from "@mui/material";
 import Loading from "../components/Loading";
 import AddCategoryDialog from "../components/AddCategoryDialog";
@@ -28,6 +31,9 @@ function ManageCategories() {
     const [editCategory, setEditCategory] = useState(null); // Stores category to edit
     const [updatedName, setUpdatedName] = useState("");
     const [updatedDescription, setUpdatedDescription] = useState("");
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
 
     // Fetch categories from the backend using axios
     useEffect(() => {
@@ -61,6 +67,7 @@ function ManageCategories() {
                     (category) => category.category_id !== category_id
                 )
             );
+            setSnackbar({ open: true, message: "Category deleted successfully!", severity: "success" });
         } catch (error) {
             console.error("Error deleting category:", error);
         }
@@ -92,7 +99,8 @@ function ManageCategories() {
                         : cat
                 )
             );
-            setEditCategory(null); // Close the dialog
+            setEditCategory(null); 
+            setSnackbar({ open: true, message: "Category updated successfully!", severity: "success" });// Close the dialog
         } catch (error) {
             console.error("Error updating category:", error);
         }
@@ -110,9 +118,11 @@ function ManageCategories() {
 
     const handleCategoryAdded = (newCategory) => {
         setCategories((prev) => [...prev, newCategory]);
+        setSnackbar({ open: true, message: "Category added successfully!", severity: "success" });
     };
 
     return (
+      
         <section>
             <Typography variant="h4" gutterBottom>
                 Manage Categories
@@ -152,15 +162,17 @@ function ManageCategories() {
                                         Update
                                     </Button>
                                     <Button
-                                        variant="contained"
-                                        color="error"
-                                        onClick={() =>
-                                            handleDelete(category.category_id)
-                                        }
-                                        style={{ marginLeft: "10px" }}
-                                    >
-                                        Delete
-                                    </Button>
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => {
+                                        setCategoryToDelete(category); 
+                                        setConfirmOpen(true);
+                                    }}
+                                    style={{ marginLeft: "10px" }}
+                                >
+                                    Delete
+                                </Button>
+
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -169,6 +181,33 @@ function ManageCategories() {
             </TableContainer>
 
             {/* Edit Dialog */}
+                        <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>
+                    Are you sure you want to delete this category?
+                    <br />
+                    <strong>
+                        [{categoryToDelete?.category_id}] {categoryToDelete?.name}
+                    </strong>
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            if (categoryToDelete) {
+                                handleDelete(categoryToDelete.category_id);
+                                setConfirmOpen(false);
+                            }
+                        }}
+                        color="error"
+                        variant="contained"
+                    >
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <Dialog
                 open={Boolean(editCategory)}
                 onClose={() => setEditCategory(null)}
@@ -217,6 +256,20 @@ function ManageCategories() {
                 onClose={handleCloseDialog}
                 onCategoryAdded={handleCategoryAdded}
             />
+                        <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+                <Alert
+                    onClose={() => setSnackbar({ ...snackbar, open: false })}
+                    severity={snackbar.severity}
+                    sx={{ width: "100%" }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </section>
     );
 }

@@ -127,6 +127,7 @@ function ProductListing() {
                                     setWishlistItems={setWishlistItems}
                                     handleAddToCart={handleAddToCart}
                                     newPrice={product.new_price}
+                                    average_rating={product.average_rating}
                                 />
                             </div>
                         ))

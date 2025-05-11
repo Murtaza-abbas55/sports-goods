@@ -13,6 +13,8 @@ import {
     Paper,
     Stack,
     Box,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import Loading from "../components/Loading";
@@ -23,6 +25,7 @@ function UpdateProduct() {
     const [error, setError] = useState(null);
     const [editing, setEditing] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -100,6 +103,7 @@ function UpdateProduct() {
                         : product
                 )
             );
+            setOpenSnackbar(true);
         } catch (error) {
             console.error("Error updating product:", error);
         }
@@ -308,6 +312,20 @@ function UpdateProduct() {
                     </Paper>
                 </Box>
             )}
+            <Snackbar
+    open={openSnackbar}
+    autoHideDuration={3000}
+    onClose={() => setOpenSnackbar(false)}
+    anchorOrigin={{ vertical: "top", horizontal: "center" }}
+>
+    <Alert
+        onClose={() => setOpenSnackbar(false)}
+        severity="success"
+        sx={{ width: "100%" }}
+    >
+        Product updated successfully!
+    </Alert>
+</Snackbar>
         </>
     );
 }

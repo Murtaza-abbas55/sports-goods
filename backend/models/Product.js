@@ -36,7 +36,6 @@ export const GetProductById = async (id) => {
         throw new Error(`Error retrieving product with id ${id}: ` + error.message);
     }
 };
-
 export const getAllProducts = async () => {
     try {
         const query = `
@@ -51,13 +50,17 @@ export const getAllProducts = async () => {
                 p.created_at, 
                 p.admin_username,
                 s.discount_percentage, 
-                s.new_price
+                s.new_price,
+                COALESCE(AVG(r.rating), 0) AS average_rating,
+                COUNT(r.review_id) AS review_count
             FROM 
                 Products p
             LEFT JOIN 
-                Sale s
-            ON 
-                p.product_id = s.product_id
+                Sale s ON p.product_id = s.product_id
+            LEFT JOIN 
+                Reviews r ON p.product_id = r.product_id
+            GROUP BY 
+                p.product_id, s.discount_percentage, s.new_price
         `;
 
         const result = await pool.query(query);
@@ -67,6 +70,37 @@ export const getAllProducts = async () => {
         throw new Error('Error retrieving products: ' + error.message);
     }
 };
+
+// export const getAllProducts = async () => {
+//     try {
+//         const query = `
+//             SELECT 
+//                 p.product_id, 
+//                 p.name, 
+//                 p.image_url, 
+//                 p.stock, 
+//                 p.price, 
+//                 p.description, 
+//                 p.category_id, 
+//                 p.created_at, 
+//                 p.admin_username,
+//                 s.discount_percentage, 
+//                 s.new_price
+//             FROM 
+//                 Products p
+//             LEFT JOIN 
+//                 Sale s
+//             ON 
+//                 p.product_id = s.product_id
+//         `;
+
+//         const result = await pool.query(query);
+
+//         return result.rows;
+//     } catch (error) {
+//         throw new Error('Error retrieving products: ' + error.message);
+//     }
+// };
 
 export const createProduct = async (productData) => {
     const { product_id, name, description, price, stock, category_id, image_url, admin_username } = productData;
